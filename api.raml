@@ -1,0 +1,52 @@
+#%RAML 1.0
+title: Example JaxRS Container Service
+version: v1.0.0
+mediaType: application/json
+
+uses:
+  err: .tools/raml/errors.raml
+  lib: schema/library.raml
+
+# TODO: THIS SHOULD BE HEADER
+securitySchemes:
+  header-auth:
+    description: Authentication based on a WDK auth cookie.
+    type:
+      x-custom
+    describedBy:
+      headers:
+        Auth_Key:
+          description: Authorization header.
+          type: string
+
+
+#
+# Example Endpoints
+#
+
+/hello:
+  displayName: Hello World
+  get:
+    responses:
+      200:
+        body:
+          application/json:
+            type: lib.HelloResponse
+  post:
+    securedBy: header-auth
+    body:
+      application/json:
+        type: lib.HelloPostRequest
+    responses:
+      200:
+        body:
+          application/json:
+            type: lib.HelloPostResponse
+      401:
+        body:
+          application/json:
+            type: err.UnauthorizedError
+      500:
+        body:
+          application/json:
+            type: err.ServerError
