@@ -41,6 +41,7 @@ securitySchemes:
         displayName: Internal Server Error
         body: error.Server
   post:
+    displayName: New Staff Entry
     description: Create a new dataset staff record.
     responses:
       200:
@@ -65,6 +66,7 @@ securitySchemes:
       staff-id:
         type: datastore-id
     put:
+      displayName: Replace Staff Entry
       description: Update dataset staff.
       responses:
         204:
@@ -88,6 +90,7 @@ securitySchemes:
           displayName: Internal Server Error
           body: error.Server
     delete:
+      displayName: Delete Staff Entry
       description: Delete dataset staff.
       responses:
         204:
@@ -128,6 +131,7 @@ securitySchemes:
         body: error.Server
 
   post:
+    displayName: New Provider
     description: Create a new dataset provider record.
     responses:
       200:
@@ -154,6 +158,7 @@ securitySchemes:
         description: Dataset provider ID.
         type: datastore-id
     put:
+      displayName: Replace Provider
       description: Replace a dataset provider record.
       responses:
         204:
@@ -177,6 +182,7 @@ securitySchemes:
           displayName: Internal Server Error
           body: error.Server
     delete:
+      displayName: Delete Provider
       description: Delete a dataset provider record.
       responses:
         204:
@@ -196,6 +202,7 @@ securitySchemes:
 
 /dataset-end-users:
   get:
+    displayName: List End Users
     description: Get a list of all end-users for the specified dataset.
     queryParameters:
       datasetId:
@@ -213,6 +220,7 @@ securitySchemes:
         displayName: Internal Server Error
         body: error.Server
   post:
+    displayName: New End User
     description: Create a new dataset end-user record.
     responses:
       200:
@@ -238,6 +246,7 @@ securitySchemes:
         description: ID of a specific end-user record.
         type: datastore-id
     get:
+      displayName: End User Details
       description: Get the details of an end-user record.
       responses:
         200:
@@ -254,6 +263,7 @@ securitySchemes:
           displayName: Internal Server Error
           body: error.Server
     put:
+      displayName: Replace End User
       description: Replace a dataset end-user record.
       responses:
         204:
