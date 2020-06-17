@@ -4,7 +4,6 @@
 /vendor/
 /.tools/
 generated/
-api.html
 
 
 *.jar

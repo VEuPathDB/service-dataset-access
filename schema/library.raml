@@ -9,15 +9,6 @@
 ################################################################################
 
 types:
-  HelloResponse:
-    type: object
-    additionalProperties: false
-    properties:
-      greeting:
-        type: string
-        enum:
-          - Hello World
-      anotherType: AnotherType
   HelloPostRequest:
     type: object
     additionalProperties: false
@@ -36,4 +27,13 @@ types:
     type: object
     properties:
       something?: string
+  HelloResponse:
+    type: object
+    additionalProperties: false
+    properties:
+      greeting:
+        type: string
+        enum:
+          - Hello World
+      anotherType: AnotherType
 

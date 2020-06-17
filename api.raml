@@ -4,7 +4,7 @@ version: v1.0.0
 mediaType: application/json
 
 uses:
-  err: .tools/raml/errors.raml
+  error: https://raw.githubusercontent.com/VEuPathDB/docs-api-schema/v1.0.0/libraries/errors.raml
   lib: schema/library.raml
 
 # TODO: THIS SHOULD BE HEADER
@@ -19,34 +19,231 @@ securitySchemes:
           description: Authorization header.
           type: string
 
-
-#
-# Example Endpoints
-#
-
-/hello:
-  displayName: Hello World
+/staff:
   get:
+    description: List dataset staff.
     responses:
       200:
-        body:
-          application/json:
-            type: lib.HelloResponse
-  post:
-    securedBy: header-auth
-    body:
-      application/json:
-        type: lib.HelloPostRequest
-    responses:
-      200:
-        body:
-          application/json:
-            type: lib.HelloPostResponse
       401:
-        body:
-          application/json:
-            type: err.UnauthorizedError
+        displayName: Unauthorized
+        body: error.Unauthorized
+      403:
+        displayName: Forbidden
+        body: error.Forbidden
       500:
-        body:
-          application/json:
-            type: err.ServerError
+        displayName: Internal Server Error
+        body: error.Server
+  post:
+    description: Create a new dataset staff record.
+    responses:
+      200:
+      401:
+        displayName: Unauthorized
+        body: error.Unauthorized
+      403:
+        displayName: Forbidden
+        body: error.Forbidden
+      422:
+        displayName: Unprocessable Entity
+        body: error.UnprocessableEntity
+      500:
+        displayName: Internal Server Error
+        body: error.Server
+
+  /{staff-id}:
+    uriParameters:
+      staff-id:
+        type: integer
+        minimum: 1
+    put:
+      description: Update dataset staff.
+      responses:
+        204:
+          displayName: Success Response
+        401:
+          displayName: Unauthorized
+          body: error.Unauthorized
+        403:
+          displayName: Forbidden
+          body: error.Forbidden
+        404:
+          displayName: Not Found
+          body: error.NotFound
+        422:
+          displayName: Unprocessable Entity
+          body: error.UnprocessableEntity
+        500:
+          displayName: Internal Server Error
+          body: error.Server
+    delete:
+      description: Delete dataset staff.
+      responses:
+        204:
+          displayName: Success Response
+        401:
+          displayName: Unauthorized
+          body: error.Unauthorized
+        403:
+          displayName: Forbidden
+          body: error.Forbidden
+        404:
+          displayName: Not Found
+          body: error.NotFound
+        500:
+          displayName: Internal Server Error
+          body: error.Server
+
+/dataset-providers:
+  get:
+    description: Get a list of providers for this dataset.
+    queryParameters:
+      datasetId:
+        type: integer
+        minimum: 1
+        required: true
+    responses:
+      200:
+      401:
+      403:
+        displayName: Forbidden
+        body: error.Forbidden
+      500:
+        displayName: Internal Server Error
+        body: error.Server
+
+  post:
+    description: Create a new dataset provider record.
+    responses:
+      200:
+      400:
+      401:
+      403:
+        displayName: Forbidden
+        body: error.Forbidden
+      422:
+        displayName: Unprocessable Entity
+        body: error.UnprocessableEntity
+      500:
+        displayName: Internal Server Error
+        body: error.Server
+
+
+  /{provider-id}:
+    uriParameters:
+      provider-id:
+        description: Dataset provider ID.
+        type: integer
+        minimum: 1
+    put:
+      description: Replace a dataset provider record.
+      responses:
+        204:
+          displayName: Success Response
+        400:
+        401:
+          displayName: Unauthorized
+          body: error.Unauthorized
+        403:
+          displayName: Forbidden
+          body: error.Forbidden
+        404:
+          displayName: Not Found
+          body: error.NotFound
+        422:
+          displayName: Unprocessable Entity
+          body: error.UnprocessableEntity
+        500:
+          displayName: Internal Server Error
+          body: error.Server
+    delete:
+      description: Delete a dataset provider record.
+      responses:
+        204:
+          displayName: Success Response
+        401:
+          displayName: Unauthorized
+          body: error.Unauthorized
+        403:
+          displayName: Forbidden
+          body: error.Forbidden
+        404:
+          displayName: Not Found
+          body: error.NotFound
+        500:
+          displayName: Internal Server Error
+          body: error.Server
+
+/dataset-end-users:
+  get:
+    description: Get a list of all end-users for the specified dataset.
+    queryParameters:
+      datasetId:
+        type: integer
+        minimum: 1
+        required: true
+    responses:
+      200:
+      401:
+      403:
+        displayName: Forbidden
+        body: error.Forbidden
+      500:
+        displayName: Internal Server Error
+        body: error.Server
+  post:
+    description: Create a new dataset end-user record.
+    responses:
+      200:
+      401:
+        displayName: Unauthorized
+        body: error.Unauthorized
+      403:
+        displayName: Forbidden
+        body: error.Forbidden
+      422:
+        displayName: Unprocessable Entity
+        body: error.UnprocessableEntity
+      500:
+        displayName: Internal Server Error
+        body: error.Server
+
+  /{end-user-id}:
+    uriParameters:
+      end-user-id:
+        description: ID of a specific end-user record.
+        type: integer
+        minimum: 1
+    get:
+      description: Get the details of an end-user record.
+      responses:
+        200:
+        401:
+        403:
+          displayName: Forbidden
+          body: error.Forbidden
+        404:
+          displayName: Not Found
+          body: error.NotFound
+        500:
+          displayName: Internal Server Error
+          body: error.Server
+    put:
+      description: Replace a dataset end-user record.
+      responses:
+        204:
+          displayName: Success Response
+        401:
+          displayName: Unauthorized
+          body: error.Unauthorized
+        403:
+          displayName: Forbidden
+          body: error.Forbidden
+        404:
+          displayName: Not Found
+          body: error.NotFound
+        422:
+          displayName: Unprocessable Entity
+          body: error.UnprocessableEntity
+        500:
+          displayName: Internal Server Error
+          body: error.Server
