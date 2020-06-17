@@ -111,6 +111,8 @@ securitySchemes:
     responses:
       200:
       401:
+        displayName: Unauthorized
+        body: error.Unauthorized
       403:
         displayName: Forbidden
         body: error.Forbidden
@@ -126,6 +128,8 @@ securitySchemes:
         displayName: BadRequest
         body: error.BadRequest
       401:
+        displayName: Unauthorized
+        body: error.Unauthorized
       403:
         displayName: Forbidden
         body: error.Forbidden
@@ -195,6 +199,8 @@ securitySchemes:
     responses:
       200:
       401:
+        displayName: Unauthorized
+        body: error.Unauthorized
       403:
         displayName: Forbidden
         body: error.Forbidden
@@ -232,6 +238,8 @@ securitySchemes:
       responses:
         200:
         401:
+          displayName: Unauthorized
+          body: error.Unauthorized
         403:
           displayName: Forbidden
           body: error.Forbidden
