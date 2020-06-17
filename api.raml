@@ -145,8 +145,7 @@ securitySchemes:
     uriParameters:
       provider-id:
         description: Dataset provider ID.
-        type: integer
-        minimum: 1
+        type: datastore-id
     put:
       description: Replace a dataset provider record.
       responses:
@@ -193,8 +192,7 @@ securitySchemes:
     description: Get a list of all end-users for the specified dataset.
     queryParameters:
       datasetId:
-        type: integer
-        minimum: 1
+        type: datastore-id
         required: true
     responses:
       200:
@@ -231,8 +229,7 @@ securitySchemes:
     uriParameters:
       end-user-id:
         description: ID of a specific end-user record.
-        type: integer
-        minimum: 1
+        type: datastore-id
     get:
       description: Get the details of an end-user record.
       responses:

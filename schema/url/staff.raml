@@ -1,0 +1,13 @@
+#%RAML 1.0 Library
+
+types:
+  Staff:
+    type: object
+    properties:
+      staffId:
+        type: integer
+        minimum: 1
+      userId:
+        type: integer
+        minimum: 1
+      isOwner: boolean

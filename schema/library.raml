@@ -9,31 +9,14 @@
 ################################################################################
 
 types:
-  HelloResponse:
-    type: object
-    additionalProperties: false
-    properties:
-      greeting:
-        type: string
-        enum:
-          - Hello World
-      anotherType: AnotherType
-  HelloPostRequest:
-    type: object
-    additionalProperties: false
-    properties:
-      greet:
-        description: Who do you want to say hello to?
-        type: string
-  HelloPostResponse:
-    type: object
-    additionalProperties: false
-    properties:
-      message:
-        description: Generated greeting
-        type: string
-  AnotherType:
+  Staff:
     type: object
     properties:
-      something?: string
+      staffId:
+        type: integer
+        minimum: 1
+      userId:
+        type: integer
+        minimum: 1
+      isOwner: boolean
 
