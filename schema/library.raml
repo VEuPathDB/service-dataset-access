@@ -9,13 +9,6 @@
 ################################################################################
 
 types:
-  HelloPostRequest:
-    type: object
-    additionalProperties: false
-    properties:
-      greet:
-        description: Who do you want to say hello to?
-        type: string
   HelloPostResponse:
     type: object
     additionalProperties: false
@@ -36,4 +29,11 @@ types:
         enum:
           - Hello World
       anotherType: AnotherType
+  HelloPostRequest:
+    type: object
+    additionalProperties: false
+    properties:
+      greet:
+        description: Who do you want to say hello to?
+        type: string
 
