@@ -9,7 +9,25 @@
 ################################################################################
 
 types:
-  StaffList: Staff[]
+  DatasetProvider:
+    type: object
+    properties:
+      providerId:
+        type: integer
+        minimum: 1
+      userId:
+        type: integer
+        minimum: 1
+      projectId:
+        type: integer
+        minimum: 1
+      datasetId:
+        type: integer
+        minimum: 1
+      isManager: boolean
+  DatasetProviderList:
+    type: array
+    items: DatasetProvider
   Staff:
     type: object
     properties:
@@ -20,4 +38,5 @@ types:
         type: integer
         minimum: 1
       isOwner: boolean
+  StaffList: Staff[]
 

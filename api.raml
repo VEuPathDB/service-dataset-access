@@ -107,6 +107,7 @@ securitySchemes:
 
 /dataset-providers:
   get:
+    displayName: Provider List
     description: Get a list of providers for this dataset.
     queryParameters:
       datasetId:
@@ -114,6 +115,8 @@ securitySchemes:
         required: true
     responses:
       200:
+        displayName: Success Response
+        body: lib.DatasetProviderList
       401:
         displayName: Unauthorized
         body: error.Unauthorized
