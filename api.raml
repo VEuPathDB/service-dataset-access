@@ -24,9 +24,13 @@ securitySchemes:
 
 /staff:
   get:
+    displayName: Staff List
     description: List dataset staff.
     responses:
       200:
+        displayName: Success Response
+        body:
+          type: lib.StaffList
       401:
         displayName: Unauthorized
         body: error.Unauthorized
