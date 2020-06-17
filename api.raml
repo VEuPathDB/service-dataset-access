@@ -40,6 +40,9 @@ securitySchemes:
     description: Create a new dataset staff record.
     responses:
       200:
+      400:
+        displayName: BadRequest
+        body: error.BadRequest
       401:
         displayName: Unauthorized
         body: error.Unauthorized
@@ -56,13 +59,15 @@ securitySchemes:
   /{staff-id}:
     uriParameters:
       staff-id:
-        type: integer
-        minimum: 1
+        type: datastore-id
     put:
       description: Update dataset staff.
       responses:
         204:
           displayName: Success Response
+        400:
+          displayName: BadRequest
+          body: error.BadRequest
         401:
           displayName: Unauthorized
           body: error.Unauthorized
@@ -101,8 +106,7 @@ securitySchemes:
     description: Get a list of providers for this dataset.
     queryParameters:
       datasetId:
-        type: integer
-        minimum: 1
+        type: datastore-id
         required: true
     responses:
       200:
@@ -119,6 +123,8 @@ securitySchemes:
     responses:
       200:
       400:
+        displayName: BadRequest
+        body: error.BadRequest
       401:
       403:
         displayName: Forbidden
@@ -143,6 +149,8 @@ securitySchemes:
         204:
           displayName: Success Response
         400:
+          displayName: BadRequest
+          body: error.BadRequest
         401:
           displayName: Unauthorized
           body: error.Unauthorized
@@ -197,6 +205,9 @@ securitySchemes:
     description: Create a new dataset end-user record.
     responses:
       200:
+      400:
+        displayName: BadRequest
+        body: error.BadRequest
       401:
         displayName: Unauthorized
         body: error.Unauthorized
@@ -235,6 +246,9 @@ securitySchemes:
       responses:
         204:
           displayName: Success Response
+        400:
+          displayName: BadRequest
+          body: error.BadRequest
         401:
           displayName: Unauthorized
           body: error.Unauthorized
@@ -250,3 +264,8 @@ securitySchemes:
         500:
           displayName: Internal Server Error
           body: error.Server
+
+types:
+  datastore-id:
+    type: integer
+    minimum: 1

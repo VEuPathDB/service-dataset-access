@@ -9,6 +9,17 @@
 ################################################################################
 
 types:
+  HelloPostResponse:
+    type: object
+    additionalProperties: false
+    properties:
+      message:
+        description: Generated greeting
+        type: string
+  AnotherType:
+    type: object
+    properties:
+      something?: string
   HelloResponse:
     type: object
     additionalProperties: false
@@ -25,15 +36,4 @@ types:
       greet:
         description: Who do you want to say hello to?
         type: string
-  HelloPostResponse:
-    type: object
-    additionalProperties: false
-    properties:
-      message:
-        description: Generated greeting
-        type: string
-  AnotherType:
-    type: object
-    properties:
-      something?: string
 
