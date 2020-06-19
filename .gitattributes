@@ -1,1 +1,2 @@
 *.html linguist-documentation
+*.sql  linguist-detectable linguist-language=SQL
