@@ -9,6 +9,15 @@
 ################################################################################
 
 types:
+  DatasetProvider:
+    type: object
+    properties:
+      providerId: DatastoreId
+      projectId: DatastoreId
+      datasetId: DatastoreId
+      user: UserDetails
+      isManager: boolean
+  DatasetProviderList: DatasetProvider[]
   Staff:
     type: object
     properties:
@@ -31,13 +40,4 @@ types:
     properties:
       user: UserDetails
   EndUserList: EndUser[]
-  DatasetProvider:
-    type: object
-    properties:
-      providerId: DatastoreId
-      projectId: DatastoreId
-      datasetId: DatastoreId
-      user: UserDetails
-      isManager: boolean
-  DatasetProviderList: DatasetProvider[]
 

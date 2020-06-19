@@ -10,7 +10,6 @@ uses:
   error: https://raw.githubusercontent.com/VEuPathDB/docs-api-schema/v1.1.1/libraries/errors.raml
   lib: schema/library.raml
 
-# TODO: THIS SHOULD BE HEADER
 securitySchemes:
   header-auth:
     description: Authentication based on a WDK auth cookie.
@@ -64,7 +63,7 @@ securitySchemes:
   /{staff-id}:
     uriParameters:
       staff-id:
-        type: datastore-id
+        type: lib.DatastoreId
     put:
       displayName: Replace Staff Entry
       description: Update dataset staff.
@@ -114,7 +113,7 @@ securitySchemes:
     description: Get a list of providers for this dataset.
     queryParameters:
       datasetId:
-        type: datastore-id
+        type: string
         required: true
     responses:
       200:
@@ -156,7 +155,7 @@ securitySchemes:
     uriParameters:
       provider-id:
         description: Dataset provider ID.
-        type: datastore-id
+        type: lib.DatastoreId
     put:
       displayName: Replace Provider
       description: Replace a dataset provider record.
@@ -205,9 +204,7 @@ securitySchemes:
     displayName: List End Users
     description: Get a list of all end-users for the specified dataset.
     queryParameters:
-      datasetId:
-        type: datastore-id
-        required: true
+      datasetId: lib.DatastoreId
     responses:
       200:
       401:
@@ -244,7 +241,7 @@ securitySchemes:
     uriParameters:
       end-user-id:
         description: ID of a specific end-user record.
-        type: datastore-id
+        type: lib.DatastoreId
     get:
       displayName: End User Details
       description: Get the details of an end-user record.
@@ -286,8 +283,3 @@ securitySchemes:
         500:
           displayName: Internal Server Error
           body: error.Server
-
-types:
-  datastore-id:
-    type: integer
-    minimum: 1
