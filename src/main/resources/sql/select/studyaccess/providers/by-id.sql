@@ -2,6 +2,7 @@ SELECT
   p.user_id,
   p.project_id,
   p.dataset_id,
+  p.is_manager,
   a.email,
   (
     SELECT value
