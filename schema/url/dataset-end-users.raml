@@ -4,10 +4,8 @@ uses:
   lib: ../common.raml
 
 types:
-  Staff:
+  EndUser:
     type: object
     properties:
-      staffId: lib.DatastoreId
       user: lib.UserDetails
-      isOwner: boolean
-  StaffList: Staff[]
+  EndUserList: EndUser[]

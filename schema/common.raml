@@ -1,0 +1,13 @@
+#%RAML 1.0 Library
+
+types:
+  DatastoreId:
+    type: integer
+    minimum: 1
+  UserDetails:
+    type: object
+    properties:
+      userId: DatastoreId
+      firstName: string
+      lastName: string
+      organization: string
