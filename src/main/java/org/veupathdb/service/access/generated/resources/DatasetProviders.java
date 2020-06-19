@@ -23,203 +23,203 @@ import org.veupathdb.service.access.generated.support.ResponseDelegate;
 public interface DatasetProviders {
   @GET
   @Produces("application/json")
-  GetDatasetProvidersResponse getDatasetProviders(@QueryParam("datasetId") String datasetId);
+  GetListResponse getList(@QueryParam("datasetId") String datasetId);
 
   @POST
   @Produces("application/json")
-  PostDatasetProvidersResponse postDatasetProviders();
+  PostResponse post();
 
   @PUT
   @Path("/{provider-id}")
   @Produces("application/json")
-  PutDatasetProvidersByProviderIdResponse putDatasetProvidersByProviderId(
+  PutByIdResponse putById(
       @PathParam("provider-id") int providerId);
 
   @DELETE
   @Path("/{provider-id}")
   @Produces("application/json")
-  DeleteDatasetProvidersByProviderIdResponse deleteDatasetProvidersByProviderId(
+  DeleteByIdResponse deleteById(
       @PathParam("provider-id") int providerId);
 
-  class PostDatasetProvidersResponse extends ResponseDelegate {
-    private PostDatasetProvidersResponse(Response response, Object entity) {
+  class PostResponse extends ResponseDelegate {
+    private PostResponse(Response response, Object entity) {
       super(response, entity);
     }
 
-    private PostDatasetProvidersResponse(Response response) {
+    private PostResponse(Response response) {
       super(response);
     }
 
-    public static PostDatasetProvidersResponse respond200() {
+    public static PostResponse respond200() {
       Response.ResponseBuilder responseBuilder = Response.status(200);
-      return new PostDatasetProvidersResponse(responseBuilder.build());
+      return new PostResponse(responseBuilder.build());
     }
 
-    public static PostDatasetProvidersResponse respond400WithApplicationJson(BadRequest entity) {
+    public static PostResponse respond400WithApplicationJson(BadRequest entity) {
       Response.ResponseBuilder responseBuilder = Response.status(400).header("Content-Type", "application/json");
       responseBuilder.entity(entity);
-      return new PostDatasetProvidersResponse(responseBuilder.build(), entity);
+      return new PostResponse(responseBuilder.build(), entity);
     }
 
-    public static PostDatasetProvidersResponse respond401WithApplicationJson(Unauthorized entity) {
+    public static PostResponse respond401WithApplicationJson(Unauthorized entity) {
       Response.ResponseBuilder responseBuilder = Response.status(401).header("Content-Type", "application/json");
       responseBuilder.entity(entity);
-      return new PostDatasetProvidersResponse(responseBuilder.build(), entity);
+      return new PostResponse(responseBuilder.build(), entity);
     }
 
-    public static PostDatasetProvidersResponse respond403WithApplicationJson(Forbidden entity) {
+    public static PostResponse respond403WithApplicationJson(Forbidden entity) {
       Response.ResponseBuilder responseBuilder = Response.status(403).header("Content-Type", "application/json");
       responseBuilder.entity(entity);
-      return new PostDatasetProvidersResponse(responseBuilder.build(), entity);
+      return new PostResponse(responseBuilder.build(), entity);
     }
 
-    public static PostDatasetProvidersResponse respond422WithApplicationJson(
+    public static PostResponse respond422WithApplicationJson(
         UnprocessableEntity entity) {
       Response.ResponseBuilder responseBuilder = Response.status(422).header("Content-Type", "application/json");
       responseBuilder.entity(entity);
-      return new PostDatasetProvidersResponse(responseBuilder.build(), entity);
+      return new PostResponse(responseBuilder.build(), entity);
     }
 
-    public static PostDatasetProvidersResponse respond500WithApplicationJson(Server entity) {
+    public static PostResponse respond500WithApplicationJson(Server entity) {
       Response.ResponseBuilder responseBuilder = Response.status(500).header("Content-Type", "application/json");
       responseBuilder.entity(entity);
-      return new PostDatasetProvidersResponse(responseBuilder.build(), entity);
+      return new PostResponse(responseBuilder.build(), entity);
     }
   }
 
-  class GetDatasetProvidersResponse extends ResponseDelegate {
-    private GetDatasetProvidersResponse(Response response, Object entity) {
+  class GetListResponse extends ResponseDelegate {
+    private GetListResponse(Response response, Object entity) {
       super(response, entity);
     }
 
-    private GetDatasetProvidersResponse(Response response) {
+    private GetListResponse(Response response) {
       super(response);
     }
 
-    public static GetDatasetProvidersResponse respond200WithApplicationJson(
+    public static GetListResponse respond200WithApplicationJson(
         DatasetProviderList entity) {
       Response.ResponseBuilder responseBuilder = Response.status(200).header("Content-Type", "application/json");
       GenericEntity<DatasetProviderList> wrappedEntity = new GenericEntity<DatasetProviderList>(entity){};
       responseBuilder.entity(wrappedEntity);
-      return new GetDatasetProvidersResponse(responseBuilder.build(), wrappedEntity);
+      return new GetListResponse(responseBuilder.build(), wrappedEntity);
     }
 
-    public static GetDatasetProvidersResponse respond401WithApplicationJson(Unauthorized entity) {
+    public static GetListResponse respond401WithApplicationJson(Unauthorized entity) {
       Response.ResponseBuilder responseBuilder = Response.status(401).header("Content-Type", "application/json");
       responseBuilder.entity(entity);
-      return new GetDatasetProvidersResponse(responseBuilder.build(), entity);
+      return new GetListResponse(responseBuilder.build(), entity);
     }
 
-    public static GetDatasetProvidersResponse respond403WithApplicationJson(Forbidden entity) {
+    public static GetListResponse respond403WithApplicationJson(Forbidden entity) {
       Response.ResponseBuilder responseBuilder = Response.status(403).header("Content-Type", "application/json");
       responseBuilder.entity(entity);
-      return new GetDatasetProvidersResponse(responseBuilder.build(), entity);
+      return new GetListResponse(responseBuilder.build(), entity);
     }
 
-    public static GetDatasetProvidersResponse respond500WithApplicationJson(Server entity) {
+    public static GetListResponse respond500WithApplicationJson(Server entity) {
       Response.ResponseBuilder responseBuilder = Response.status(500).header("Content-Type", "application/json");
       responseBuilder.entity(entity);
-      return new GetDatasetProvidersResponse(responseBuilder.build(), entity);
+      return new GetListResponse(responseBuilder.build(), entity);
     }
   }
 
-  class DeleteDatasetProvidersByProviderIdResponse extends ResponseDelegate {
-    private DeleteDatasetProvidersByProviderIdResponse(Response response, Object entity) {
+  class DeleteByIdResponse extends ResponseDelegate {
+    private DeleteByIdResponse(Response response, Object entity) {
       super(response, entity);
     }
 
-    private DeleteDatasetProvidersByProviderIdResponse(Response response) {
+    private DeleteByIdResponse(Response response) {
       super(response);
     }
 
-    public static DeleteDatasetProvidersByProviderIdResponse respond204() {
+    public static DeleteByIdResponse respond204() {
       Response.ResponseBuilder responseBuilder = Response.status(204);
-      return new DeleteDatasetProvidersByProviderIdResponse(responseBuilder.build());
+      return new DeleteByIdResponse(responseBuilder.build());
     }
 
-    public static DeleteDatasetProvidersByProviderIdResponse respond401WithApplicationJson(
+    public static DeleteByIdResponse respond401WithApplicationJson(
         Unauthorized entity) {
       Response.ResponseBuilder responseBuilder = Response.status(401).header("Content-Type", "application/json");
       responseBuilder.entity(entity);
-      return new DeleteDatasetProvidersByProviderIdResponse(responseBuilder.build(), entity);
+      return new DeleteByIdResponse(responseBuilder.build(), entity);
     }
 
-    public static DeleteDatasetProvidersByProviderIdResponse respond403WithApplicationJson(
+    public static DeleteByIdResponse respond403WithApplicationJson(
         Forbidden entity) {
       Response.ResponseBuilder responseBuilder = Response.status(403).header("Content-Type", "application/json");
       responseBuilder.entity(entity);
-      return new DeleteDatasetProvidersByProviderIdResponse(responseBuilder.build(), entity);
+      return new DeleteByIdResponse(responseBuilder.build(), entity);
     }
 
-    public static DeleteDatasetProvidersByProviderIdResponse respond404WithApplicationJson(
+    public static DeleteByIdResponse respond404WithApplicationJson(
         NotFound entity) {
       Response.ResponseBuilder responseBuilder = Response.status(404).header("Content-Type", "application/json");
       responseBuilder.entity(entity);
-      return new DeleteDatasetProvidersByProviderIdResponse(responseBuilder.build(), entity);
+      return new DeleteByIdResponse(responseBuilder.build(), entity);
     }
 
-    public static DeleteDatasetProvidersByProviderIdResponse respond500WithApplicationJson(
+    public static DeleteByIdResponse respond500WithApplicationJson(
         Server entity) {
       Response.ResponseBuilder responseBuilder = Response.status(500).header("Content-Type", "application/json");
       responseBuilder.entity(entity);
-      return new DeleteDatasetProvidersByProviderIdResponse(responseBuilder.build(), entity);
+      return new DeleteByIdResponse(responseBuilder.build(), entity);
     }
   }
 
-  class PutDatasetProvidersByProviderIdResponse extends ResponseDelegate {
-    private PutDatasetProvidersByProviderIdResponse(Response response, Object entity) {
+  class PutByIdResponse extends ResponseDelegate {
+    private PutByIdResponse(Response response, Object entity) {
       super(response, entity);
     }
 
-    private PutDatasetProvidersByProviderIdResponse(Response response) {
+    private PutByIdResponse(Response response) {
       super(response);
     }
 
-    public static PutDatasetProvidersByProviderIdResponse respond204() {
+    public static PutByIdResponse respond204() {
       Response.ResponseBuilder responseBuilder = Response.status(204);
-      return new PutDatasetProvidersByProviderIdResponse(responseBuilder.build());
+      return new PutByIdResponse(responseBuilder.build());
     }
 
-    public static PutDatasetProvidersByProviderIdResponse respond400WithApplicationJson(
+    public static PutByIdResponse respond400WithApplicationJson(
         BadRequest entity) {
       Response.ResponseBuilder responseBuilder = Response.status(400).header("Content-Type", "application/json");
       responseBuilder.entity(entity);
-      return new PutDatasetProvidersByProviderIdResponse(responseBuilder.build(), entity);
+      return new PutByIdResponse(responseBuilder.build(), entity);
     }
 
-    public static PutDatasetProvidersByProviderIdResponse respond401WithApplicationJson(
+    public static PutByIdResponse respond401WithApplicationJson(
         Unauthorized entity) {
       Response.ResponseBuilder responseBuilder = Response.status(401).header("Content-Type", "application/json");
       responseBuilder.entity(entity);
-      return new PutDatasetProvidersByProviderIdResponse(responseBuilder.build(), entity);
+      return new PutByIdResponse(responseBuilder.build(), entity);
     }
 
-    public static PutDatasetProvidersByProviderIdResponse respond403WithApplicationJson(
+    public static PutByIdResponse respond403WithApplicationJson(
         Forbidden entity) {
       Response.ResponseBuilder responseBuilder = Response.status(403).header("Content-Type", "application/json");
       responseBuilder.entity(entity);
-      return new PutDatasetProvidersByProviderIdResponse(responseBuilder.build(), entity);
+      return new PutByIdResponse(responseBuilder.build(), entity);
     }
 
-    public static PutDatasetProvidersByProviderIdResponse respond404WithApplicationJson(
+    public static PutByIdResponse respond404WithApplicationJson(
         NotFound entity) {
       Response.ResponseBuilder responseBuilder = Response.status(404).header("Content-Type", "application/json");
       responseBuilder.entity(entity);
-      return new PutDatasetProvidersByProviderIdResponse(responseBuilder.build(), entity);
+      return new PutByIdResponse(responseBuilder.build(), entity);
     }
 
-    public static PutDatasetProvidersByProviderIdResponse respond422WithApplicationJson(
+    public static PutByIdResponse respond422WithApplicationJson(
         UnprocessableEntity entity) {
       Response.ResponseBuilder responseBuilder = Response.status(422).header("Content-Type", "application/json");
       responseBuilder.entity(entity);
-      return new PutDatasetProvidersByProviderIdResponse(responseBuilder.build(), entity);
+      return new PutByIdResponse(responseBuilder.build(), entity);
     }
 
-    public static PutDatasetProvidersByProviderIdResponse respond500WithApplicationJson(
+    public static PutByIdResponse respond500WithApplicationJson(
         Server entity) {
       Response.ResponseBuilder responseBuilder = Response.status(500).header("Content-Type", "application/json");
       responseBuilder.entity(entity);
-      return new PutDatasetProvidersByProviderIdResponse(responseBuilder.build(), entity);
+      return new PutByIdResponse(responseBuilder.build(), entity);
     }
   }
 }
