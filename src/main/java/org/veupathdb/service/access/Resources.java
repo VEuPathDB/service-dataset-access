@@ -2,6 +2,7 @@ package org.veupathdb.service.access;
 
 import org.veupathdb.lib.container.jaxrs.config.Options;
 import org.veupathdb.lib.container.jaxrs.server.ContainerResources;
+import org.veupathdb.service.access.controller.ProviderController;
 
 /**
  * Service Resource Registration.
@@ -22,7 +23,7 @@ public class Resources extends ContainerResources {
   @Override
   protected Object[] resources() {
     return new Object[] {
-      HelloWorld.class,
+      ProviderController.class
     };
   }
 }

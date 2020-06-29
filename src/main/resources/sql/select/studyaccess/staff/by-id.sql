@@ -13,7 +13,13 @@ SELECT
     FROM useraccounts.account_properties
     WHERE user_id = s.user_id
     AND key = 'last_name'
-  )
+  ) last_name
+, (
+    SELECT value
+    FROM useraccounts.account_properties
+    WHERE user_id = p.user_id
+    AND key = 'organization'
+  ) organization
 FROM
   studyaccess.staff s
   INNER JOIN useraccounts.accounts a

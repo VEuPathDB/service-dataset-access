@@ -2,16 +2,17 @@ package org.veupathdb.service.access.model;
 
 public class UserRow
 {
-  private int userId;
+  private long userId;
   private String email;
   private String firstName;
   private String lastName;
+  private String organization;
 
-  public int getUserId() {
+  public long getUserId() {
     return userId;
   }
 
-  public void setUserId(int userId) {
+  public void setUserId(long userId) {
     this.userId = userId;
   }
 
@@ -37,5 +38,13 @@ public class UserRow
 
   public void setLastName(String lastName) {
     this.lastName = lastName;
+  }
+
+  public String getOrganization() {
+    return organization;
+  }
+
+  public void setOrganization(String organization) {
+    this.organization = organization;
   }
 }

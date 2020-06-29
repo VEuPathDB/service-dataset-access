@@ -24,7 +24,18 @@ securitySchemes:
 /staff:
   get:
     displayName: Staff List
-    description: List dataset staff.
+    description: List dataset staff in ascending order by ID.
+    queryParameters:
+      limit:
+        type: integer
+        minimum: 0
+        default: 100
+        description: Number of rows to include in the result
+      offset:
+        type: integer
+        minimum: 0
+        default: 0
+        description: Number of rows to skip from the result
     responses:
       200:
         displayName: Success Response
@@ -64,9 +75,10 @@ securitySchemes:
     uriParameters:
       staff-id:
         type: lib.DatastoreId
-    put:
+    patch:
       displayName: Replace Staff Entry
       description: Update dataset staff.
+      body: lib.StaffPatch[]
       responses:
         204:
           displayName: Success Response
@@ -115,6 +127,16 @@ securitySchemes:
       datasetId:
         type: string
         required: true
+      limit:
+        type: integer
+        minimum: 0
+        default: 100
+        description: Number of rows to include in the result
+      offset:
+        type: integer
+        minimum: 0
+        default: 0
+        description: Number of rows to skip from the result
     responses:
       200:
         displayName: Success Response
@@ -132,10 +154,13 @@ securitySchemes:
   post:
     displayName: New Provider
     description: Create a new dataset provider record.
+    body: lib.DatasetProviderCreateRequest
     responses:
       200:
+        displayName: Success Response
+        body: lib.DatasetProviderCreateResponse
       400:
-        displayName: BadRequest
+        displayName: Bad Request
         body: error.BadRequest
       401:
         displayName: Unauthorized
@@ -156,9 +181,10 @@ securitySchemes:
       provider-id:
         description: Dataset provider ID.
         type: lib.DatastoreId
-    put:
+    patch:
       displayName: Replace Provider
       description: Replace a dataset provider record.
+      body: lib.DatasetProviderPatch[]
       responses:
         204:
           displayName: Success Response
@@ -205,6 +231,16 @@ securitySchemes:
     description: Get a list of all end-users for the specified dataset.
     queryParameters:
       datasetId: lib.DatastoreId
+      limit:
+        type: integer
+        minimum: 0
+        default: 100
+        description: Number of rows to include in the result
+      offset:
+        type: integer
+        minimum: 0
+        default: 0
+        description: Number of rows to skip from the result
     responses:
       200:
       401:
@@ -259,9 +295,10 @@ securitySchemes:
         500:
           displayName: Internal Server Error
           body: error.Server
-    put:
+    patch:
       displayName: Replace End User
       description: Replace a dataset end-user record.
+      body: lib.EndUserPatch[]
       responses:
         204:
           displayName: Success Response

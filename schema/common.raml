@@ -7,7 +7,11 @@ types:
   UserDetails:
     type: object
     properties:
-      userId: DatastoreId
+      userId:
+        type: integer
+        format: int64
+        minimum: 1
       firstName: string
       lastName: string
       organization: string
+    additionalProperties: false

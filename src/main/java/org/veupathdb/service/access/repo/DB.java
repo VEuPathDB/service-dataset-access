@@ -10,28 +10,49 @@ public interface DB
   interface Table
   {
     String
-      Projects  = Schema.StudyAccess + ".projects",
       Providers = Schema.StudyAccess + ".providers",
       Staff     = Schema.StudyAccess + ".staff",
       EndUsers  = Schema.StudyAccess + ".validdatasetuser";
   }
 
+  interface Sequence {
+    String
+      Providers = Schema.StudyAccess + ".providers_pkseq",
+      Staff     = Schema.StudyAccess + ".staff_pkseq";
+  }
+
   interface Column
   {
-    interface Project
+    interface Provider
     {
-      String
-        ProjectId = "project_id",
-        Name      = "name";
-    }
-
-    interface Provider {
       String
         ProviderId = "provider_id",
         ProjectId  = "project_id",
         UserId     = "user_id",
         DatasetId  = "dataset_id",
         IsManager  = "is_manager";
+    }
+
+    interface Staff
+    {
+      String
+        StaffId = "staff_id",
+        UserId  = "user_id",
+        IsOwner = "is_owner";
+    }
+
+    interface Accounts
+    {
+      String
+        Email = "email";
+    }
+
+    interface Misc
+    {
+      String
+        FirstName    = "first_name",
+        LastName     = "last_name",
+        Organization = "organization";
     }
   }
 }

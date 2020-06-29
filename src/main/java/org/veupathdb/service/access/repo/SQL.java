@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 import io.vulpine.lib.sql.load.SqlLoader;
 import org.veupathdb.service.access.repo.DB.Table;
 
-public interface SQL
+interface SQL
 {
   SqlLoader loader = new SqlLoader();
 
@@ -27,26 +27,28 @@ public interface SQL
     }
   }
 
+  interface Insert
+  {
+    String Providers = insert(Table.Providers, "insert");
+  }
+
   interface Select
   {
-    interface Projects
-    {
-      String
-        All = select(Table.Projects, "all");
-    }
-
     interface Providers
     {
       String
-        ByDataset = select(Table.Providers, "by-dataset"),
-        ById      = select(Table.Providers, "by-id");
+        ByDataset      = select(Table.Providers, "by-dataset"),
+        ById           = select(Table.Providers, "by-id"),
+        CountByDataset = select(Table.Providers, "count-by-dataset"),
+        NextId         = select(Table.Providers, "sequence");
     }
 
     interface Staff
     {
       String
-        All  = select(Table.Staff, "all"),
-        ById = select(Table.Staff, "by-id");
+        All      = select(Table.Staff, "all"),
+        ById     = select(Table.Staff, "by-id"),
+        ByUserId = select(Table.Staff, "by-user-id");
     }
   }
 
@@ -63,14 +65,19 @@ public interface SQL
     }
   }
 
-  private static String select(String path, String query) {
-    return loader.select(path + "." + query)
-      .orElseThrow(makeErr(Method.SELECT, path, query));
-  }
-
   private static String delete(String path, String query) {
     return loader.delete(path + "." + query)
       .orElseThrow(makeErr(Method.DELETE, path, query));
+  }
+
+  private static String insert(String path, String query) {
+    return loader.insert(path + "." + query)
+      .orElseThrow(makeErr(Method.INSERT, path, query));
+  }
+
+  private static String select(String path, String query) {
+    return loader.select(path + "." + query)
+      .orElseThrow(makeErr(Method.SELECT, path, query));
   }
 
   private static String update(String path, String query) {

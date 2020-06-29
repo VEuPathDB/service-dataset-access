@@ -1,21 +1,26 @@
 SELECT
-  p.user_id,
-  p.project_id,
-  p.dataset_id,
-  p.is_manager,
-  a.email,
-  (
+  p.user_id
+, p.dataset_id
+, p.is_manager
+, a.email
+, (
     SELECT value
     FROM useraccounts.account_properties
     WHERE user_id = p.user_id
     AND key = 'first_name'
-  ) first_name,
-  (
+  ) first_name
+, (
     SELECT value
     FROM useraccounts.account_properties
     WHERE user_id = p.user_id
     AND key = 'last_name'
-  )
+  ) last_name
+, (
+    SELECT value
+    FROM useraccounts.account_properties
+    WHERE user_id = p.user_id
+    AND key = 'organization'
+) organization
 FROM
   studyaccess.providers p
   INNER JOIN useraccounts.accounts a

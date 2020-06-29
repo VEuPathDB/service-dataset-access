@@ -9,35 +9,147 @@
 ################################################################################
 
 types:
-  DatasetProviderList: DatasetProvider[]
+  DatasetProviderPatchRequest:
+    type: array
+    minItems: 1
+    maxItems: 1
+    items: DatasetProviderPatch
+  DatasetProviderPatch:
+    type: object
+    additionalProperties: false
+    properties:
+      op:
+        type: string
+        pattern: ^replace$
+      path:
+        type: string
+        pattern: ^/isManager$
+      value: boolean
   DatasetProvider:
     type: object
+    additionalProperties: false
     properties:
       providerId: DatastoreId
-      projectId: DatastoreId
-      datasetId: DatastoreId
+      datasetId: string
       user: UserDetails
       isManager: boolean
+  DatasetProviderList:
+    type: object
+    additionalProperties: false
+    properties:
+      data: DatasetProvider[]
+      rows:
+        type: integer
+        minimum: 0
+      offset:
+        type: integer
+        minimum: 0
+      total:
+        type: integer
+        minimum: 0
+  DatasetProviderCreateRequest:
+    type: object
+    additionalProperties: false
+    properties:
+      datasetId: string
+      userId:
+        type: integer
+        format: int64
+        minimum: 1
+      isManager: boolean
+  DatasetProviderCreateResponse:
+    type: object
+    additionalProperties: false
+    properties:
+      providerId:
+        type: integer
+        minimum: 1
+  StaffPatchRequest:
+    type: array
+    minItems: 1
+    maxItems: 1
+    items: StaffPatch
+  StaffPatch:
+    type: object
+    additionalProperties: false
+    properties:
+      op:
+        type: string
+        pattern: ^replace$
+      path:
+        type: string
+        pattern: ^/isOwner$
+      value: boolean
   Staff:
     type: object
+    additionalProperties: false
     properties:
       staffId: DatastoreId
       user: UserDetails
       isOwner: boolean
-  StaffList: Staff[]
-  DatastoreId:
-    type: integer
-    minimum: 1
+  StaffList:
+    type: object
+    additionalProperties: false
+    properties:
+      data: Staff[]
+      rows:
+        type: integer
+        minimum: 0
+      offset:
+        type: integer
+        minimum: 0
+      total:
+        type: integer
+        minimum: 0
+  NewStaffResponse:
+    type: object
+    additionalProperties: false
+    properties:
+      staffId:
+        type: integer
+        minimum: 1
   UserDetails:
     type: object
+    additionalProperties: false
     properties:
-      userId: DatastoreId
+      userId:
+        type: integer
+        format: int64
+        minimum: 1
       firstName: string
       lastName: string
       organization: string
-  EndUser:
+  DatastoreId:
+    type: integer
+    minimum: 1
+  EndUserList:
+    type: object
+    additionalProperties: false
+    properties:
+      data: EndUser[]
+      rows:
+        type: integer
+        minimum: 0
+      offset:
+        type: integer
+        minimum: 0
+      total:
+        type: integer
+        minimum: 0
+  EndUserPatchRequest:
+    type: array
+    minItems: 1
+    maxItems: 1
+    items: EndUserPatch
+  EndUserPatch:
     type: object
     properties:
+      op:
+        type: string
+        pattern: ^replace$
+  EndUser:
+    type: object
+    additionalProperties: false
+    properties:
       user: UserDetails
-  EndUserList: EndUser[]
 
