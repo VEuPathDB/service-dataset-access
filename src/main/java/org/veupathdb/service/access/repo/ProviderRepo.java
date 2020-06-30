@@ -15,7 +15,7 @@ public final class ProviderRepo
     static void byId(int providerId) throws Exception {
       try (
         var con = Util.getAcctDbConnection();
-        var ps  = con.prepareStatement(SQL.Delete.Providers.ById)
+        var ps = con.prepareStatement(SQL.Delete.Providers.ById)
       ) {
         ps.setInt(1, providerId);
         ps.execute();
@@ -27,17 +27,17 @@ public final class ProviderRepo
   {
     static int newProvider(PartialProviderRow row) throws Exception {
       try (
-        var con = Util.getAcctDbConnection();
-        var ps  = con.prepareStatement(SQL.Insert.Providers)
+        final var cn = Util.getAcctDbConnection();
+        final var ps = cn.prepareStatement(SQL.Insert.Providers)
       ) {
-        final var id = Select.nextProviderId();
-        ps.setInt(1, id);
-        ps.setLong(2, row.getUserId());
-        ps.setBoolean(3, row.isManager());
-        ps.setString(4, row.getDatasetId());
+        ps.setLong(1, row.getUserId());
+        ps.setBoolean(2, row.isManager());
+        ps.setString(3, row.getDatasetId());
 
-        ps.execute();
-        return id;
+        try (final var rs = ps.executeQuery()) {
+          rs.next();
+          return rs.getInt(1);
+        }
       }
     }
   }
@@ -137,18 +137,6 @@ public final class ProviderRepo
         }
       }
     }
-
-    private static int nextProviderId() throws Exception {
-      try (
-        var con = Util.getAcctDbConnection();
-        var stm = con.createStatement();
-        var rs  = stm.executeQuery(SQL.Select.Providers.NextId)
-      ) {
-        rs.next();
-        return rs.getInt(1);
-      }
-    }
-
   } // End::Select
 
   public interface Update
@@ -156,7 +144,7 @@ public final class ProviderRepo
     static void isManagerById(ProviderRow row) throws Exception {
       try (
         var con = Util.getAcctDbConnection();
-        var ps  = con.prepareStatement(SQL.Update.Providers.ById)
+        var ps = con.prepareStatement(SQL.Update.Providers.ById)
       ) {
         ps.setBoolean(1, row.isManager());
         ps.setInt(2, row.getProviderId());

@@ -24,19 +24,18 @@ public final class StaffRepo
 
   public interface Insert {
     static int newStaff(final PartialStaffRow row) throws Exception {
-      final var id = Select.nextId();
-
       try (
         final var cn = Util.getAcctDbConnection();
         final var ps = cn.prepareStatement(SQL.Insert.Staff)
       ) {
-        ps.setInt(1, id);
-        ps.setLong(2, row.getUserId());
-        ps.setBoolean(3, row.isOwner());
-        ps.execute();
-      }
+        ps.setLong(1, row.getUserId());
+        ps.setBoolean(1, row.isOwner());
 
-      return id;
+        try (final var rs = ps.executeQuery()) {
+          rs.next();
+          return rs.getInt(1);
+        }
+      }
     }
   }
 
@@ -100,7 +99,7 @@ public final class StaffRepo
     static List < StaffRow > list(int limit, int offset) throws Exception {
       try (
         final var cn = Util.getAcctDbConnection();
-        final var ps = cn.prepareStatement(SQL.Select.Staff.All);
+        final var ps = cn.prepareStatement(SQL.Select.Staff.All)
       ) {
         ps.setInt(1, offset);
         ps.setInt(2, limit);
@@ -118,17 +117,6 @@ public final class StaffRepo
           }
           return out;
         }
-      }
-    }
-
-    private static int nextId() throws Exception {
-      try (
-        final var cn = Util.getAcctDbConnection();
-        final var st = cn.createStatement();
-        final var rs = st.executeQuery(SQL.Select.Staff.NextId)
-      ) {
-        rs.next();
-        return rs.getInt(1);
       }
     }
   } // End::Select

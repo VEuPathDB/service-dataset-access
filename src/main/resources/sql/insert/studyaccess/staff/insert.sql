@@ -1,4 +1,6 @@
 INSERT INTO
-  studyaccess.staff (staff_id, user_id, is_owner)
+  studyaccess.staff (user_id, is_owner)
 VALUES
-  (?, ?, ?)
+  (?, ?)
+RETURNING
+  staff_id INTO :id

@@ -55,8 +55,7 @@ interface SQL
       String
         ByDataset      = select(Table.Providers, "by-dataset"),
         ById           = select(Table.Providers, "by-id"),
-        CountByDataset = select(Table.Providers, "count-by-dataset"),
-        NextId         = select(Table.Providers, "sequence");
+        CountByDataset = select(Table.Providers, "count-by-dataset");
     }
 
     interface Staff
@@ -65,8 +64,7 @@ interface SQL
         All      = select(Table.Staff, "all"),
         ById     = select(Table.Staff, "by-id"),
         ByUserId = select(Table.Staff, "by-user-id"),
-        CountAll = select(Table.Staff, "count"),
-        NextId   = select(Table.Staff, "sequence");
+        CountAll = select(Table.Staff, "count");
     }
   }
 
