@@ -9,6 +9,22 @@
 ################################################################################
 
 types:
+  DatasetProviderPatchRequest:
+    type: array
+    minItems: 1
+    maxItems: 1
+    items: DatasetProviderPatch
+  DatasetProviderPatch:
+    type: object
+    additionalProperties: false
+    properties:
+      op:
+        type: string
+        pattern: ^replace$
+      path:
+        type: string
+        pattern: ^/isManager$
+      value: boolean
   DatasetProvider:
     type: object
     additionalProperties: false
@@ -46,29 +62,6 @@ types:
     additionalProperties: false
     properties:
       providerId:
-        type: integer
-        minimum: 1
-  DatasetProviderPatchRequest:
-    type: array
-    minItems: 1
-    maxItems: 1
-    items: DatasetProviderPatch
-  DatasetProviderPatch:
-    type: object
-    additionalProperties: false
-    properties:
-      op:
-        type: string
-        pattern: ^replace$
-      path:
-        type: string
-        pattern: ^/isManager$
-      value: boolean
-  NewStaffResponse:
-    type: object
-    additionalProperties: false
-    properties:
-      staffId:
         type: integer
         minimum: 1
   StaffPatchRequest:
@@ -116,6 +109,19 @@ types:
         format: int64
         minimum: 1
       isOwner: boolean
+  NewStaffResponse:
+    type: object
+    additionalProperties: false
+    properties:
+      staffId:
+        type: integer
+        minimum: 1
+  ApprovalStatus:
+    type: string
+    enum:
+      - approved
+      - requested
+      - denied
   DatastoreId:
     type: integer
     minimum: 1
@@ -130,11 +136,55 @@ types:
       firstName: string
       lastName: string
       organization: string
+  RestrictionLevel:
+    type: string
+    enum:
+      - public
+      - limited
+      - protected
+      - controlled
+      - admin
+  EndUserPatch:
+    type: object
+    properties:
+      op: string
   EndUser:
     type: object
     additionalProperties: false
     properties:
       user: UserDetails
+      startDate: datetime
+      duration: integer
+      restrictionLevel: RestrictionLevel
+      purpose: string
+      researchQuestion: string
+      analysisPlan: string
+      disseminationPlan: string
+      approvalStatus: ApprovalStatus
+      denialReason?: string
+  EndUserCreateRequest:
+    type: object
+    additionalProperties: false
+    properties:
+      userId:
+        type: integer
+        format: int64
+        minimum: 1
+      purpose: string
+      researchQuestion: string
+      analysisPlan: string
+      disseminationPlan: string
+      priorAuth: string
+      startDate?: datetime
+      duration?: integer
+      restrictionLevel?: RestrictionLevel
+      approvalStatus?: ApprovalStatus
+      denialReason?: string
+  EndUserCreateResponse:
+    type: object
+    additionalProperties: false
+    properties:
+      endUserId: string
   EndUserList:
     type: object
     additionalProperties: false
@@ -149,15 +199,4 @@ types:
       total:
         type: integer
         minimum: 0
-  EndUserPatchRequest:
-    type: array
-    minItems: 1
-    maxItems: 1
-    items: EndUserPatch
-  EndUserPatch:
-    type: object
-    properties:
-      op:
-        type: string
-        pattern: ^replace$
 

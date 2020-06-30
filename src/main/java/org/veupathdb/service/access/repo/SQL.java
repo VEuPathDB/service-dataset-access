@@ -36,6 +36,11 @@ interface SQL
 
   interface Select
   {
+    interface Accounts
+    {
+      String exists = select(Table.Accounts, "exists-by-id");
+    }
+
     interface EndUsers
     {
       String

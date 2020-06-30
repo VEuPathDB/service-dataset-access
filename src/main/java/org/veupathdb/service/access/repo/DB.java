@@ -1,27 +1,21 @@
 package org.veupathdb.service.access.repo;
 
-import org.veupathdb.service.access.model.RestrictionLevel;
-
 public interface DB
 {
   interface Schema
   {
-    String StudyAccess = "studyaccess";
+    String
+      StudyAccess = "studyaccess",
+      UserAccounts = "useraccounts";
   }
 
   interface Table
   {
     String
+      Accounts  = Schema.UserAccounts + ".accounts",
       Providers = Schema.StudyAccess + ".providers",
       Staff     = Schema.StudyAccess + ".staff",
       EndUsers  = Schema.StudyAccess + ".validdatasetuser";
-  }
-
-  interface Sequence
-  {
-    String
-      Providers = Schema.StudyAccess + ".providers_pkseq",
-      Staff     = Schema.StudyAccess + ".staff_pkseq";
   }
 
   interface Column

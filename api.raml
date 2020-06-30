@@ -251,8 +251,7 @@ securitySchemes:
       approval:
         displayName: Approval Status
         description: Filter results by the approval status of the users.
-        type: string
-        enum: ["approved", "requested", "denied"]
+        type: lib.ApprovalStatus
     responses:
       200:
         displayName: Success Response
@@ -269,6 +268,7 @@ securitySchemes:
   post:
     displayName: New End User
     description: Create a new dataset end-user record.
+    body: lib.EndUserCreateRequest
     responses:
       200:
       400:
@@ -290,8 +290,12 @@ securitySchemes:
   /{end-user-id}:
     uriParameters:
       end-user-id:
-        description: ID of a specific end-user record.
-        type: lib.DatastoreId
+        description: |
+          ID of a specific end-user record.  This ID consists of the WDK user ID
+          for the user followed by a single dash (`-`) character followed by
+          the dataset ID. Example: `82-DS_897fe55e6f`.
+        type: string
+        pattern: "^\\d+-\\w+$"
     get:
       displayName: End User Details
       description: Get the details of an end-user record.

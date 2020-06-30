@@ -10,8 +10,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import org.veupathdb.service.access.generated.model.ApprovalStatus;
 import org.veupathdb.service.access.generated.model.BadRequest;
-import org.veupathdb.service.access.generated.model.DatasetEndUsersGetApproval;
+import org.veupathdb.service.access.generated.model.EndUserCreateRequest;
+import org.veupathdb.service.access.generated.model.EndUserList;
 import org.veupathdb.service.access.generated.model.EndUserPatch;
 import org.veupathdb.service.access.generated.model.Forbidden;
 import org.veupathdb.service.access.generated.model.NotFound;
@@ -28,24 +30,25 @@ public interface DatasetEndUsers {
   GetDatasetEndUsersResponse getDatasetEndUsers(@QueryParam("datasetId") String datasetId,
       @QueryParam("limit") @DefaultValue("100") int limit,
       @QueryParam("offset") @DefaultValue("0") int offset,
-      @QueryParam("approval") DatasetEndUsersGetApproval approval);
+      @QueryParam("approval") ApprovalStatus approval);
 
   @POST
   @Produces("application/json")
-  PostDatasetEndUsersResponse postDatasetEndUsers();
+  @Consumes("application/json")
+  PostDatasetEndUsersResponse postDatasetEndUsers(EndUserCreateRequest entity);
 
   @GET
   @Path("/{end-user-id}")
   @Produces("application/json")
   GetDatasetEndUsersByEndUserIdResponse getDatasetEndUsersByEndUserId(
-      @PathParam("end-user-id") int endUserId);
+      @PathParam("end-user-id") String endUserId);
 
   @PATCH
   @Path("/{end-user-id}")
   @Produces("application/json")
   @Consumes("application/json")
   PatchDatasetEndUsersByEndUserIdResponse patchDatasetEndUsersByEndUserId(
-      @PathParam("end-user-id") int endUserId, List<EndUserPatch> entity);
+      @PathParam("end-user-id") String endUserId, List<EndUserPatch> entity);
 
   class GetDatasetEndUsersResponse extends ResponseDelegate {
     private GetDatasetEndUsersResponse(Response response, Object entity) {
@@ -56,9 +59,10 @@ public interface DatasetEndUsers {
       super(response);
     }
 
-    public static GetDatasetEndUsersResponse respond200() {
-      Response.ResponseBuilder responseBuilder = Response.status(200);
-      return new GetDatasetEndUsersResponse(responseBuilder.build());
+    public static GetDatasetEndUsersResponse respond200WithApplicationJson(EndUserList entity) {
+      Response.ResponseBuilder responseBuilder = Response.status(200).header("Content-Type", "application/json");
+      responseBuilder.entity(entity);
+      return new GetDatasetEndUsersResponse(responseBuilder.build(), entity);
     }
 
     public static GetDatasetEndUsersResponse respond401WithApplicationJson(Unauthorized entity) {

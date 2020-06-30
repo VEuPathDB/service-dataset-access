@@ -15,3 +15,17 @@ types:
       lastName: string
       organization: string
     additionalProperties: false
+  RestrictionLevel:
+    type: string
+    enum:
+      - public
+      - limited
+      - protected
+      - controlled
+      - admin
+  ApprovalStatus:
+    type: string
+    enum:
+      - approved
+      - requested
+      - denied

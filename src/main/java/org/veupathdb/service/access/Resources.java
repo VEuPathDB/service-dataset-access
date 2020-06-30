@@ -2,6 +2,7 @@ package org.veupathdb.service.access;
 
 import org.veupathdb.lib.container.jaxrs.config.Options;
 import org.veupathdb.lib.container.jaxrs.server.ContainerResources;
+import org.veupathdb.service.access.controller.EndUserController;
 import org.veupathdb.service.access.controller.ProviderController;
 import org.veupathdb.service.access.controller.StaffController;
 
@@ -25,7 +26,8 @@ public class Resources extends ContainerResources {
   protected Object[] resources() {
     return new Object[] {
       ProviderController.class,
-      StaffController.class
+      StaffController.class,
+      EndUserController.class
     };
   }
 }

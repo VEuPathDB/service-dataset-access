@@ -10,26 +10,42 @@ types:
       user: lib.UserDetails
       startDate: datetime
       duration: integer
-      restrictionLevel:
-        type: string
-        examples:
-          public: public
-          limited: limited
-          protected: protected
-          controlled: controlled
-          admin: admin
+      restrictionLevel: lib.RestrictionLevel
       purpose: string
       researchQuestion: string
       analysisPlan: string
       disseminationPlan: string
-      approvalStatus:
-        type: string
-        examples:
-          approved: approved
-          requested: requested
-          denied: denied
+      approvalStatus: lib.ApprovalStatus
       denialReason?: string
     additionalProperties: false
+
+  EndUserCreateRequest:
+    type: object
+    properties:
+      userId:
+        type: integer
+        format: int64
+        minimum: 1
+      purpose: string
+      researchQuestion: string
+      analysisPlan: string
+      disseminationPlan: string
+      priorAuth: string
+
+      # Fields available only if the user is a manager or owner
+      startDate?: datetime
+      duration?: integer
+      restrictionLevel?: lib.RestrictionLevel
+      approvalStatus?: lib.ApprovalStatus
+      denialReason?: string
+    additionalProperties: false
+
+  EndUserCreateResponse:
+    type: object
+    properties:
+      endUserId: string
+    additionalProperties: false
+
   EndUserList:
     type: object
     properties:
@@ -45,14 +61,8 @@ types:
         type: integer
         minimum: 0
     additionalProperties: false
-  EndUserPatchRequest:
-    type: array
-    items: EndUserPatch
-    minItems: 1
-    maxItems: 1
   EndUserPatch:
     type: object
     properties:
       op:
         type: string
-        pattern: "^replace$"
