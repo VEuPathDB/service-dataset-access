@@ -10,11 +10,16 @@ import org.veupathdb.lib.container.jaxrs.providers.UserProvider;
 import org.veupathdb.service.access.generated.model.*;
 import org.veupathdb.service.access.model.PartialProviderRow;
 import org.veupathdb.service.access.model.ProviderRow;
-import org.veupathdb.service.access.repo.Providers;
+import org.veupathdb.service.access.repo.ProviderRepo;
 import org.veupathdb.service.access.util.Keys;
 
 public class ProviderService
 {
+  /**
+   * Creates a new Provider record from the given request body.
+   *
+   * @return the ID of the newly created record.
+   */
   public static int createProvider(DatasetProviderCreateRequest body) {
     final var row = new PartialProviderRow();
     row.setDatasetId(body.getDatasetId());
@@ -22,7 +27,7 @@ public class ProviderService
     row.setUserId(body.getUserId());
 
     try {
-      return Providers.Insert.newProvider(row);
+      return ProviderRepo.Insert.newProvider(row);
     } catch (Exception e) {
       throw new InternalServerErrorException(e);
     }
@@ -42,8 +47,8 @@ public class ProviderService
     final int offset
   ) {
     try {
-      final var total = Providers.Select.countByDataset(datasetId);
-      final var rows  = Providers.Select.byDataset(datasetId, limit, offset);
+      final var total = ProviderRepo.Select.countByDataset(datasetId);
+      final var rows  = ProviderRepo.Select.byDataset(datasetId, limit, offset);
       return list2Providers(rows, offset, total);
     } catch (WebApplicationException e) {
       throw e;
@@ -58,7 +63,7 @@ public class ProviderService
    */
   public static ProviderRow requireProviderById(int providerId) {
     try {
-      return Providers.Select.byId(providerId)
+      return ProviderRepo.Select.byId(providerId)
         .orElseThrow(NotFoundException::new);
     } catch (WebApplicationException e) {
       throw e;
@@ -73,7 +78,7 @@ public class ProviderService
    */
   public static ProviderRow requireProviderByUserId(long userId) {
     try {
-      return Providers.Select.byUserId(userId)
+      return ProviderRepo.Select.byUserId(userId)
         .orElseThrow(NotFoundException::new);
     } catch (WebApplicationException e) {
       throw e;
@@ -101,7 +106,7 @@ public class ProviderService
 
   public static void deleteProvider(int providerId) {
     try {
-      Providers.Delete.byId(providerId);
+      ProviderRepo.Delete.byId(providerId);
     } catch (Exception e) {
       throw new InternalServerErrorException(e);
     }
@@ -109,7 +114,7 @@ public class ProviderService
 
   public static void updateProvider(ProviderRow row) {
     try {
-      Providers.Update.isManagerById(row);
+      ProviderRepo.Update.isManagerById(row);
     } catch (Exception e) {
       throw new InternalServerErrorException(e);
     }

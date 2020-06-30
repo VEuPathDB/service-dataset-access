@@ -8,7 +8,7 @@ import java.util.Optional;
 import org.veupathdb.service.access.model.PartialProviderRow;
 import org.veupathdb.service.access.model.ProviderRow;
 
-public class Providers
+public final class ProviderRepo
 {
   public interface Delete
   {

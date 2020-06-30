@@ -107,7 +107,6 @@ public class ProviderController implements DatasetProviders
 
     // Lookup will 404 if the provider id is invalid.
     requireProviderById(providerId);
-
     deleteProvider(providerId);
 
     return DeleteDatasetProvidersByProviderIdResponse.respond204();

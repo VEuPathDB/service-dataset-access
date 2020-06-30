@@ -13,6 +13,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import org.veupathdb.service.access.generated.model.BadRequest;
 import org.veupathdb.service.access.generated.model.Forbidden;
+import org.veupathdb.service.access.generated.model.NewStaffRequest;
+import org.veupathdb.service.access.generated.model.NewStaffResponse;
 import org.veupathdb.service.access.generated.model.NotFound;
 import org.veupathdb.service.access.generated.model.Server;
 import org.veupathdb.service.access.generated.model.StaffList;
@@ -31,7 +33,8 @@ public interface Staff {
 
   @POST
   @Produces("application/json")
-  PostStaffResponse postStaff();
+  @Consumes("application/json")
+  PostStaffResponse postStaff(NewStaffRequest entity);
 
   @PATCH
   @Path("/{staff-id}")
@@ -54,9 +57,10 @@ public interface Staff {
       super(response);
     }
 
-    public static PostStaffResponse respond200() {
-      Response.ResponseBuilder responseBuilder = Response.status(200);
-      return new PostStaffResponse(responseBuilder.build());
+    public static PostStaffResponse respond200WithApplicationJson(NewStaffResponse entity) {
+      Response.ResponseBuilder responseBuilder = Response.status(200).header("Content-Type", "application/json");
+      responseBuilder.entity(entity);
+      return new PostStaffResponse(responseBuilder.build(), entity);
     }
 
     public static PostStaffResponse respond400WithApplicationJson(BadRequest entity) {

@@ -53,10 +53,13 @@ securitySchemes:
   post:
     displayName: New Staff Entry
     description: Create a new dataset staff record.
+    body: lib.NewStaffRequest
     responses:
       200:
+        displayName: Success Response
+        body: lib.NewStaffResponse
       400:
-        displayName: BadRequest
+        displayName: Bad Request
         body: error.BadRequest
       401:
         displayName: Unauthorized

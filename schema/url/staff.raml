@@ -26,6 +26,14 @@ types:
         type: integer
         minimum: 0
     additionalProperties: false
+  NewStaffRequest:
+    type: object
+    properties:
+      userId:
+        type: integer
+        format: int64
+        minimum: 1
+      isOwner: boolean
   NewStaffResponse:
     type: object
     properties:

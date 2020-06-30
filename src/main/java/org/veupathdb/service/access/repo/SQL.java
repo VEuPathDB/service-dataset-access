@@ -29,7 +29,9 @@ interface SQL
 
   interface Insert
   {
-    String Providers = insert(Table.Providers, "insert");
+    String
+      Providers = insert(Table.Providers, "insert"),
+      Staff     = insert(Table.Staff, "insert");
   }
 
   interface Select
@@ -48,7 +50,9 @@ interface SQL
       String
         All      = select(Table.Staff, "all"),
         ById     = select(Table.Staff, "by-id"),
-        ByUserId = select(Table.Staff, "by-user-id");
+        ByUserId = select(Table.Staff, "by-user-id"),
+        CountAll = select(Table.Staff, "count"),
+        NextId   = select(Table.Staff, "sequence");
     }
   }
 

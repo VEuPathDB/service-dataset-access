@@ -9,11 +9,6 @@
 ################################################################################
 
 types:
-  DatasetProviderPatchRequest:
-    type: array
-    minItems: 1
-    maxItems: 1
-    items: DatasetProviderPatch
   DatasetProviderPatch:
     type: object
     additionalProperties: false
@@ -64,6 +59,11 @@ types:
       providerId:
         type: integer
         minimum: 1
+  DatasetProviderPatchRequest:
+    type: array
+    minItems: 1
+    maxItems: 1
+    items: DatasetProviderPatch
   StaffPatchRequest:
     type: array
     minItems: 1
@@ -101,6 +101,14 @@ types:
       total:
         type: integer
         minimum: 0
+  NewStaffRequest:
+    type: object
+    properties:
+      userId:
+        type: integer
+        format: int64
+        minimum: 1
+      isOwner: boolean
   NewStaffResponse:
     type: object
     additionalProperties: false
@@ -122,6 +130,11 @@ types:
   DatastoreId:
     type: integer
     minimum: 1
+  EndUser:
+    type: object
+    additionalProperties: false
+    properties:
+      user: UserDetails
   EndUserList:
     type: object
     additionalProperties: false
@@ -147,9 +160,4 @@ types:
       op:
         type: string
         pattern: ^replace$
-  EndUser:
-    type: object
-    additionalProperties: false
-    properties:
-      user: UserDetails
 

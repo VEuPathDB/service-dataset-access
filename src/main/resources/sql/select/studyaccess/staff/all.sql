@@ -25,3 +25,7 @@ FROM
   studyaccess.staff s
   INNER JOIN useraccounts.accounts a
     ON s.user_id = a.user_id
+ORDER BY
+  s.staff_id
+OFFSET ? ROWS
+FETCH NEXT ? ROWS ONLY
