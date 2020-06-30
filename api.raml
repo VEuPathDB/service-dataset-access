@@ -255,6 +255,8 @@ securitySchemes:
         enum: ["approved", "requested", "denied"]
     responses:
       200:
+        displayName: Success Response
+        body: lib.EndUserList
       401:
         displayName: Unauthorized
         body: error.Unauthorized

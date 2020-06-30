@@ -4,5 +4,5 @@ public enum ApprovalStatus
 {
   APPROVED,
   REQUESTED,
-  DENIED;
+  DENIED
 }

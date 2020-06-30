@@ -14,6 +14,7 @@ public class EndUserRow extends UserRow
   private String           disseminationPlan;
   private ApprovalStatus   approvalStatus;
   private String           priorAuth;
+  private String           denialReason;
 
   public String getDatasetId() {
     return datasetId;
@@ -102,6 +103,15 @@ public class EndUserRow extends UserRow
 
   public EndUserRow setPriorAuth(String priorAuth) {
     this.priorAuth = priorAuth;
+    return this;
+  }
+
+  public String getDenialReason() {
+    return denialReason;
+  }
+
+  public EndUserRow setDenialReason(String denialReason) {
+    this.denialReason = denialReason;
     return this;
   }
 }

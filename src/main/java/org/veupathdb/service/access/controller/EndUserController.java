@@ -40,9 +40,7 @@ public class EndUserController implements DatasetEndUsers
     if (!userIsManager(curUser.getUserId()) && !userIsOwner(curUser.getUserId()))
       throw new ForbiddenException();
 
-
-
-    return null;
+    return GetDatasetEndUsersResponse.respond200();
   }
 
   @Override

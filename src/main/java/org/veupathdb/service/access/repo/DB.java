@@ -32,6 +32,7 @@ public interface DB
         AnalysisPlan      = "analysis_plan",
         ApprovalStatus    = "approval_status",
         DatasetId         = "dataset_presenter_id",
+        DenialReason      = "denial_reason",
         DisseminationPlan = "dissemination_plan",
         Duration          = "duration",
         PriorAuth         = "prior_auth",
@@ -46,7 +47,6 @@ public interface DB
     {
       String
         ProviderId = "provider_id",
-        ProjectId  = "project_id",
         UserId     = "user_id",
         DatasetId  = "dataset_id",
         IsManager  = "is_manager";

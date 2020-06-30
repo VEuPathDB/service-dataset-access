@@ -121,6 +121,7 @@ public final class EndUserRepo
         .setStartDate(rs.getObject(
           DB.Column.EndUser.StartDate,
           OffsetDateTime.class))
+        .setDenialReason(rs.getString(DB.Column.EndUser.DenialReason))
         .setUserId(rs.getLong(DB.Column.EndUser.UserId))
         .setEmail(rs.getString(DB.Column.Accounts.Email))
         .setOrganization(rs.getString(DB.Column.Misc.Organization))

@@ -8,6 +8,27 @@ types:
     type: object
     properties:
       user: lib.UserDetails
+      startDate: datetime
+      duration: integer
+      restrictionLevel:
+        type: string
+        examples:
+          public: public
+          limited: limited
+          protected: protected
+          controlled: controlled
+          admin: admin
+      purpose: string
+      researchQuestion: string
+      analysisPlan: string
+      disseminationPlan: string
+      approvalStatus:
+        type: string
+        examples:
+          approved: approved
+          requested: requested
+          denied: denied
+      denialReason?: string
     additionalProperties: false
   EndUserList:
     type: object
