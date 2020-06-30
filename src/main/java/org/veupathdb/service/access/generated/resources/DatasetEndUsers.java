@@ -11,6 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import org.veupathdb.service.access.generated.model.BadRequest;
+import org.veupathdb.service.access.generated.model.DatasetEndUsersGetApproval;
 import org.veupathdb.service.access.generated.model.EndUserPatch;
 import org.veupathdb.service.access.generated.model.Forbidden;
 import org.veupathdb.service.access.generated.model.NotFound;
@@ -24,9 +25,10 @@ import org.veupathdb.service.access.generated.support.ResponseDelegate;
 public interface DatasetEndUsers {
   @GET
   @Produces("application/json")
-  GetDatasetEndUsersResponse getDatasetEndUsers(@QueryParam("datasetId") int datasetId,
+  GetDatasetEndUsersResponse getDatasetEndUsers(@QueryParam("datasetId") String datasetId,
       @QueryParam("limit") @DefaultValue("100") int limit,
-      @QueryParam("offset") @DefaultValue("0") int offset);
+      @QueryParam("offset") @DefaultValue("0") int offset,
+      @QueryParam("approval") DatasetEndUsersGetApproval approval);
 
   @POST
   @Produces("application/json")

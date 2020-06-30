@@ -233,17 +233,26 @@ securitySchemes:
     displayName: List End Users
     description: Get a list of all end-users for the specified dataset.
     queryParameters:
-      datasetId: lib.DatastoreId
+      datasetId:
+        displayName: Dataset ID
+        type: string
       limit:
+        displayName: Result Limit
+        description: Number of rows to include in the result
         type: integer
         minimum: 0
         default: 100
-        description: Number of rows to include in the result
       offset:
+        displayName: Result Offset
+        description: Number of rows to skip from the result
         type: integer
         minimum: 0
         default: 0
-        description: Number of rows to skip from the result
+      approval:
+        displayName: Approval Status
+        description: Filter results by the approval status of the users.
+        type: string
+        enum: ["approved", "requested", "denied"]
     responses:
       200:
       401:

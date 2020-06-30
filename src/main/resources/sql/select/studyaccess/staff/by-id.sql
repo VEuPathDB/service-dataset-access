@@ -17,7 +17,7 @@ SELECT
 , (
     SELECT value
     FROM useraccounts.account_properties
-    WHERE user_id = p.user_id
+    WHERE user_id = s.user_id
     AND key = 'organization'
   ) organization
 FROM

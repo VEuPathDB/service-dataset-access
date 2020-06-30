@@ -12,39 +12,44 @@ public class UserRow
     return userId;
   }
 
-  public void setUserId(long userId) {
+  public UserRow setUserId(long userId) {
     this.userId = userId;
+    return this;
   }
 
   public String getEmail() {
     return email;
   }
 
-  public void setEmail(String email) {
+  public UserRow setEmail(String email) {
     this.email = email;
+    return this;
   }
 
   public String getFirstName() {
     return firstName;
   }
 
-  public void setFirstName(String firstName) {
+  public UserRow setFirstName(String firstName) {
     this.firstName = firstName;
+    return this;
   }
 
   public String getLastName() {
     return lastName;
   }
 
-  public void setLastName(String lastName) {
+  public UserRow setLastName(String lastName) {
     this.lastName = lastName;
+    return this;
   }
 
   public String getOrganization() {
     return organization;
   }
 
-  public void setOrganization(String organization) {
+  public UserRow setOrganization(String organization) {
     this.organization = organization;
+    return this;
   }
 }

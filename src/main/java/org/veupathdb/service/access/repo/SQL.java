@@ -36,6 +36,15 @@ interface SQL
 
   interface Select
   {
+    interface EndUsers
+    {
+      String
+        CountByDataset         = select(Table.EndUsers, "count-by-dataset"),
+        CountByDatasetFiltered = select(Table.EndUsers, "count-by-dataset-filtered"),
+        ByDataset              = select(Table.EndUsers, "by-dataset"),
+        ByDatasetFiltered      = select(Table.EndUsers, "by-dataset-filtered");
+    }
+
     interface Providers
     {
       String

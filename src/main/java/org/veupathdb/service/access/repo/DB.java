@@ -1,5 +1,7 @@
 package org.veupathdb.service.access.repo;
 
+import org.veupathdb.service.access.model.RestrictionLevel;
+
 public interface DB
 {
   interface Schema
@@ -15,7 +17,8 @@ public interface DB
       EndUsers  = Schema.StudyAccess + ".validdatasetuser";
   }
 
-  interface Sequence {
+  interface Sequence
+  {
     String
       Providers = Schema.StudyAccess + ".providers_pkseq",
       Staff     = Schema.StudyAccess + ".staff_pkseq";
@@ -23,6 +26,22 @@ public interface DB
 
   interface Column
   {
+    interface EndUser
+    {
+      String
+        AnalysisPlan      = "analysis_plan",
+        ApprovalStatus    = "approval_status",
+        DatasetId         = "dataset_presenter_id",
+        DisseminationPlan = "dissemination_plan",
+        Duration          = "duration",
+        PriorAuth         = "prior_auth",
+        Purpose           = "purpose",
+        ResearchQuestion  = "research_question",
+        RestrictionLevel  = "restriction_level",
+        StartDate         = "start_date",
+        UserId            = "user_id";
+    }
+
     interface Provider
     {
       String
