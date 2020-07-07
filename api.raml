@@ -79,7 +79,7 @@ securitySchemes:
       staff-id:
         type: lib.DatastoreId
     patch:
-      displayName: Replace Staff Entry
+      displayName: Update Staff Entry
       description: Update dataset staff.
       body: lib.StaffPatch[]
       responses:
@@ -185,8 +185,8 @@ securitySchemes:
         description: Dataset provider ID.
         type: lib.DatastoreId
     patch:
-      displayName: Replace Provider
-      description: Replace a dataset provider record.
+      displayName: Update Provider
+      description: Update a dataset provider record.
       body: lib.DatasetProviderPatch[]
       responses:
         204:
@@ -318,7 +318,7 @@ securitySchemes:
           displayName: Internal Server Error
           body: error.Server
     patch:
-      displayName: Replace End User
+      displayName: Update End User
       description: |
         Update an end user record.
 

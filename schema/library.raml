@@ -9,6 +9,34 @@
 ################################################################################
 
 types:
+  DatastoreId:
+    type: integer
+    minimum: 1
+  UserDetails:
+    type: object
+    additionalProperties: false
+    properties:
+      userId:
+        type: integer
+        format: int64
+        minimum: 1
+      firstName: string
+      lastName: string
+      organization: string
+  RestrictionLevel:
+    type: string
+    enum:
+      - public
+      - limited
+      - protected
+      - controlled
+      - admin
+  ApprovalStatus:
+    type: string
+    enum:
+      - approved
+      - requested
+      - denied
   EndUser:
     type: object
     additionalProperties: false
@@ -72,9 +100,6 @@ types:
           - add
           - remove
           - replace
-          - copy
-          - move
-          - test
       path:
         type: string
         pattern: ^/.+$
@@ -187,32 +212,4 @@ types:
         type: string
         pattern: ^/isOwner$
       value: boolean
-  DatastoreId:
-    type: integer
-    minimum: 1
-  UserDetails:
-    type: object
-    additionalProperties: false
-    properties:
-      userId:
-        type: integer
-        format: int64
-        minimum: 1
-      firstName: string
-      lastName: string
-      organization: string
-  RestrictionLevel:
-    type: string
-    enum:
-      - public
-      - limited
-      - protected
-      - controlled
-      - admin
-  ApprovalStatus:
-    type: string
-    enum:
-      - approved
-      - requested
-      - denied
 
