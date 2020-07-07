@@ -47,7 +47,7 @@ public class ProviderController implements DatasetProviders
 
     // if the user is not a manager for the dataset, see if they are an owner.
     if (!allowed)
-      allowed = userIsOwner(currentUser);
+      allowed = userIsOwner(currentUser.getUserId());
 
     // If the user is neither an owner or a manager of the dataset, 403
     if (!allowed)
@@ -65,7 +65,7 @@ public class ProviderController implements DatasetProviders
 
     // To add a new provider, a user must be a site owner or a manager for the
     // dataset.
-    if (!userIsOwner(currentUser) && !userIsManager(currentUser.getUserId()))
+    if (!userIsOwner(currentUser.getUserId()) && !userIsManager(currentUser.getUserId()))
       throw new ForbiddenException();
 
     // TODO: Connect to application database to verify datasetId value.
@@ -85,7 +85,7 @@ public class ProviderController implements DatasetProviders
 
     // To add a new provider, a user must be a site owner or a manager for the
     // dataset.
-    if (!userIsOwner(currentUser) && !userIsManager(currentUser.getUserId()))
+    if (!userIsOwner(currentUser.getUserId()) && !userIsManager(currentUser.getUserId()))
       throw new ForbiddenException();
 
     validatePatch(entity);

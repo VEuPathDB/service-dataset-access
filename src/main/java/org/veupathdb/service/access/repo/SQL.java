@@ -30,6 +30,7 @@ interface SQL
   interface Insert
   {
     String
+      EndUser   = insert(Table.EndUsers, "insert"),
       Providers = insert(Table.Providers, "insert"),
       Staff     = insert(Table.Staff, "insert");
   }
@@ -44,6 +45,7 @@ interface SQL
     interface EndUsers
     {
       String
+        ById                   = select(Table.EndUsers, "by-id"),
         CountByDataset         = select(Table.EndUsers, "count-by-dataset"),
         CountByDatasetFiltered = select(Table.EndUsers, "count-by-dataset-filtered"),
         ByDataset              = select(Table.EndUsers, "by-dataset"),
@@ -66,6 +68,12 @@ interface SQL
         ByUserId = select(Table.Staff, "by-user-id"),
         CountAll = select(Table.Staff, "count");
     }
+
+    interface Datasets
+    {
+      String Exists = select(Table.Datasets, "exists");
+    }
+
   }
 
   interface Update
@@ -78,6 +86,13 @@ interface SQL
     interface Staff
     {
       String ById = update(Table.Staff, "by-id");
+    }
+
+    interface EndUser
+    {
+      String
+        ModUpdate  = update(Table.EndUsers, "mod-update"),
+        SelfUpdate = update(Table.EndUsers, "self-update");
     }
   }
 

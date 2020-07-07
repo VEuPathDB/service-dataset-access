@@ -1,9 +1,11 @@
 package org.veupathdb.service.access.repo;
 
 import java.sql.ResultSet;
+import java.sql.Types;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.veupathdb.service.access.model.ApprovalStatus;
 import org.veupathdb.service.access.model.ApprovalStatusCache;
@@ -12,6 +14,35 @@ import org.veupathdb.service.access.model.RestrictionLevelCache;
 
 public final class EndUserRepo
 {
+  public interface Insert
+  {
+    static void newEndUser(final EndUserRow row) throws Exception {
+      try (
+        final var cn = Util.getAcctDbConnection();
+        final var ps = cn.prepareStatement(SQL.Insert.EndUser)
+      ) {
+        ps.setLong(1, row.getUserId());
+        ps.setString(2, row.getDatasetId());
+        ps.setShort(3, RestrictionLevelCache.getInstance()
+          .get(row.getRestrictionLevel())
+          .orElseThrow());
+        ps.setShort(4, ApprovalStatusCache.getInstance()
+          .get(row.getApprovalStatus())
+          .orElseThrow());
+        ps.setObject(5, row.getStartDate());
+        ps.setInt(6, row.getDuration());
+        ps.setString(7, row.getPurpose());
+        ps.setString(8, row.getResearchQuestion());
+        ps.setString(9, row.getAnalysisPlan());
+        ps.setString(10, row.getDisseminationPlan());
+        ps.setString(11, row.getPriorAuth());
+        ps.setString(12, row.getDenialReason());
+
+        ps.execute();
+      }
+    }
+  }
+
   public interface Select
   {
     static int countByDataset(final String datasetId) throws Exception {
@@ -48,6 +79,12 @@ public final class EndUserRepo
       }
     }
 
+    /**
+     * Returns a list of {@link EndUserRow} instances representing the results
+     * of a <code>SELECT</code> query searching for at most <code>limit</code>
+     * end user records (starting from offset <code>offset+1</code>) matching
+     * the given <code>datasetId</code>.
+     */
     static List < EndUserRow > list(
       final String datasetId,
       final int limit,
@@ -73,6 +110,12 @@ public final class EndUserRepo
       }
     }
 
+    /**
+     * Returns a list of {@link EndUserRow} instances representing the results
+     * of a <code>SELECT</code> query searching for at most <code>limit</code>
+     * end user records (starting from offset <code>offset+1</code>) matching
+     * the given <code>datasetId</code> and <code>status</code>.
+     */
     static List < EndUserRow > filteredList(
       final String datasetId,
       final int limit,
@@ -102,6 +145,30 @@ public final class EndUserRepo
       }
     }
 
+    static Optional < EndUserRow > endUser(
+      final long userId,
+      final String datasetId
+    ) throws Exception {
+      try (
+        final var cn = Util.getAcctDbConnection();
+        final var ps = cn.prepareStatement(SQL.Select.EndUsers.ById)
+      ) {
+        ps.setLong(1, userId);
+        ps.setString(2, datasetId);
+
+        try (final var rs = ps.executeQuery()) {
+          if (!rs.next())
+            return Optional.empty();
+
+          return Optional.of(parseEndUserRow(rs));
+        }
+      }
+    }
+
+    /**
+     * Parses a single {@link ResultSet} row into an instance of
+     * {@link EndUserRow}.
+     */
     private static EndUserRow parseEndUserRow(final ResultSet rs)
     throws Exception {
       return (EndUserRow) new EndUserRow()
@@ -120,7 +187,8 @@ public final class EndUserRepo
           .orElseThrow())
         .setStartDate(rs.getObject(
           DB.Column.EndUser.StartDate,
-          OffsetDateTime.class))
+          OffsetDateTime.class
+        ))
         .setDenialReason(rs.getString(DB.Column.EndUser.DenialReason))
         .setUserId(rs.getLong(DB.Column.EndUser.UserId))
         .setEmail(rs.getString(DB.Column.Accounts.Email))
@@ -130,4 +198,49 @@ public final class EndUserRepo
     }
   }
 
+  public interface Update
+  {
+    static void self(EndUserRow row) throws Exception {
+      try (
+        final var cn = Util.getAcctDbConnection();
+        final var ps = cn.prepareStatement(SQL.Update.EndUser.SelfUpdate)
+      ) {
+        ps.setString(1, row.getPurpose());
+        ps.setString(2, row.getResearchQuestion());
+        ps.setString(3, row.getAnalysisPlan());
+        ps.setString(4, row.getDisseminationPlan());
+        ps.setString(5, row.getPriorAuth());
+        ps.setLong(6, row.getUserId());
+        ps.setString(7, row.getDatasetId());
+
+        ps.execute();
+      }
+    }
+
+    static void mod(EndUserRow row) throws Exception {
+      try (
+        final var cn = Util.getAcctDbConnection();
+        final var ps = cn.prepareStatement(SQL.Update.EndUser.ModUpdate)
+      ) {
+        ps.setObject(1, row.getStartDate(), Types.DATE);
+        ps.setLong(2, row.getDuration());
+        ps.setString(3, row.getPurpose());
+        ps.setString(4, row.getResearchQuestion());
+        ps.setString(5, row.getAnalysisPlan());
+        ps.setString(6, row.getDisseminationPlan());
+        ps.setString(7, row.getPriorAuth());
+        ps.setShort(8, RestrictionLevelCache.getInstance()
+          .get(row.getRestrictionLevel())
+          .orElseThrow());
+        ps.setShort(9, ApprovalStatusCache.getInstance()
+          .get(row.getApprovalStatus())
+          .orElseThrow());
+        ps.setString(10, row.getDenialReason());
+        ps.setLong(11, row.getUserId());
+        ps.setString(12, row.getDatasetId());
+
+        ps.execute();
+      }
+    }
+  }
 }

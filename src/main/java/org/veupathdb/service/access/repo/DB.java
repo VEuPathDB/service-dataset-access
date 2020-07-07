@@ -5,7 +5,8 @@ public interface DB
   interface Schema
   {
     String
-      StudyAccess = "studyaccess",
+      StudyAccess  = "studyaccess",
+      Tuning       = "apidbtuning",
       UserAccounts = "useraccounts";
   }
 
@@ -13,9 +14,10 @@ public interface DB
   {
     String
       Accounts  = Schema.UserAccounts + ".accounts",
+      Datasets  = Schema.Tuning + ".datasetpresenter",
+      EndUsers  = Schema.StudyAccess + ".validdatasetuser",
       Providers = Schema.StudyAccess + ".providers",
-      Staff     = Schema.StudyAccess + ".staff",
-      EndUsers  = Schema.StudyAccess + ".validdatasetuser";
+      Staff     = Schema.StudyAccess + ".staff";
   }
 
   interface Column

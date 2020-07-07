@@ -1,39 +1,66 @@
 package org.veupathdb.service.access.generated.model;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder("op")
+@JsonPropertyOrder({
+    "op",
+    "path",
+    "value",
+    "from"
+})
 public class EndUserPatchImpl implements EndUserPatch {
   @JsonProperty("op")
-  private String op;
+  private EndUserPatch.OpType op;
 
-  @JsonIgnore
-  private Map<String, Object> additionalProperties = new ExcludingMap();
+  @JsonProperty("path")
+  private String path;
+
+  @JsonProperty("value")
+  private Object value;
+
+  @JsonProperty("from")
+  private String from;
 
   @JsonProperty("op")
-  public String getOp() {
+  public EndUserPatch.OpType getOp() {
     return this.op;
   }
 
   @JsonProperty("op")
-  public void setOp(String op) {
+  public void setOp(EndUserPatch.OpType op) {
     this.op = op;
   }
 
-  @JsonAnyGetter
-  public Map<String, Object> getAdditionalProperties() {
-    return additionalProperties;
+  @JsonProperty("path")
+  public String getPath() {
+    return this.path;
   }
 
-  @JsonAnySetter
-  public void setAdditionalProperties(String key, Object value) {
-    this.additionalProperties.put(key, value);
+  @JsonProperty("path")
+  public void setPath(String path) {
+    this.path = path;
+  }
+
+  @JsonProperty("value")
+  public Object getValue() {
+    return this.value;
+  }
+
+  @JsonProperty("value")
+  public void setValue(Object value) {
+    this.value = value;
+  }
+
+  @JsonProperty("from")
+  public String getFrom() {
+    return this.from;
+  }
+
+  @JsonProperty("from")
+  public void setFrom(String from) {
+    this.from = from;
   }
 }

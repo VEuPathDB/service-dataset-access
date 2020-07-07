@@ -271,8 +271,10 @@ securitySchemes:
     body: lib.EndUserCreateRequest
     responses:
       200:
+        displayName: Success Response
+        body: lib.EndUserCreateResponse
       400:
-        displayName: BadRequest
+        displayName: Bad Request
         body: error.BadRequest
       401:
         displayName: Unauthorized
@@ -301,6 +303,8 @@ securitySchemes:
       description: Get the details of an end-user record.
       responses:
         200:
+          displayName: Success Response
+          body: lib.EndUser
         401:
           displayName: Unauthorized
           body: error.Unauthorized
@@ -315,7 +319,98 @@ securitySchemes:
           body: error.Server
     patch:
       displayName: Replace End User
-      description: Replace a dataset end-user record.
+      description: |
+        Update an end user record.
+
+        The following rules apply to end user self updates:
+
+        1. The user may only submit updates while their access request is in the
+           "requested" status.
+        2. Only the following fields may be updated:
+            1. `purpose`
+            2. `researchQuestion`
+            3. `analysisPlan`
+            4. `disseminationPlan`
+
+        This endpoint supports only the listed JSON Patch operations on the
+        listed paths.  All other JSON paths or operations will result in a 403
+        error.
+
+        **`/startDate`**
+
+        * `add`
+        * `remove`
+        * `replace`
+
+        This field may only be altered by site owners and dataset managers.
+
+        **`/duration`**
+
+        * `add`
+        * `remove`
+        * `replace`
+
+        This field may only be altered by site owners and dataset managers.
+
+        **`/restrictionLevel`**
+
+        * `replace`
+
+        This field may only be altered by site owners and dataset managers.
+
+        **`/purpose`**
+
+        * `replace`
+
+        This field may be altered by site owners and dataset managers at any
+        time.
+
+        This field may only be altered by end users while their access request
+        is in the "requested" status.
+
+        **`/researchQuestion`**
+
+        * `replace`
+
+        This field may be altered by site owners and dataset managers at any
+        time.
+
+        This field may only be altered by end users while their access request
+        is in the "requested" status.
+
+        **`/analysisPlan`**
+
+        * `replace`
+
+        This field may be altered by site owners and dataset managers at any
+        time.
+
+        This field may only be altered by end users while their access request
+        is in the "requested" status.
+
+        **`/disseminationPlan`**
+
+        * `replace`
+
+        This field may be altered by site owners and dataset managers at any
+        time.
+
+        This field may only be altered by end users while their access request
+        is in the "requested" status.
+
+        **`/approvalStatus`**
+
+        * `replace`
+
+        This field may only be altered by site owners and dataset managers.
+
+        **`/denialReason`**
+
+        * `add`
+        * `remove`
+        * `replace`
+
+        This field may only be altered by site owners and dataset managers.
       body: lib.EndUserPatch[]
       responses:
         204:

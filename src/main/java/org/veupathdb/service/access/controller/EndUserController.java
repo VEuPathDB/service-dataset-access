@@ -1,23 +1,19 @@
 package org.veupathdb.service.access.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Request;
 
-import org.veupathdb.lib.container.jaxrs.errors.UnprocessableEntityException;
 import org.veupathdb.lib.container.jaxrs.providers.UserProvider;
 import org.veupathdb.lib.container.jaxrs.server.annotations.Authenticated;
 import org.veupathdb.service.access.generated.model.ApprovalStatus;
 import org.veupathdb.service.access.generated.model.EndUserCreateRequest;
+import org.veupathdb.service.access.generated.model.EndUserCreateResponseImpl;
 import org.veupathdb.service.access.generated.model.EndUserPatch;
 import org.veupathdb.service.access.generated.resources.DatasetEndUsers;
 import org.veupathdb.service.access.service.EndUserService;
-import org.veupathdb.service.access.util.Keys;
 
 import static org.veupathdb.service.access.service.ProviderService.userIsManager;
 import static org.veupathdb.service.access.service.StaffService.userIsOwner;
@@ -55,34 +51,40 @@ public class EndUserController implements DatasetEndUsers
     final var curUser = UserProvider.lookupUser(request)
       .orElseThrow(InternalServerErrorException::new);
 
-    if (curUser.getUserId() == entity.getUserId())
+    final String recordId;
+    if (curUser.getUserId() == entity.getUserId()) {
       EndUserService.validateOwnPost(entity);
-    else if (userIsManager(curUser.getUserId()) || userIsOwner(curUser.getUserId())) {
-      // If the specified user does not exist then 422
-      if (!EndUserService.userExists(entity.getUserId()))
-        throw new UnprocessableEntityException(new HashMap <>(1){{
-          put(Keys.Json.KEY_USER_ID, new ArrayList <>(1){{
-            add("invalid user id");
-          }});
-        }});
+      recordId = EndUserService.endUserSelfCreate(entity);
+    } else if (userIsManager(curUser.getUserId()) || userIsOwner(curUser.getUserId())) {
+      EndUserService.validateManagerPost(entity);
+      recordId = EndUserService.endUserManagerCreate(entity);
     } else
       throw new ForbiddenException();
 
+    final var out = new EndUserCreateResponseImpl();
+    out.setEndUserId(recordId);
 
-    return null;
+    return PostDatasetEndUsersResponse.respond200WithApplicationJson(out);
   }
 
   @Override
   public GetDatasetEndUsersByEndUserIdResponse getDatasetEndUsersByEndUserId(
-    String endUserId
+    final String endUserId
   ) {
     final var curUser = UserProvider.lookupUser(request)
       .orElseThrow(InternalServerErrorException::new);
 
-    if (!userIsManager(curUser.getUserId()) && !userIsOwner(curUser.getUserId()))
-      throw new ForbiddenException();
+    final var endUser = EndUserService.getEndUser(endUserId);
 
-    return null;
+    if (endUser.getUser().getUserId() == curUser.getUserId()
+      || userIsManager(curUser.getUserId())
+      ||userIsOwner(curUser.getUserId())
+    ) {
+      return GetDatasetEndUsersByEndUserIdResponse.respond200WithApplicationJson(
+        endUser);
+    }
+
+    throw new ForbiddenException();
   }
 
   @Override
@@ -90,6 +92,19 @@ public class EndUserController implements DatasetEndUsers
     final String endUserId,
     final List < EndUserPatch > entity
   ) {
+    final var curUser = UserProvider.lookupUser(request)
+      .orElseThrow(InternalServerErrorException::new);
+
+    final var endUser = EndUserService.getRawEndUser(endUserId);
+
+    if (endUser.getUserId() == curUser.getUserId()) {
+      EndUserService.selfPatch(endUser, entity);
+    } else if (userIsManager(curUser.getUserId()) || userIsOwner(curUser.getUserId())) {
+      EndUserService.modPatch(endUser, entity);
+    } else {
+      throw new ForbiddenException();
+    }
+
     return null;
   }
 }

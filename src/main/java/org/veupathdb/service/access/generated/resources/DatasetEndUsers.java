@@ -12,7 +12,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import org.veupathdb.service.access.generated.model.ApprovalStatus;
 import org.veupathdb.service.access.generated.model.BadRequest;
+import org.veupathdb.service.access.generated.model.EndUser;
 import org.veupathdb.service.access.generated.model.EndUserCreateRequest;
+import org.veupathdb.service.access.generated.model.EndUserCreateResponse;
 import org.veupathdb.service.access.generated.model.EndUserList;
 import org.veupathdb.service.access.generated.model.EndUserPatch;
 import org.veupathdb.service.access.generated.model.Forbidden;
@@ -93,9 +95,11 @@ public interface DatasetEndUsers {
       super(response);
     }
 
-    public static PostDatasetEndUsersResponse respond200() {
-      Response.ResponseBuilder responseBuilder = Response.status(200);
-      return new PostDatasetEndUsersResponse(responseBuilder.build());
+    public static PostDatasetEndUsersResponse respond200WithApplicationJson(
+        EndUserCreateResponse entity) {
+      Response.ResponseBuilder responseBuilder = Response.status(200).header("Content-Type", "application/json");
+      responseBuilder.entity(entity);
+      return new PostDatasetEndUsersResponse(responseBuilder.build(), entity);
     }
 
     public static PostDatasetEndUsersResponse respond400WithApplicationJson(BadRequest entity) {
@@ -139,9 +143,11 @@ public interface DatasetEndUsers {
       super(response);
     }
 
-    public static GetDatasetEndUsersByEndUserIdResponse respond200() {
-      Response.ResponseBuilder responseBuilder = Response.status(200);
-      return new GetDatasetEndUsersByEndUserIdResponse(responseBuilder.build());
+    public static GetDatasetEndUsersByEndUserIdResponse respond200WithApplicationJson(
+        EndUser entity) {
+      Response.ResponseBuilder responseBuilder = Response.status(200).header("Content-Type", "application/json");
+      responseBuilder.entity(entity);
+      return new GetDatasetEndUsersByEndUserIdResponse(responseBuilder.build(), entity);
     }
 
     public static GetDatasetEndUsersByEndUserIdResponse respond401WithApplicationJson(

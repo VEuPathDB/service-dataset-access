@@ -9,21 +9,40 @@ import java.util.Date;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "user",
-    "startDate",
-    "duration",
-    "restrictionLevel",
+    "userId",
     "purpose",
     "researchQuestion",
     "analysisPlan",
     "disseminationPlan",
+    "priorAuth",
+    "datasetId",
+    "startDate",
+    "duration",
+    "restrictionLevel",
     "approvalStatus",
-    "denialReason",
-    "priorAuth"
+    "denialReason"
 })
-public class EndUserImpl implements EndUser {
-  @JsonProperty("user")
-  private UserDetails user;
+public class EndUserCreateRequestImpl implements EndUserCreateRequest {
+  @JsonProperty("userId")
+  private long userId;
+
+  @JsonProperty("purpose")
+  private String purpose;
+
+  @JsonProperty("researchQuestion")
+  private String researchQuestion;
+
+  @JsonProperty("analysisPlan")
+  private String analysisPlan;
+
+  @JsonProperty("disseminationPlan")
+  private String disseminationPlan;
+
+  @JsonProperty("priorAuth")
+  private String priorAuth;
+
+  @JsonProperty("datasetId")
+  private String datasetId;
 
   @JsonProperty("startDate")
   @JsonFormat(
@@ -41,65 +60,20 @@ public class EndUserImpl implements EndUser {
   @JsonProperty("restrictionLevel")
   private RestrictionLevel restrictionLevel;
 
-  @JsonProperty("purpose")
-  private String purpose;
-
-  @JsonProperty("researchQuestion")
-  private String researchQuestion;
-
-  @JsonProperty("analysisPlan")
-  private String analysisPlan;
-
-  @JsonProperty("disseminationPlan")
-  private String disseminationPlan;
-
   @JsonProperty("approvalStatus")
   private ApprovalStatus approvalStatus;
 
   @JsonProperty("denialReason")
   private String denialReason;
 
-  @JsonProperty("priorAuth")
-  private String priorAuth;
-
-  @JsonProperty("user")
-  public UserDetails getUser() {
-    return this.user;
+  @JsonProperty("userId")
+  public long getUserId() {
+    return this.userId;
   }
 
-  @JsonProperty("user")
-  public void setUser(UserDetails user) {
-    this.user = user;
-  }
-
-  @JsonProperty("startDate")
-  public Date getStartDate() {
-    return this.startDate;
-  }
-
-  @JsonProperty("startDate")
-  public void setStartDate(Date startDate) {
-    this.startDate = startDate;
-  }
-
-  @JsonProperty("duration")
-  public int getDuration() {
-    return this.duration;
-  }
-
-  @JsonProperty("duration")
-  public void setDuration(int duration) {
-    this.duration = duration;
-  }
-
-  @JsonProperty("restrictionLevel")
-  public RestrictionLevel getRestrictionLevel() {
-    return this.restrictionLevel;
-  }
-
-  @JsonProperty("restrictionLevel")
-  public void setRestrictionLevel(RestrictionLevel restrictionLevel) {
-    this.restrictionLevel = restrictionLevel;
+  @JsonProperty("userId")
+  public void setUserId(long userId) {
+    this.userId = userId;
   }
 
   @JsonProperty("purpose")
@@ -142,6 +116,56 @@ public class EndUserImpl implements EndUser {
     this.disseminationPlan = disseminationPlan;
   }
 
+  @JsonProperty("priorAuth")
+  public String getPriorAuth() {
+    return this.priorAuth;
+  }
+
+  @JsonProperty("priorAuth")
+  public void setPriorAuth(String priorAuth) {
+    this.priorAuth = priorAuth;
+  }
+
+  @JsonProperty("datasetId")
+  public String getDatasetId() {
+    return this.datasetId;
+  }
+
+  @JsonProperty("datasetId")
+  public void setDatasetId(String datasetId) {
+    this.datasetId = datasetId;
+  }
+
+  @JsonProperty("startDate")
+  public Date getStartDate() {
+    return this.startDate;
+  }
+
+  @JsonProperty("startDate")
+  public void setStartDate(Date startDate) {
+    this.startDate = startDate;
+  }
+
+  @JsonProperty("duration")
+  public int getDuration() {
+    return this.duration;
+  }
+
+  @JsonProperty("duration")
+  public void setDuration(int duration) {
+    this.duration = duration;
+  }
+
+  @JsonProperty("restrictionLevel")
+  public RestrictionLevel getRestrictionLevel() {
+    return this.restrictionLevel;
+  }
+
+  @JsonProperty("restrictionLevel")
+  public void setRestrictionLevel(RestrictionLevel restrictionLevel) {
+    this.restrictionLevel = restrictionLevel;
+  }
+
   @JsonProperty("approvalStatus")
   public ApprovalStatus getApprovalStatus() {
     return this.approvalStatus;
@@ -160,15 +184,5 @@ public class EndUserImpl implements EndUser {
   @JsonProperty("denialReason")
   public void setDenialReason(String denialReason) {
     this.denialReason = denialReason;
-  }
-
-  @JsonProperty("priorAuth")
-  public String getPriorAuth() {
-    return this.priorAuth;
-  }
-
-  @JsonProperty("priorAuth")
-  public void setPriorAuth(String priorAuth) {
-    this.priorAuth = priorAuth;
   }
 }

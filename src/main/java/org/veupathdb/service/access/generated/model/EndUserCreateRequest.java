@@ -5,32 +5,14 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Date;
 
 @JsonDeserialize(
-    as = EndUserImpl.class
+    as = EndUserCreateRequestImpl.class
 )
-public interface EndUser {
-  @JsonProperty("user")
-  UserDetails getUser();
+public interface EndUserCreateRequest {
+  @JsonProperty("userId")
+  long getUserId();
 
-  @JsonProperty("user")
-  void setUser(UserDetails user);
-
-  @JsonProperty("startDate")
-  Date getStartDate();
-
-  @JsonProperty("startDate")
-  void setStartDate(Date startDate);
-
-  @JsonProperty("duration")
-  int getDuration();
-
-  @JsonProperty("duration")
-  void setDuration(int duration);
-
-  @JsonProperty("restrictionLevel")
-  RestrictionLevel getRestrictionLevel();
-
-  @JsonProperty("restrictionLevel")
-  void setRestrictionLevel(RestrictionLevel restrictionLevel);
+  @JsonProperty("userId")
+  void setUserId(long userId);
 
   @JsonProperty("purpose")
   String getPurpose();
@@ -56,6 +38,36 @@ public interface EndUser {
   @JsonProperty("disseminationPlan")
   void setDisseminationPlan(String disseminationPlan);
 
+  @JsonProperty("priorAuth")
+  String getPriorAuth();
+
+  @JsonProperty("priorAuth")
+  void setPriorAuth(String priorAuth);
+
+  @JsonProperty("datasetId")
+  String getDatasetId();
+
+  @JsonProperty("datasetId")
+  void setDatasetId(String datasetId);
+
+  @JsonProperty("startDate")
+  Date getStartDate();
+
+  @JsonProperty("startDate")
+  void setStartDate(Date startDate);
+
+  @JsonProperty("duration")
+  int getDuration();
+
+  @JsonProperty("duration")
+  void setDuration(int duration);
+
+  @JsonProperty("restrictionLevel")
+  RestrictionLevel getRestrictionLevel();
+
+  @JsonProperty("restrictionLevel")
+  void setRestrictionLevel(RestrictionLevel restrictionLevel);
+
   @JsonProperty("approvalStatus")
   ApprovalStatus getApprovalStatus();
 
@@ -67,10 +79,4 @@ public interface EndUser {
 
   @JsonProperty("denialReason")
   void setDenialReason(String denialReason);
-
-  @JsonProperty("priorAuth")
-  String getPriorAuth();
-
-  @JsonProperty("priorAuth")
-  void setPriorAuth(String priorAuth);
 }

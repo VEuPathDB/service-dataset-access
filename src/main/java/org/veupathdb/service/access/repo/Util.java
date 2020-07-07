@@ -1,6 +1,8 @@
 package org.veupathdb.service.access.repo;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.Types;
 
 import org.veupathdb.lib.container.jaxrs.utils.db.DbManager;
 

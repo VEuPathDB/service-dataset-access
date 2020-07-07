@@ -1,24 +1,59 @@
 package org.veupathdb.service.access.generated.model;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.util.Map;
 
 @JsonDeserialize(
     as = EndUserPatchImpl.class
 )
 public interface EndUserPatch {
-  @JsonAnyGetter
-  Map<String, Object> getAdditionalProperties();
-
-  @JsonAnySetter
-  void setAdditionalProperties(String key, Object value);
+  @JsonProperty("op")
+  OpType getOp();
 
   @JsonProperty("op")
-  String getOp();
+  void setOp(OpType op);
 
-  @JsonProperty("op")
-  void setOp(String op);
+  @JsonProperty("path")
+  String getPath();
+
+  @JsonProperty("path")
+  void setPath(String path);
+
+  @JsonProperty("value")
+  Object getValue();
+
+  @JsonProperty("value")
+  void setValue(Object value);
+
+  @JsonProperty("from")
+  String getFrom();
+
+  @JsonProperty("from")
+  void setFrom(String from);
+
+  enum OpType {
+    @JsonProperty("add")
+    ADD("add"),
+
+    @JsonProperty("remove")
+    REMOVE("remove"),
+
+    @JsonProperty("replace")
+    REPLACE("replace"),
+
+    @JsonProperty("copy")
+    COPY("copy"),
+
+    @JsonProperty("move")
+    MOVE("move"),
+
+    @JsonProperty("test")
+    TEST("test");
+
+    private String name;
+
+    OpType(String name) {
+      this.name = name;
+    }
+  }
 }

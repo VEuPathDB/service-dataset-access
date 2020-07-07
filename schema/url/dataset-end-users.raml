@@ -8,8 +8,8 @@ types:
     type: object
     properties:
       user: lib.UserDetails
-      startDate: datetime
-      duration: integer
+      startDate?: datetime
+      duration?: integer
       restrictionLevel: lib.RestrictionLevel
       purpose: string
       researchQuestion: string
@@ -17,6 +17,7 @@ types:
       disseminationPlan: string
       approvalStatus: lib.ApprovalStatus
       denialReason?: string
+      priorAuth: string
     additionalProperties: false
 
   EndUserCreateRequest:
@@ -31,6 +32,7 @@ types:
       analysisPlan: string
       disseminationPlan: string
       priorAuth: string
+      datasetId: string
 
       # Fields available only if the user is a manager or owner
       startDate?: datetime
@@ -66,3 +68,18 @@ types:
     properties:
       op:
         type: string
+        enum:
+        - add
+        - remove
+        - replace
+        - copy
+        - move
+        - test
+      path:
+        type: string
+        pattern: "^/.+$"
+      value?:
+        type: any
+      from?:
+        type: string
+    additionalProperties: false
