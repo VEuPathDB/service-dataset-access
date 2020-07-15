@@ -5,7 +5,28 @@ services:
     build:
       dockerfile: Dockerfile
       context: .
-    mem_limit:
+    environment:
+      # User authentication salt
+      AUTH_SECRET_KEY:
+
+      # Application DB
+      APP_DB_TNS_NAME:
+      APP_DB_USER:
+      APP_DB_PASS:
+
+      # Account DB
+      ACCT_DB_TNS_NAME:
+      ACCT_DB_USER:
+      ACCT_DB_PASS:
+
+      # User DB
+      USER_DB_TNS_NAME:
+      USER_DB_USER:
+      USER_DB_PASS:
+
+      # LDAP
+      LDAP_SERVER:
+      ORACLE_BASE_DN:
     ports:
     - 8088:80
     networks:
