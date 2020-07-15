@@ -6,6 +6,8 @@ services:
       dockerfile: Dockerfile
       context: .
     environment:
+      SERVER_PORT: 80
+
       # User authentication salt
       AUTH_SECRET_KEY:
 
