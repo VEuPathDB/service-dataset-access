@@ -9,7 +9,7 @@ public class Main extends Server {
     var server = new Main();
     server.enableAccountDB();
     server.enableApplicationDB();
-    server.enableApplicationDB();
+    server.enableUserDB();
     server.start(args);
   }
 
