@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  service:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    mem_limit:
+    ports:
+    - 8088:80
+    networks:
+    - traefik
+    labels:
+    - "traefik.http.routers.dataset-access-service-dev.rule=Host(`dataset-access-service-dev.local.apidb.org`)"
+    - "traefik.http.routers.dataset-access-service-dev.tls=true"
+    - "traefik.http.routers.dataset-access-service-dev.entrypoints=local"
+    - "traefik.http.services.dataset-access-service-dev.loadbalancer.server.port=80"
+networks:
+  traefik:
+    external: true

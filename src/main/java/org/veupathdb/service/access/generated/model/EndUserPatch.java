@@ -39,16 +39,7 @@ public interface EndUserPatch {
     REMOVE("remove"),
 
     @JsonProperty("replace")
-    REPLACE("replace"),
-
-    @JsonProperty("copy")
-    COPY("copy"),
-
-    @JsonProperty("move")
-    MOVE("move"),
-
-    @JsonProperty("test")
-    TEST("test");
+    REPLACE("replace");
 
     private String name;
 
