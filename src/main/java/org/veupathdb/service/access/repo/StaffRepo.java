@@ -12,26 +12,28 @@ public final class StaffRepo
   public interface Delete
   {
     static void byId(int staffId) throws Exception {
+      final var sql = SQL.Delete.Staff.ById;
       try (
         var con = Util.getAcctDbConnection();
-        var ps = con.prepareStatement(SQL.Delete.Staff.ById)
+        var ps = con.prepareStatement(sql)
       ) {
         ps.setInt(1, staffId);
-        ps.execute();
+        Util.executeLogged(ps, sql);
       }
     }
   }
 
   public interface Insert {
     static int newStaff(final PartialStaffRow row) throws Exception {
+      final var sql = SQL.Insert.Staff;
       try (
         final var cn = Util.getAcctDbConnection();
-        final var ps = cn.prepareStatement(SQL.Insert.Staff)
+        final var ps = cn.prepareStatement(sql)
       ) {
         ps.setLong(1, row.getUserId());
         ps.setBoolean(1, row.isOwner());
 
-        try (final var rs = ps.executeQuery()) {
+        try (final var rs = Util.executeQueryLogged(ps, sql)) {
           rs.next();
           return rs.getInt(1);
         }
@@ -42,13 +44,14 @@ public final class StaffRepo
   public interface Select
   {
     static Optional < StaffRow > byId(int staffId) throws Exception {
+      final var sql = SQL.Select.Staff.ById;
       try (
         var con = Util.getAcctDbConnection();
-        var ps = con.prepareStatement(SQL.Select.Staff.ById)
+        var ps = con.prepareStatement(sql)
       ) {
         ps.setInt(1, staffId);
 
-        try (var rs = ps.executeQuery()) {
+        try (var rs = Util.executeQueryLogged(ps, sql)) {
           if (!rs.next())
             return Optional.empty();
 
@@ -64,13 +67,14 @@ public final class StaffRepo
     }
 
     static Optional < StaffRow > byUserId(long userId) throws Exception {
+      final var sql = SQL.Select.Staff.ByUserId;
       try (
         var con = Util.getAcctDbConnection();
-        var ps = con.prepareStatement(SQL.Select.Staff.ByUserId)
+        var ps = con.prepareStatement(sql)
       ) {
         ps.setLong(1, userId);
 
-        try (var rs = ps.executeQuery()) {
+        try (var rs = Util.executeQueryLogged(ps, sql)) {
           if (!rs.next())
             return Optional.empty();
 
@@ -89,7 +93,7 @@ public final class StaffRepo
       try (
         final var cn = Util.getAcctDbConnection();
         final var st = cn.createStatement();
-        final var rs = st.executeQuery(SQL.Select.Staff.CountAll)
+        final var rs = Util.executeQueryLogged(st, SQL.Select.Staff.CountAll)
       ) {
         rs.next();
         return rs.getInt(1);
@@ -97,14 +101,15 @@ public final class StaffRepo
     }
 
     static List < StaffRow > list(int limit, int offset) throws Exception {
+      final var sql = SQL.Select.Staff.All;
       try (
         final var cn = Util.getAcctDbConnection();
-        final var ps = cn.prepareStatement(SQL.Select.Staff.All)
+        final var ps = cn.prepareStatement(sql)
       ) {
         ps.setInt(1, offset);
         ps.setInt(2, limit);
 
-        try (var rs = ps.executeQuery()) {
+        try (var rs = Util.executeQueryLogged(ps, sql)) {
           final var out = new ArrayList < StaffRow >(10);
 
           while (rs.next()) {
@@ -124,13 +129,14 @@ public final class StaffRepo
   public interface Update
   {
     static void ownerFlagById(StaffRow row) throws Exception {
+      final var sql = SQL.Update.Staff.ById;
       try (
         var con = Util.getAcctDbConnection();
-        var ps = con.prepareStatement(SQL.Update.Staff.ById)
+        var ps = con.prepareStatement(sql)
       ) {
         ps.setBoolean(1, row.isOwner());
         ps.setInt(2, row.getStaffId());
-        ps.execute();
+        Util.executeLogged(ps, sql);
       }
     }
   }

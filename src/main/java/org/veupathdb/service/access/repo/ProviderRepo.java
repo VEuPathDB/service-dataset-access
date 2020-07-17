@@ -13,12 +13,13 @@ public final class ProviderRepo
   public interface Delete
   {
     static void byId(int providerId) throws Exception {
+      final var sql = SQL.Delete.Providers.ById;
       try (
         var con = Util.getAcctDbConnection();
-        var ps = con.prepareStatement(SQL.Delete.Providers.ById)
+        var ps = con.prepareStatement(sql)
       ) {
         ps.setInt(1, providerId);
-        ps.execute();
+        Util.executeLogged(ps, sql);
       }
     }
   }
@@ -26,15 +27,16 @@ public final class ProviderRepo
   public interface Insert
   {
     static int newProvider(PartialProviderRow row) throws Exception {
+      final var sql = SQL.Insert.Providers;
       try (
         final var cn = Util.getAcctDbConnection();
-        final var ps = cn.prepareStatement(SQL.Insert.Providers)
+        final var ps = cn.prepareStatement(sql)
       ) {
         ps.setLong(1, row.getUserId());
         ps.setBoolean(2, row.isManager());
         ps.setString(3, row.getDatasetId());
 
-        try (final var rs = ps.executeQuery()) {
+        try (final var rs = Util.executeQueryLogged(ps, sql)) {
           rs.next();
           return rs.getInt(1);
         }
@@ -49,15 +51,16 @@ public final class ProviderRepo
       final int limit,
       final int offset
     ) throws Exception {
+      final var sql = SQL.Select.Providers.ByDataset;
       try (
         var con = Util.getAcctDbConnection();
-        var ps = con.prepareStatement(SQL.Select.Providers.ByDataset)
+        var ps = con.prepareStatement(sql)
       ) {
         ps.setString(1, datasetId);
         ps.setInt(2, offset);
         ps.setInt(3, limit);
 
-        try (var rs = ps.executeQuery()) {
+        try (var rs = Util.executeQueryLogged(ps, sql)) {
           if (!rs.next())
             return Collections.emptyList();
 
@@ -80,13 +83,14 @@ public final class ProviderRepo
     }
 
     static Optional < ProviderRow > byId(int providerId) throws Exception {
+      final var sql = SQL.Select.Providers.ById;
       try (
         var con = Util.getAcctDbConnection();
-        var ps = con.prepareStatement(SQL.Select.Providers.ById)
+        var ps = con.prepareStatement(sql)
       ) {
         ps.setInt(1, providerId);
 
-        try (var rs = ps.executeQuery()) {
+        try (var rs = Util.executeQueryLogged(ps, sql)) {
           if (!rs.next())
             return Optional.empty();
 
@@ -103,13 +107,14 @@ public final class ProviderRepo
     }
 
     static Optional < ProviderRow > byUserId(long userId) throws Exception {
+      final var sql = SQL.Select.Providers.ById;
       try (
         var con = Util.getAcctDbConnection();
-        var ps = con.prepareStatement(SQL.Select.Providers.ById)
+        var ps = con.prepareStatement(sql)
       ) {
         ps.setLong(1, userId);
 
-        try (var rs = ps.executeQuery()) {
+        try (var rs = Util.executeQueryLogged(ps, sql)) {
           if (!rs.next())
             return Optional.empty();
 
@@ -126,12 +131,13 @@ public final class ProviderRepo
     }
 
     static int countByDataset(String datasetId) throws Exception {
+      final var sql = SQL.Select.Providers.CountByDataset;
       try (
         var con = Util.getAcctDbConnection();
-        var ps = con.prepareStatement(SQL.Select.Providers.CountByDataset)
+        var ps = con.prepareStatement(sql)
       ) {
         ps.setString(1, datasetId);
-        try (var rs = ps.executeQuery()) {
+        try (var rs = Util.executeQueryLogged(ps, sql)) {
           rs.next();
           return rs.getInt(1);
         }
@@ -142,13 +148,14 @@ public final class ProviderRepo
   public interface Update
   {
     static void isManagerById(ProviderRow row) throws Exception {
+      final var sql = SQL.Update.Providers.ById;
       try (
         var con = Util.getAcctDbConnection();
-        var ps = con.prepareStatement(SQL.Update.Providers.ById)
+        var ps = con.prepareStatement(sql)
       ) {
         ps.setBoolean(1, row.isManager());
         ps.setInt(2, row.getProviderId());
-        ps.execute();
+        Util.executeLogged(ps, sql);
       }
     }
   }

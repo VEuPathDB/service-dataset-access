@@ -17,9 +17,10 @@ public final class EndUserRepo
   public interface Insert
   {
     static void newEndUser(final EndUserRow row) throws Exception {
+      final var sql = SQL.Insert.EndUser;
       try (
         final var cn = Util.getAcctDbConnection();
-        final var ps = cn.prepareStatement(SQL.Insert.EndUser)
+        final var ps = cn.prepareStatement(sql)
       ) {
         ps.setLong(1, row.getUserId());
         ps.setString(2, row.getDatasetId());
@@ -38,7 +39,7 @@ public final class EndUserRepo
         ps.setString(11, row.getPriorAuth());
         ps.setString(12, row.getDenialReason());
 
-        ps.execute();
+        Util.executeLogged(ps, sql);
       }
     }
   }
@@ -46,13 +47,14 @@ public final class EndUserRepo
   public interface Select
   {
     static int countByDataset(final String datasetId) throws Exception {
+      final var sql = SQL.Select.EndUsers.CountByDataset;
       try (
         final var cn = Util.getAcctDbConnection();
-        final var ps = cn.prepareStatement(SQL.Select.EndUsers.CountByDataset)
+        final var ps = cn.prepareStatement(sql)
       ) {
         ps.setString(1, datasetId);
 
-        try (final var rs = ps.executeQuery()) {
+        try (final var rs = Util.executeQueryLogged(ps, sql)) {
           rs.next();
           return rs.getInt(1);
         }
@@ -63,16 +65,17 @@ public final class EndUserRepo
       final String datasetId,
       final ApprovalStatus status
     ) throws Exception {
+      final var sql = SQL.Select.EndUsers.CountByDatasetFiltered;
       try (
         final var cn = Util.getAcctDbConnection();
-        final var ps = cn.prepareStatement(SQL.Select.EndUsers.CountByDataset)
+        final var ps = cn.prepareStatement(sql)
       ) {
         ps.setString(1, datasetId);
         ps.setShort(2, ApprovalStatusCache.getInstance()
           .get(status)
           .orElseThrow());
 
-        try (final var rs = ps.executeQuery()) {
+        try (final var rs = Util.executeQueryLogged(ps, sql)) {
           rs.next();
           return rs.getInt(1);
         }
@@ -90,6 +93,7 @@ public final class EndUserRepo
       final int limit,
       final int offset
     ) throws Exception {
+      final var sql = SQL.Select.EndUsers.ByDataset;
       try (
         final var cn = Util.getAcctDbConnection();
         final var ps = cn.prepareStatement(SQL.Select.EndUsers.ByDataset)
@@ -100,7 +104,7 @@ public final class EndUserRepo
 
         final var out = new ArrayList < EndUserRow >(10);
 
-        try (final var rs = ps.executeQuery()) {
+        try (final var rs = Util.executeQueryLogged(ps, sql)) {
           while (rs.next()) {
             out.add(parseEndUserRow(rs));
           }
@@ -122,9 +126,10 @@ public final class EndUserRepo
       final int offset,
       final ApprovalStatus status
     ) throws Exception {
+      final var sql = SQL.Select.EndUsers.ByDataset;
       try (
         final var cn = Util.getAcctDbConnection();
-        final var ps = cn.prepareStatement(SQL.Select.EndUsers.ByDataset)
+        final var ps = cn.prepareStatement(sql)
       ) {
         ps.setString(1, datasetId);
         ps.setShort(2, ApprovalStatusCache.getInstance()
@@ -135,7 +140,7 @@ public final class EndUserRepo
 
         final var out = new ArrayList < EndUserRow >(10);
 
-        try (final var rs = ps.executeQuery()) {
+        try (final var rs = Util.executeQueryLogged(ps, sql)) {
           while (rs.next()) {
             out.add(parseEndUserRow(rs));
           }
@@ -149,14 +154,15 @@ public final class EndUserRepo
       final long userId,
       final String datasetId
     ) throws Exception {
+      final var sql = SQL.Select.EndUsers.ById;
       try (
         final var cn = Util.getAcctDbConnection();
-        final var ps = cn.prepareStatement(SQL.Select.EndUsers.ById)
+        final var ps = cn.prepareStatement(sql)
       ) {
         ps.setLong(1, userId);
         ps.setString(2, datasetId);
 
-        try (final var rs = ps.executeQuery()) {
+        try (final var rs = Util.executeQueryLogged(ps, sql)) {
           if (!rs.next())
             return Optional.empty();
 
@@ -201,9 +207,10 @@ public final class EndUserRepo
   public interface Update
   {
     static void self(EndUserRow row) throws Exception {
+      final var sql = SQL.Update.EndUser.SelfUpdate;
       try (
         final var cn = Util.getAcctDbConnection();
-        final var ps = cn.prepareStatement(SQL.Update.EndUser.SelfUpdate)
+        final var ps = cn.prepareStatement(sql)
       ) {
         ps.setString(1, row.getPurpose());
         ps.setString(2, row.getResearchQuestion());
@@ -213,14 +220,15 @@ public final class EndUserRepo
         ps.setLong(6, row.getUserId());
         ps.setString(7, row.getDatasetId());
 
-        ps.execute();
+        Util.executeLogged(ps, sql);
       }
     }
 
     static void mod(EndUserRow row) throws Exception {
+      final var sql = SQL.Update.EndUser.ModUpdate;
       try (
         final var cn = Util.getAcctDbConnection();
-        final var ps = cn.prepareStatement(SQL.Update.EndUser.ModUpdate)
+        final var ps = cn.prepareStatement(sql)
       ) {
         ps.setObject(1, row.getStartDate(), Types.DATE);
         ps.setLong(2, row.getDuration());
@@ -239,7 +247,7 @@ public final class EndUserRepo
         ps.setLong(11, row.getUserId());
         ps.setString(12, row.getDatasetId());
 
-        ps.execute();
+        Util.executeLogged(ps, sql);
       }
     }
   }
