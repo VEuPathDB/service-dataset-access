@@ -1,11 +1,9 @@
 package org.veupathdb.service.access.repo;
 
 import java.sql.*;
-import java.util.function.Supplier;
 
-import io.vulpine.lib.jcfi.CheckedBiFunction;
-import io.vulpine.lib.jcfi.CheckedFunction;
-import io.vulpine.lib.jcfi.CheckedSupplier;
+import io.vulpine.lib.jcfie.ExtensibleCheckedBiFunction;
+import io.vulpine.lib.jcfie.ExtensibleCheckedFunction;
 import org.veupathdb.lib.container.jaxrs.utils.db.DbManager;
 
 final class Util
@@ -25,8 +23,8 @@ final class Util
   private static <T> T exec(
     Statement ps,
     String sql,
-    CheckedFunction <PreparedStatement, T> fn1,
-    CheckedBiFunction <Statement, String, T> fn2
+    ExtensibleCheckedFunction <PreparedStatement, T, SQLException> fn1,
+    ExtensibleCheckedBiFunction <Statement, String, T, SQLException> fn2
   ) throws Exception {
     try {
       return ps instanceof PreparedStatement
