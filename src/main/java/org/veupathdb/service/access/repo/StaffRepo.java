@@ -14,8 +14,8 @@ public final class StaffRepo
     static void byId(int staffId) throws Exception {
       final var sql = SQL.Delete.Staff.ById;
       try (
-        var con = Util.getAcctDbConnection();
-        var ps = con.prepareStatement(sql)
+        final var con = Util.getAcctDbConnection();
+        final var ps = Util.prepareStatement(con, sql)
       ) {
         ps.setInt(1, staffId);
         Util.executeLogged(ps, sql);
@@ -28,7 +28,7 @@ public final class StaffRepo
       final var sql = SQL.Insert.Staff;
       try (
         final var cn = Util.getAcctDbConnection();
-        final var ps = cn.prepareStatement(sql)
+        final var ps = Util.prepareStatement(cn, sql)
       ) {
         ps.setLong(1, row.getUserId());
         ps.setBoolean(1, row.isOwner());
@@ -46,8 +46,8 @@ public final class StaffRepo
     static Optional < StaffRow > byId(int staffId) throws Exception {
       final var sql = SQL.Select.Staff.ById;
       try (
-        var con = Util.getAcctDbConnection();
-        var ps = con.prepareStatement(sql)
+        final var con = Util.getAcctDbConnection();
+        final var ps = Util.prepareStatement(con, sql)
       ) {
         ps.setInt(1, staffId);
 
@@ -69,8 +69,8 @@ public final class StaffRepo
     static Optional < StaffRow > byUserId(long userId) throws Exception {
       final var sql = SQL.Select.Staff.ByUserId;
       try (
-        var con = Util.getAcctDbConnection();
-        var ps = con.prepareStatement(sql)
+        final var con = Util.getAcctDbConnection();
+        final var ps = Util.prepareStatement(con, sql)
       ) {
         ps.setLong(1, userId);
 
@@ -104,7 +104,7 @@ public final class StaffRepo
       final var sql = SQL.Select.Staff.All;
       try (
         final var cn = Util.getAcctDbConnection();
-        final var ps = cn.prepareStatement(sql)
+        final var ps = Util.prepareStatement(cn, sql)
       ) {
         ps.setInt(1, offset);
         ps.setInt(2, limit);
@@ -131,8 +131,8 @@ public final class StaffRepo
     static void ownerFlagById(StaffRow row) throws Exception {
       final var sql = SQL.Update.Staff.ById;
       try (
-        var con = Util.getAcctDbConnection();
-        var ps = con.prepareStatement(sql)
+        final var con = Util.getAcctDbConnection();
+        final var ps = Util.prepareStatement(con, sql)
       ) {
         ps.setBoolean(1, row.isOwner());
         ps.setInt(2, row.getStaffId());

@@ -8,7 +8,7 @@ public final class DatasetRepo
       final var sql = SQL.Select.Datasets.Exists;
       try (
         final var cn = Util.getAcctDbConnection();
-        final var ps = cn.prepareStatement(sql)
+        final var ps = Util.prepareStatement(cn, sql)
       ) {
         ps.setString(1, datasetId);
         try (final var rs = Util.executeQueryLogged(ps, sql)) {

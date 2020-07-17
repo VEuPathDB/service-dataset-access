@@ -16,7 +16,7 @@ public final class ProviderRepo
       final var sql = SQL.Delete.Providers.ById;
       try (
         var con = Util.getAcctDbConnection();
-        var ps = con.prepareStatement(sql)
+        var ps = Util.prepareStatement(con, sql)
       ) {
         ps.setInt(1, providerId);
         Util.executeLogged(ps, sql);
@@ -30,7 +30,7 @@ public final class ProviderRepo
       final var sql = SQL.Insert.Providers;
       try (
         final var cn = Util.getAcctDbConnection();
-        final var ps = cn.prepareStatement(sql)
+        final var ps = Util.prepareStatement(cn, sql)
       ) {
         ps.setLong(1, row.getUserId());
         ps.setBoolean(2, row.isManager());
@@ -54,7 +54,7 @@ public final class ProviderRepo
       final var sql = SQL.Select.Providers.ByDataset;
       try (
         var con = Util.getAcctDbConnection();
-        var ps = con.prepareStatement(sql)
+        var ps = Util.prepareStatement(con, sql)
       ) {
         ps.setString(1, datasetId);
         ps.setInt(2, offset);
@@ -86,7 +86,7 @@ public final class ProviderRepo
       final var sql = SQL.Select.Providers.ById;
       try (
         var con = Util.getAcctDbConnection();
-        var ps = con.prepareStatement(sql)
+        var ps = Util.prepareStatement(con, sql)
       ) {
         ps.setInt(1, providerId);
 
@@ -110,7 +110,7 @@ public final class ProviderRepo
       final var sql = SQL.Select.Providers.ById;
       try (
         var con = Util.getAcctDbConnection();
-        var ps = con.prepareStatement(sql)
+        var ps = Util.prepareStatement(con, sql)
       ) {
         ps.setLong(1, userId);
 
@@ -134,7 +134,7 @@ public final class ProviderRepo
       final var sql = SQL.Select.Providers.CountByDataset;
       try (
         var con = Util.getAcctDbConnection();
-        var ps = con.prepareStatement(sql)
+        var ps = Util.prepareStatement(con, sql)
       ) {
         ps.setString(1, datasetId);
         try (var rs = Util.executeQueryLogged(ps, sql)) {
@@ -151,7 +151,7 @@ public final class ProviderRepo
       final var sql = SQL.Update.Providers.ById;
       try (
         var con = Util.getAcctDbConnection();
-        var ps = con.prepareStatement(sql)
+        var ps = Util.prepareStatement(con, sql)
       ) {
         ps.setBoolean(1, row.isManager());
         ps.setInt(2, row.getProviderId());

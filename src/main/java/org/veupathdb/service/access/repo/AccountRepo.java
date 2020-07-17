@@ -8,7 +8,7 @@ public final class AccountRepo
       final var sql = SQL.Select.Accounts.exists;
       try (
         final var cn = Util.getAcctDbConnection();
-        final var ps = cn.prepareStatement(sql)
+        final var ps = Util.prepareStatement(cn, sql)
       ) {
         ps.setLong(1, userId);
         try (final var rs = Util.executeQueryLogged(ps, sql)) {

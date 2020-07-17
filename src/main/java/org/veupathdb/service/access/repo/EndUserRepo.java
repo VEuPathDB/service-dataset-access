@@ -20,7 +20,7 @@ public final class EndUserRepo
       final var sql = SQL.Insert.EndUser;
       try (
         final var cn = Util.getAcctDbConnection();
-        final var ps = cn.prepareStatement(sql)
+        final var ps = Util.prepareStatement(cn, sql)
       ) {
         ps.setLong(1, row.getUserId());
         ps.setString(2, row.getDatasetId());
@@ -50,7 +50,7 @@ public final class EndUserRepo
       final var sql = SQL.Select.EndUsers.CountByDataset;
       try (
         final var cn = Util.getAcctDbConnection();
-        final var ps = cn.prepareStatement(sql)
+        final var ps = Util.prepareStatement(cn, sql)
       ) {
         ps.setString(1, datasetId);
 
@@ -68,7 +68,7 @@ public final class EndUserRepo
       final var sql = SQL.Select.EndUsers.CountByDatasetFiltered;
       try (
         final var cn = Util.getAcctDbConnection();
-        final var ps = cn.prepareStatement(sql)
+        final var ps = Util.prepareStatement(cn, sql)
       ) {
         ps.setString(1, datasetId);
         ps.setShort(2, ApprovalStatusCache.getInstance()
@@ -129,7 +129,7 @@ public final class EndUserRepo
       final var sql = SQL.Select.EndUsers.ByDataset;
       try (
         final var cn = Util.getAcctDbConnection();
-        final var ps = cn.prepareStatement(sql)
+        final var ps = Util.prepareStatement(cn, sql)
       ) {
         ps.setString(1, datasetId);
         ps.setShort(2, ApprovalStatusCache.getInstance()
@@ -157,7 +157,7 @@ public final class EndUserRepo
       final var sql = SQL.Select.EndUsers.ById;
       try (
         final var cn = Util.getAcctDbConnection();
-        final var ps = cn.prepareStatement(sql)
+        final var ps = Util.prepareStatement(cn, sql)
       ) {
         ps.setLong(1, userId);
         ps.setString(2, datasetId);
@@ -210,7 +210,7 @@ public final class EndUserRepo
       final var sql = SQL.Update.EndUser.SelfUpdate;
       try (
         final var cn = Util.getAcctDbConnection();
-        final var ps = cn.prepareStatement(sql)
+        final var ps = Util.prepareStatement(cn, sql)
       ) {
         ps.setString(1, row.getPurpose());
         ps.setString(2, row.getResearchQuestion());
@@ -228,7 +228,7 @@ public final class EndUserRepo
       final var sql = SQL.Update.EndUser.ModUpdate;
       try (
         final var cn = Util.getAcctDbConnection();
-        final var ps = cn.prepareStatement(sql)
+        final var ps = Util.prepareStatement(cn, sql)
       ) {
         ps.setObject(1, row.getStartDate(), Types.DATE);
         ps.setLong(2, row.getDuration());

@@ -20,6 +20,17 @@ final class Util
     return exec(ps, sql, PreparedStatement::execute, Statement::execute);
   }
 
+  public static PreparedStatement prepareStatement(
+    final Connection con,
+    final String sql
+  ) throws Exception {
+    try {
+      return con.prepareStatement(sql);
+    } catch (Exception e) {
+      throw new Exception("Failed to prepare query:\n" + sql, e);
+    }
+  }
+
   private static <T> T exec(
     Statement ps,
     String sql,
