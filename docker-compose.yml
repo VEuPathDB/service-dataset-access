@@ -2,9 +2,7 @@ version: "3.8"
 
 services:
   service:
-    build:
-      dockerfile: Dockerfile
-      context: .
+    image: veupathdb/user-dataset-import-service:latest
     environment:
       SERVER_PORT: 80
 
