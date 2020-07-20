@@ -465,6 +465,7 @@ public class EndUserService
 
     final var out = new EndUserImpl();
     out.setUser(user);
+    out.setDatasetId(row.getDatasetId());
     out.setAnalysisPlan(row.getAnalysisPlan());
     out.setApprovalStatus(convertApproval(row.getApprovalStatus()));
     out.setDenialReason(row.getDenialReason());

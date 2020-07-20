@@ -10,6 +10,7 @@ import java.util.Date;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "user",
+    "datasetId",
     "startDate",
     "duration",
     "restrictionLevel",
@@ -24,6 +25,9 @@ import java.util.Date;
 public class EndUserImpl implements EndUser {
   @JsonProperty("user")
   private UserDetails user;
+
+  @JsonProperty("datasetId")
+  private String datasetId;
 
   @JsonProperty("startDate")
   @JsonFormat(
@@ -70,6 +74,16 @@ public class EndUserImpl implements EndUser {
   @JsonProperty("user")
   public void setUser(UserDetails user) {
     this.user = user;
+  }
+
+  @JsonProperty("datasetId")
+  public String getDatasetId() {
+    return this.datasetId;
+  }
+
+  @JsonProperty("datasetId")
+  public void setDatasetId(String datasetId) {
+    this.datasetId = datasetId;
   }
 
   @JsonProperty("startDate")

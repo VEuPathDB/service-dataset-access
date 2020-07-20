@@ -37,7 +37,10 @@ public class EndUserController implements DatasetEndUsers
     final var curUser = UserProvider.lookupUser(request)
       .orElseThrow(InternalServerErrorException::new);
 
-    if (!userIsManager(curUser.getUserId()) && !userIsOwner(curUser.getUserId()))
+    if (datasetId == null || datasetId.isBlank())
+      throw new ForbiddenException();
+
+    if (!userIsManager(curUser.getUserId(), datasetId) && !userIsOwner(curUser.getUserId()))
       throw new ForbiddenException();
 
     return GetDatasetEndUsersResponse.respond200WithApplicationJson(
@@ -55,7 +58,7 @@ public class EndUserController implements DatasetEndUsers
     if (curUser.getUserId() == entity.getUserId()) {
       EndUserService.validateOwnPost(entity);
       recordId = EndUserService.endUserSelfCreate(entity);
-    } else if (userIsManager(curUser.getUserId()) || userIsOwner(curUser.getUserId())) {
+    } else if (userIsManager(curUser.getUserId(), entity.getDatasetId()) || userIsOwner(curUser.getUserId())) {
       EndUserService.validateManagerPost(entity);
       recordId = EndUserService.endUserManagerCreate(entity);
     } else
@@ -77,7 +80,7 @@ public class EndUserController implements DatasetEndUsers
     final var endUser = EndUserService.getEndUser(endUserId);
 
     if (endUser.getUser().getUserId() == curUser.getUserId()
-      || userIsManager(curUser.getUserId())
+      || userIsManager(curUser.getUserId(), endUser.getDatasetId())
       ||userIsOwner(curUser.getUserId())
     ) {
       return GetDatasetEndUsersByEndUserIdResponse.respond200WithApplicationJson(
@@ -99,7 +102,7 @@ public class EndUserController implements DatasetEndUsers
 
     if (endUser.getUserId() == curUser.getUserId()) {
       EndUserService.selfPatch(endUser, entity);
-    } else if (userIsManager(curUser.getUserId()) || userIsOwner(curUser.getUserId())) {
+    } else if (userIsManager(curUser.getUserId(), endUser.getDatasetId()) || userIsOwner(curUser.getUserId())) {
       EndUserService.modPatch(endUser, entity);
     } else {
       throw new ForbiddenException();

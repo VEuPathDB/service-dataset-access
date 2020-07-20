@@ -14,6 +14,12 @@ public interface EndUser {
   @JsonProperty("user")
   void setUser(UserDetails user);
 
+  @JsonProperty("datasetId")
+  String getDatasetId();
+
+  @JsonProperty("datasetId")
+  void setDatasetId(String datasetId);
+
   @JsonProperty("startDate")
   Date getStartDate();
 
