@@ -156,6 +156,11 @@ public class ProviderService
         out.put(Keys.Json.KEY_USER_ID, new ArrayList <>(){{
           add("Specified user does not exist.");
         }});
+
+      if (ProviderRepo.Select.byUserAndDataset(body.getUserId(), body.getDatasetId()).isPresent())
+        throw new ForbiddenException("A provider record already exists for this user and dataset.");
+    } catch(WebApplicationException e) {
+      throw e;
     } catch (Throwable e) {
       throw new InternalServerErrorException(e);
     }
