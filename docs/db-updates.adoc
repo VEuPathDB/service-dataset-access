@@ -27,6 +27,12 @@ INSERT INTO studyaccess.approval_status (name) VALUES ('requested');
 INSERT INTO studyaccess.approval_status (name) VALUES ('denied');
 ----
 
+.Grant Access
+[source, sql]
+----
+GRANT SELECT ON studyaccess.approval_status TO COMM_WDK_W;
+----
+
 === `studyaccess.restriction_level`
 
 New controlled vocabulary table for end user dataset request restriction level.
@@ -52,6 +58,12 @@ INSERT INTO studyaccess.restriction_level (name) VALUES ('controlled');
 INSERT INTO studyaccess.restriction_level (name) VALUES ('admin');
 ----
 
+.Grant Access
+[source, sql]
+----
+GRANT SELECT ON studyaccess.restriction_level TO COMM_WDK_W;
+----
+
 === `studyaccess.staff`
 
 New table tracking site staff.
@@ -72,6 +84,12 @@ CREATE TABLE studyaccess.staff
 ----
 ----
 
+.Grant Access
+[source, sql]
+----
+GRANT SELECT, INSERT, UPDATE, DELETE ON studyaccess.staff TO COMM_WDK_W;
+----
+
 === `studyaccess.providers`
 
 New table tracking dataset providers.
@@ -88,6 +106,12 @@ CREATE TABLE studyaccess.providers
     CHECK ( is_manager = 0 OR is_manager = 1 ),
   dataset_id VARCHAR2(15) NOT NULL
 )
+----
+
+.Grant Access
+[source, sql]
+----
+GRANT SELECT, INSERT, UPDATE, DELETE ON studyaccess.providers TO COMM_WDK_W;
 ----
 
 === `studyaccess.validdatasetuser`
