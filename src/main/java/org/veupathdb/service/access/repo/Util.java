@@ -35,8 +35,7 @@ final class Util
     try {
       return con.prepareStatement(sql);
     } catch (Exception e) {
-      log.error("Failed to prepare query:\n" + sql, e);
-      throw e;
+      throw new Exception("Failed to prepare query:\n" + sql, e);
     }
   }
 
@@ -52,8 +51,7 @@ final class Util
         ? fn1.apply((PreparedStatement) ps)
         : fn2.apply(ps, sql);
     } catch (Exception e) {
-      log.error("Query failed:\n" + sql, e);
-      throw e;
+      throw new Exception("Query failed:\n" + sql, e);
     }
   }
 }
