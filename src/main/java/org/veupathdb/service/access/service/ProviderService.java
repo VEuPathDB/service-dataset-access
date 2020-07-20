@@ -7,24 +7,31 @@ import java.util.stream.Collectors;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Request;
 
+import org.apache.logging.log4j.Logger;
 import org.gusdb.fgputil.accountdb.UserProfile;
 import org.veupathdb.lib.container.jaxrs.errors.UnprocessableEntityException;
+import org.veupathdb.lib.container.jaxrs.providers.LogProvider;
 import org.veupathdb.lib.container.jaxrs.providers.UserProvider;
 import org.veupathdb.service.access.generated.model.*;
 import org.veupathdb.service.access.model.PartialProviderRow;
 import org.veupathdb.service.access.model.ProviderRow;
 import org.veupathdb.service.access.repo.AccountRepo;
+import org.veupathdb.service.access.repo.DatasetRepo;
 import org.veupathdb.service.access.repo.ProviderRepo;
 import org.veupathdb.service.access.util.Keys;
 
 public class ProviderService
 {
+  private static final Logger log = LogProvider.logger(ProviderService.class);
+
   /**
    * Creates a new Provider record from the given request body.
    *
    * @return the ID of the newly created record.
    */
   public static int createProvider(DatasetProviderCreateRequest body) {
+    log.trace("ProviderService#createProvider(body)");
+
     final var row = new PartialProviderRow();
     row.setDatasetId(body.getDatasetId());
     row.setManager(body.getIsManager());
@@ -50,6 +57,7 @@ public class ProviderService
     final int limit,
     final int offset
   ) {
+    log.trace("ProviderService#getProviderList(datasetId, limit, offset)");
     if (datasetId == null || datasetId.isBlank())
       throw new BadRequestException("datasetId query param is required");
 
@@ -69,6 +77,8 @@ public class ProviderService
    * exception.
    */
   public static ProviderRow requireProviderById(int providerId) {
+    log.trace("ProviderService#requireProviderById(providerId)");
+
     try {
       return ProviderRepo.Select.byId(providerId)
         .orElseThrow(NotFoundException::new);
@@ -83,9 +93,9 @@ public class ProviderService
    * Locates a provider with the given <code>userId</code> or throws a 404
    * exception.
    */
-  public static List < ProviderRow > requireProviderByUserId(
-    final long userId
-  ) {
+  public static List < ProviderRow > requireProviderByUserId(long userId) {
+    log.trace("ProviderService#requireProviderByUserId(userId)");
+
     try {
       final var out = ProviderRepo.Select.byUserId(userId);
 
@@ -104,6 +114,8 @@ public class ProviderService
     final Request req,
     final String datasetId
   ) {
+    log.trace("ProviderService#userIsManager(req, datasetId)");
+
     return userIsManager(UserProvider.lookupUser(req)
       .map(UserProfile::getUserId)
       .orElseThrow(InternalServerErrorException::new), datasetId);
@@ -116,10 +128,9 @@ public class ProviderService
    * If provider exists with the given <code>userId</code>, a 404 exception
    * will be thrown via {@link #requireProviderByUserId(long)}.
    */
-  public static boolean userIsManager(
-    final long userId,
-    final String datasetId
-  ) {
+  public static boolean userIsManager(long userId, String datasetId) {
+    log.trace("ProviderService#userIsManager(userId, datasetId)");
+
     final var ds = datasetId.toUpperCase();
     return requireProviderByUserId(userId)
       .stream()
@@ -127,7 +138,9 @@ public class ProviderService
       .anyMatch(PartialProviderRow::isManager);
   }
 
-  public static void deleteProvider(int providerId) {
+  public static void deleteProvider(final int providerId) {
+    log.trace("ProviderService#deleteProvider(providerId)");
+
     try {
       ProviderRepo.Delete.byId(providerId);
     } catch (Exception e) {
@@ -135,7 +148,9 @@ public class ProviderService
     }
   }
 
-  public static void updateProvider(ProviderRow row) {
+  public static void updateProvider(final ProviderRow row) {
+    log.trace("ProviderService#updateProvider(row)");
+
     try {
       ProviderRepo.Update.isManagerById(row);
     } catch (Exception e) {
@@ -143,15 +158,41 @@ public class ProviderService
     }
   }
 
+  /**
+   * Validate Create Request Body
+   * <p>
+   * Verifies the following:
+   * <ul>
+   *   <li>Dataset ID value is set</li>
+   *   <li>Dataset ID value is valid (points to a real dataset)</li>
+   *   <li>User ID is valid</li>
+   *   <li>No provider currently exists for this user/dataset already.</li>
+   * </ul>
+   *
+   * @param body Provider create request body.
+   *
+   * @throws ForbiddenException if a provider already exists for the given user
+   * & dataset id values.
+   * @throws UnprocessableEntityException if the dataset id value is not set or
+   * invalid, if the user id is not valid.
+   * @throws InternalServerErrorException if a database error occurs while
+   * attempting to validate this request.
+   */
   public static void validateCreate(final DatasetProviderCreateRequest body) {
+    log.trace("ProviderService#validateCreate(body)");
+
     final var out = new HashMap<String, List<String>>();
 
-    if (body.getDatasetId() == null || body.getDatasetId().isBlank())
-      out.put(Keys.Json.KEY_DATASET_ID, new ArrayList <>(){{
-        add("Dataset ID is required");
-      }});
-
     try {
+      if (body.getDatasetId() == null || body.getDatasetId().isBlank())
+        out.put(Keys.Json.KEY_DATASET_ID, new ArrayList <>(){{
+          add("Dataset ID is required");
+        }});
+      else if (!DatasetRepo.Select.datasetExists(body.getDatasetId()))
+        out.put(Keys.Json.KEY_DATASET_ID, new ArrayList <>(){{
+          add("Dataset ID is invalid");
+        }});
+
       if (!AccountRepo.Select.userExists(body.getUserId()))
         out.put(Keys.Json.KEY_USER_ID, new ArrayList <>(){{
           add("Specified user does not exist.");
@@ -169,7 +210,9 @@ public class ProviderService
       throw new UnprocessableEntityException(out);
   }
 
-  public static void validatePatch(List < DatasetProviderPatch > items) {
+  public static void validatePatch(final List < DatasetProviderPatch > items) {
+    log.trace("ProviderService#validatePatch(items)");
+
     // If there is nothing in the patch, it's a bad request.
     if (items.isEmpty())
       throw new BadRequestException();
@@ -194,6 +237,8 @@ public class ProviderService
     final int offset,
     final int total
   ) {
+    log.trace("ProviderService#list2Providers(rows, offset, total)");
+
     var out = new DatasetProviderListImpl();
 
     out.setRows(rows.size());
@@ -206,7 +251,9 @@ public class ProviderService
     return out;
   }
 
-  private static DatasetProvider row2Provider(ProviderRow row) {
+  private static DatasetProvider row2Provider(final ProviderRow row) {
+    log.trace("ProviderService#row2Provider(row)");
+
     var user = new UserDetailsImpl();
     user.setUserId(row.getUserId());
     user.setFirstName(row.getFirstName());
