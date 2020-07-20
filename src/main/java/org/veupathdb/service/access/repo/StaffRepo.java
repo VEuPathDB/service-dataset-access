@@ -26,9 +26,10 @@ public final class StaffRepo
   public interface Insert {
     static int newStaff(final PartialStaffRow row) throws Exception {
       final var sql = SQL.Insert.Staff;
+      final var ret = new String[] {DB.Column.Staff.StaffId};
       try (
         final var cn = Util.getAcctDbConnection();
-        final var ps = Util.prepareStatement(cn, sql)
+        final var ps = Util.prepareStatement(cn, sql, ret)
       ) {
         ps.setLong(1, row.getUserId());
         ps.setBoolean(1, row.isOwner());

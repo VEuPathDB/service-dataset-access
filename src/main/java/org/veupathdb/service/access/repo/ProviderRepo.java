@@ -28,9 +28,10 @@ public final class ProviderRepo
   {
     static int newProvider(PartialProviderRow row) throws Exception {
       final var sql = SQL.Insert.Providers;
+      final var ret = new String[] {DB.Column.Provider.ProviderId};
       try (
         final var cn = Util.getAcctDbConnection();
-        final var ps = Util.prepareStatement(cn, sql)
+        final var ps = Util.prepareStatement(cn, sql, ret)
       ) {
         ps.setLong(1, row.getUserId());
         ps.setBoolean(2, row.isManager());

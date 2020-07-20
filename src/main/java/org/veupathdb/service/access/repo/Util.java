@@ -39,6 +39,19 @@ final class Util
     }
   }
 
+  public static PreparedStatement prepareStatement(
+    final Connection con,
+    final String sql,
+    final String[] returning
+  ) throws Exception {
+    log.trace("Util#prepareStatement(con, sql, returning)");
+    try {
+      return con.prepareStatement(sql, returning);
+    } catch (Exception e) {
+      throw new Exception("Failed to prepare query:\n" + sql, e);
+    }
+  }
+
   private static <T> T exec(
     Statement ps,
     String sql,

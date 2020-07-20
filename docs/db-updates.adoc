@@ -74,7 +74,7 @@ New table tracking site staff.
 CREATE TABLE studyaccess.staff
 (
   staff_id NUMBER(8) GENERATED AS IDENTITY CONSTRAINT staff_pk PRIMARY KEY,
-  user_id NUMBER(12) NOT NULL,
+  user_id NUMBER(12) NOT NULL UNIQUE,
   is_owner NUMBER(1) DEFAULT 0 NOT NULL CHECK ( is_owner = 0 OR is_owner = 1 )
 )
 ----
