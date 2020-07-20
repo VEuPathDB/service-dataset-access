@@ -43,7 +43,7 @@ public class StaffService
         .isPresent();
     } catch (WebApplicationException e) {
       throw e;
-    } catch (Exception e) {
+    } catch (Throwable e) {
       throw new InternalServerErrorException(e);
     }
   }
@@ -52,7 +52,7 @@ public class StaffService
     log.trace("StaffService#updateStaffRow(row)");
     try {
       StaffRepo.Update.ownerFlagById(row);
-    } catch (Exception e) {
+    } catch (Throwable e) {
       throw new InternalServerErrorException(e);
     }
   }
@@ -64,7 +64,7 @@ public class StaffService
         StaffRepo.Select.list(limit, offset),
         offset,
         StaffRepo.Select.count());
-    } catch (Exception e) {
+    } catch (Throwable e) {
       throw new InternalServerErrorException(e);
     }
   }
@@ -73,7 +73,7 @@ public class StaffService
     log.trace("StaffService#requireStaffById(staffId)");
     try {
       return StaffRepo.Select.byId(staffId).orElseThrow(NotFoundException::new);
-    } catch (Exception e) {
+    } catch (Throwable e) {
       throw new InternalServerErrorException(e);
     }
   }
@@ -86,7 +86,7 @@ public class StaffService
 
     try {
       return StaffRepo.Insert.newStaff(row);
-    } catch (Exception e) {
+    } catch (Throwable e) {
       throw new InternalServerErrorException(e);
     }
   }
