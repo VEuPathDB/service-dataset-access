@@ -4,6 +4,15 @@ public final class DatasetRepo
 {
   public interface Select
   {
+    /**
+     * @param datasetId ID string for the dataset to check.
+     *
+     * @return whether or not the given datasetId points to an already existent
+     * dataset.
+     *
+     * @throws Exception if a database error occurs while attempting to execute
+     * this query.
+     */
     static boolean datasetExists(final String datasetId) throws Exception {
       final var sql = SQL.Select.Datasets.Exists;
       try (
