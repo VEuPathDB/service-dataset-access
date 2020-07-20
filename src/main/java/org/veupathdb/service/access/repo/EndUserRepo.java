@@ -96,7 +96,7 @@ public final class EndUserRepo
       final var sql = SQL.Select.EndUsers.ByDataset;
       try (
         final var cn = Util.getAcctDbConnection();
-        final var ps = cn.prepareStatement(SQL.Select.EndUsers.ByDataset)
+        final var ps = Util.prepareStatement(cn, sql)
       ) {
         ps.setString(1, datasetId);
         ps.setInt(2, offset);
