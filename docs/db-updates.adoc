@@ -104,7 +104,8 @@ CREATE TABLE studyaccess.providers
   user_id NUMBER(12) NOT NULL,
   is_manager NUMBER(1) DEFAULT 0 NOT NULL
     CHECK ( is_manager = 0 OR is_manager = 1 ),
-  dataset_id VARCHAR2(15) NOT NULL
+  dataset_id VARCHAR2(15) NOT NULL,
+  CONSTRAINT provider_user_ds_uq UNIQUE (user_id, dataset_id)
 )
 ----
 
