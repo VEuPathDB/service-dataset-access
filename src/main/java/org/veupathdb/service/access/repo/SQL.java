@@ -47,7 +47,10 @@ interface SQL
       String
         ById                   = select(Table.EndUsers, "by-id"),
         CountByDataset         = select(Table.EndUsers, "count-by-dataset"),
-        CountByDatasetFiltered = select(Table.EndUsers, "count-by-dataset-filtered"),
+        CountByDatasetFiltered = select(
+          Table.EndUsers,
+          "count-by-dataset-filtered"
+        ),
         ByDataset              = select(Table.EndUsers, "by-dataset"),
         ByDatasetFiltered      = select(Table.EndUsers, "by-dataset-filtered");
     }
@@ -57,7 +60,9 @@ interface SQL
       String
         ByDataset      = select(Table.Providers, "by-dataset"),
         ById           = select(Table.Providers, "by-id"),
-        CountByDataset = select(Table.Providers, "count-by-dataset");
+        CountByDataset = select(Table.Providers, "count-by-dataset"),
+        ByUserId       = select(Table.Providers, "by-user-id"),
+        ByUserDataset  = select(Table.Providers, "by-user-id-and-dataset");
     }
 
     interface Staff

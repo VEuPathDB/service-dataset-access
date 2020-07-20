@@ -1,15 +1,19 @@
 package org.veupathdb.service.access.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Request;
 
 import org.gusdb.fgputil.accountdb.UserProfile;
+import org.veupathdb.lib.container.jaxrs.errors.UnprocessableEntityException;
 import org.veupathdb.lib.container.jaxrs.providers.UserProvider;
 import org.veupathdb.service.access.generated.model.*;
 import org.veupathdb.service.access.model.PartialProviderRow;
 import org.veupathdb.service.access.model.ProviderRow;
+import org.veupathdb.service.access.repo.AccountRepo;
 import org.veupathdb.service.access.repo.ProviderRepo;
 import org.veupathdb.service.access.util.Keys;
 
@@ -46,6 +50,9 @@ public class ProviderService
     final int limit,
     final int offset
   ) {
+    if (datasetId == null || datasetId.isBlank())
+      throw new BadRequestException("datasetId query param is required");
+
     try {
       final var total = ProviderRepo.Select.countByDataset(datasetId);
       final var rows  = ProviderRepo.Select.byDataset(datasetId, limit, offset);
@@ -76,10 +83,16 @@ public class ProviderService
    * Locates a provider with the given <code>userId</code> or throws a 404
    * exception.
    */
-  public static ProviderRow requireProviderByUserId(long userId) {
+  public static List < ProviderRow > requireProviderByUserId(
+    final long userId
+  ) {
     try {
-      return ProviderRepo.Select.byUserId(userId)
-        .orElseThrow(NotFoundException::new);
+      final var out = ProviderRepo.Select.byUserId(userId);
+
+      if (out.isEmpty())
+        throw new NotFoundException();
+
+      return out;
     } catch (WebApplicationException e) {
       throw e;
     } catch (Exception e) {
@@ -87,10 +100,13 @@ public class ProviderService
     }
   }
 
-  public static boolean userIsManager(Request req) {
+  public static boolean userIsManager(
+    final Request req,
+    final String datasetId
+  ) {
     return userIsManager(UserProvider.lookupUser(req)
       .map(UserProfile::getUserId)
-      .orElseThrow(InternalServerErrorException::new));
+      .orElseThrow(InternalServerErrorException::new), datasetId);
   }
 
   /**
@@ -100,8 +116,15 @@ public class ProviderService
    * If provider exists with the given <code>userId</code>, a 404 exception
    * will be thrown via {@link #requireProviderByUserId(long)}.
    */
-  public static boolean userIsManager(long userId) {
-    return requireProviderByUserId(userId).isManager();
+  public static boolean userIsManager(
+    final long userId,
+    final String datasetId
+  ) {
+    final var ds = datasetId.toUpperCase();
+    return requireProviderByUserId(userId)
+      .stream()
+      .filter(row -> ds.equals(row.getDatasetId().toUpperCase()))
+      .anyMatch(PartialProviderRow::isManager);
   }
 
   public static void deleteProvider(int providerId) {
@@ -120,7 +143,28 @@ public class ProviderService
     }
   }
 
-  public static void validatePatch(List<DatasetProviderPatch> items) {
+  public static void validateCreate(final DatasetProviderCreateRequest body) {
+    final var out = new HashMap<String, List<String>>();
+
+    if (body.getDatasetId() == null || body.getDatasetId().isBlank())
+      out.put(Keys.Json.KEY_DATASET_ID, new ArrayList <>(){{
+        add("Dataset ID is required");
+      }});
+
+    try {
+      if (!AccountRepo.Select.userExists(body.getUserId()))
+        out.put(Keys.Json.KEY_USER_ID, new ArrayList <>(){{
+          add("Specified user does not exist.");
+        }});
+    } catch (Throwable e) {
+      throw new InternalServerErrorException(e);
+    }
+
+    if (!out.isEmpty())
+      throw new UnprocessableEntityException(out);
+  }
+
+  public static void validatePatch(List < DatasetProviderPatch > items) {
     // If there is nothing in the patch, it's a bad request.
     if (items.isEmpty())
       throw new BadRequestException();

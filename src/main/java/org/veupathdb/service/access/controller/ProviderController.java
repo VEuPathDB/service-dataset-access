@@ -63,9 +63,11 @@ public class ProviderController implements DatasetProviders
     final var currentUser = UserProvider.lookupUser(request)
       .orElseThrow(InternalServerErrorException::new);
 
+    validateCreate(entity);
+
     // To add a new provider, a user must be a site owner or a manager for the
     // dataset.
-    if (!userIsOwner(currentUser.getUserId()) && !userIsManager(currentUser.getUserId()))
+    if (!userIsOwner(currentUser.getUserId()) && !userIsManager(currentUser.getUserId(), entity.getDatasetId()))
       throw new ForbiddenException();
 
     // TODO: Connect to application database to verify datasetId value.
@@ -83,14 +85,14 @@ public class ProviderController implements DatasetProviders
     final var currentUser = UserProvider.lookupUser(request)
       .orElseThrow(InternalServerErrorException::new);
 
+    validatePatch(entity);
+    final var provider = requireProviderById(providerId);
+
     // To add a new provider, a user must be a site owner or a manager for the
     // dataset.
-    if (!userIsOwner(currentUser.getUserId()) && !userIsManager(currentUser.getUserId()))
+    if (!userIsOwner(currentUser.getUserId()) && !userIsManager(currentUser.getUserId(), provider.getDatasetId()))
       throw new ForbiddenException();
 
-    validatePatch(entity);
-
-    final var provider = requireProviderById(providerId);
 
     provider.setManager(entity.get(0).getValue());
     updateProvider(provider);

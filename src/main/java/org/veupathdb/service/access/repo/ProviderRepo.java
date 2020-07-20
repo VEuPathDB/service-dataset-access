@@ -28,7 +28,7 @@ public final class ProviderRepo
   {
     static int newProvider(PartialProviderRow row) throws Exception {
       final var sql = SQL.Insert.Providers;
-      final var ret = new String[] {DB.Column.Provider.ProviderId};
+      final var ret = new String[]{DB.Column.Provider.ProviderId};
       try (
         final var cn = Util.getAcctDbConnection();
         final var ps = Util.prepareStatement(cn, sql, ret)
@@ -83,7 +83,8 @@ public final class ProviderRepo
       }
     }
 
-    static Optional < ProviderRow > byId(int providerId) throws Exception {
+    static Optional < ProviderRow > byId(final int providerId)
+    throws Exception {
       final var sql = SQL.Select.Providers.ById;
       try (
         var con = Util.getAcctDbConnection();
@@ -107,13 +108,18 @@ public final class ProviderRepo
       }
     }
 
-    static Optional < ProviderRow > byUserId(long userId) throws Exception {
-      final var sql = SQL.Select.Providers.ById;
+    static Optional < ProviderRow > byUserAndDataset(
+      final long userId,
+      final String datasetId
+    )
+    throws Exception {
+      final var sql = SQL.Select.Providers.ByUserDataset;
       try (
         var con = Util.getAcctDbConnection();
         var ps = Util.prepareStatement(con, sql)
       ) {
         ps.setLong(1, userId);
+        ps.setString(2, datasetId);
 
         try (var rs = Util.executeQueryLogged(ps, sql)) {
           if (!rs.next())
@@ -122,11 +128,37 @@ public final class ProviderRepo
           final var out = new ProviderRow();
           out.setProviderId(rs.getInt(DB.Column.Provider.ProviderId));
           out.setUserId(userId);
-          out.setDatasetId(rs.getString(DB.Column.Provider.DatasetId));
+          out.setDatasetId(datasetId);
           out.setManager(rs.getBoolean(DB.Column.Provider.IsManager));
           UserQuery.parseUser(out, rs);
 
           return Optional.of(out);
+        }
+      }
+    }
+
+    static List < ProviderRow > byUserId(long userId) throws Exception {
+      final var sql = SQL.Select.Providers.ByUserId;
+      try (
+        var con = Util.getAcctDbConnection();
+        var ps = Util.prepareStatement(con, sql)
+      ) {
+        ps.setLong(1, userId);
+
+        try (var rs = Util.executeQueryLogged(ps, sql)) {
+          final var out = new ArrayList < ProviderRow >();
+
+          while (rs.next()) {
+            final var row = new ProviderRow();
+            row.setProviderId(rs.getInt(DB.Column.Provider.ProviderId));
+            row.setUserId(userId);
+            row.setDatasetId(rs.getString(DB.Column.Provider.DatasetId));
+            row.setManager(rs.getBoolean(DB.Column.Provider.IsManager));
+            UserQuery.parseUser(row, rs);
+            out.add(row);
+          }
+
+          return out;
         }
       }
     }
