@@ -17,6 +17,11 @@ final class Util
     return DbManager.accountDatabase().getDataSource().getConnection();
   }
 
+  public static Connection getAppDbConnection() throws Exception {
+    log.trace("Util#getAppDbConnection()");
+    return DbManager.applicationDatabase().getDataSource().getConnection();
+  }
+
   public static ResultSet executeQueryLogged(Statement s, String q) throws Exception {
     log.trace("Util#executeQueryLogged(s, q)");
     return exec(s, q, PreparedStatement::executeQuery, Statement::executeQuery);

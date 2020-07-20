@@ -7,7 +7,7 @@ public final class DatasetRepo
     static boolean datasetExists(final String datasetId) throws Exception {
       final var sql = SQL.Select.Datasets.Exists;
       try (
-        final var cn = Util.getAcctDbConnection();
+        final var cn = Util.getAppDbConnection();
         final var ps = Util.prepareStatement(cn, sql)
       ) {
         ps.setString(1, datasetId);
