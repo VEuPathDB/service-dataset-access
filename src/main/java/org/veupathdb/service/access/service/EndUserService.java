@@ -276,19 +276,19 @@ public class EndUserService
       log.debug(path);
 
       switch (path) {
-        case Keys.Json.KEY_PURPOSE:
+        case Keys.Json.KEY_PURPOSE ->
           Patch.strVal(patch, row::setPurpose);
-        case Keys.Json.KEY_RESEARCH_QUESTION:
+        case Keys.Json.KEY_RESEARCH_QUESTION ->
           Patch.strVal(patch, row::setResearchQuestion);
-        case Keys.Json.KEY_ANALYSIS_PLAN:
+        case Keys.Json.KEY_ANALYSIS_PLAN ->
           Patch.strVal(patch, row::setAnalysisPlan);
-        case Keys.Json.KEY_DISSEMINATION_PLAN:
+        case Keys.Json.KEY_DISSEMINATION_PLAN ->
           Patch.strVal(patch, row::setDisseminationPlan);
-        case Keys.Json.KEY_PRIOR_AUTH:
+        case Keys.Json.KEY_PRIOR_AUTH ->
           Patch.strVal(patch, row::setPriorAuth);
 
           // do nothing
-        default:
+        default ->
           throw Patch.forbiddenOp(patch);
       }
     }
