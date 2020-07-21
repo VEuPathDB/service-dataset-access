@@ -9,7 +9,9 @@ import java.util.stream.Collectors;
 
 import javax.ws.rs.*;
 
+import org.apache.logging.log4j.Logger;
 import org.veupathdb.lib.container.jaxrs.errors.UnprocessableEntityException;
+import org.veupathdb.lib.container.jaxrs.providers.LogProvider;
 import org.veupathdb.service.access.generated.model.*;
 import org.veupathdb.service.access.generated.model.EndUserPatch.OpType;
 import org.veupathdb.service.access.model.ApprovalStatus;
@@ -22,6 +24,8 @@ import org.veupathdb.service.access.util.Keys;
 
 public class EndUserService
 {
+  private static final Logger log = LogProvider.logger(EndUserService.class);
+
   /**
    * Error messages
    */
@@ -47,6 +51,7 @@ public class EndUserService
     final int offset,
     final org.veupathdb.service.access.generated.model.ApprovalStatus approval
   ) {
+    log.trace("EndUserService#listEndUsers(datasetId, limit, offset, approval)");
     try {
       if (approval == null) {
         return rows2EndUserList(
@@ -69,6 +74,7 @@ public class EndUserService
   }
 
   public static EndUser getEndUser(final String rawId) {
+    log.trace("EndUserService#getEndUser(rawId)");
     final var id = new EndUserId(rawId);
 
     try {
@@ -82,6 +88,7 @@ public class EndUserService
   }
 
   public static EndUserRow getRawEndUser(final String rawId) {
+    log.trace("EndUserService#getRawEndUser(rawId)");
     final var id = new EndUserId(rawId);
 
     try {
@@ -97,6 +104,7 @@ public class EndUserService
    * cannot be self-set by end users.
    */
   public static String endUserSelfCreate(final EndUserCreateRequest req) {
+    log.trace("EndUserService#endUserSelfCreate(req)");
     try {
       final var row = createRequest2EndUserRow(req)
         .setApprovalStatus(ApprovalStatus.REQUESTED)
@@ -125,6 +133,7 @@ public class EndUserService
    * </ul>
    */
   public static String endUserManagerCreate(final EndUserCreateRequest req) {
+    log.trace("EndUserService#endUserManagerCreate(req)");
     try {
       final var row = createRequest2EndUserRow(req);
 
@@ -159,6 +168,8 @@ public class EndUserService
    * </ol>
    */
   public static void validateOwnPost(final EndUserCreateRequest req) {
+    log.trace("EndUserService#validateOwnPost(req)");
+
     if (req.getStartDate() != null)
       throw new ForbiddenException(String.format(
         errEndUserForbidden, Keys.Json.KEY_START_DATE));
@@ -197,6 +208,7 @@ public class EndUserService
    * </ol>
    */
   public static void validateManagerPost(final EndUserCreateRequest req) {
+    log.trace("EndUserService#validateManagerPost(req)");
     if (!userExists(req.getUserId()))
       throw new UnprocessableEntityException(
         new HashMap < String, List < String > >(1)
@@ -223,6 +235,7 @@ public class EndUserService
    * record.
    */
   public static boolean userExists(final long userId) {
+    log.trace("EndUserService#userExists(userId)");
     try {
       return AccountRepo.Select.userExists(userId);
     } catch (Exception e) {
@@ -234,6 +247,7 @@ public class EndUserService
     final long userId,
     final String datasetId
   ) {
+    log.trace("EndUserService#formatEndUserId(userId, datasetId)");
     return userId + "-" + datasetId;
   }
 
@@ -242,6 +256,8 @@ public class EndUserService
     final EndUserRow row,
     final List < EndUserPatch > patches
   ) {
+    log.trace("EndUserService#selfPatch(row, patches)");
+
     if (patches == null || patches.isEmpty())
       throw new BadRequestException();
 
@@ -284,6 +300,8 @@ public class EndUserService
     final EndUserRow row,
     final List < EndUserPatch > patches
   ) {
+    log.trace("EndUserService#modPatch(row, patches)");
+
     if (patches.isEmpty())
       throw new BadRequestException();
 
@@ -343,6 +361,7 @@ public class EndUserService
 
   @SuppressWarnings("BooleanMethodIsAlwaysInverted")
   private static boolean datasetExists(final String datasetId) {
+    log.trace("EndUserService#datasetExists(datasetId)");
     try {
       return DatasetRepo.Select.datasetExists(datasetId);
     } catch (Exception e) {
@@ -356,6 +375,7 @@ public class EndUserService
   private static ApprovalStatus convertApproval(
     final org.veupathdb.service.access.generated.model.ApprovalStatus status
   ) {
+    log.trace("EndUserService#convertApproval(status)");
     return status == null
       ? null
       : switch (status) {
@@ -371,6 +391,7 @@ public class EndUserService
   private static org.veupathdb.service.access.generated.model.ApprovalStatus convertApproval(
     final ApprovalStatus status
   ) {
+    log.trace("EndUserService#convertApproval(status)");
     return status == null
       ? null
       : switch (status) {
@@ -383,6 +404,7 @@ public class EndUserService
   private static RestrictionLevel convertRestriction(
     final org.veupathdb.service.access.generated.model.RestrictionLevel level
   ) {
+    log.trace("EndUserService#convertRestriction(level)");
     return level == null
       ? null
       : switch (level) {
@@ -401,6 +423,7 @@ public class EndUserService
   convertRestriction(
     final RestrictionLevel level
   ) {
+    log.trace("EndUserService#convertRestriction(level)");
     return level == null
       ? null
       : switch (level) {
@@ -416,6 +439,8 @@ public class EndUserService
   private static EndUserRow createRequest2EndUserRow(
     final EndUserCreateRequest req
   ) {
+    log.trace("EndUserService#createRequest2EndUserRow(req)");
+
     OffsetDateTime start = null;
 
     if (req.getStartDate() != null)
@@ -456,6 +481,7 @@ public class EndUserService
     final int offset,
     final int total
   ) {
+    log.trace("EndUserService#rows2EndUserList(rows, offset, total)");
     final var out = new EndUserListImpl();
 
     out.setOffset(offset);
@@ -477,6 +503,8 @@ public class EndUserService
    * @return converted end user data
    */
   private static EndUser row2EndUser(final EndUserRow row) {
+    log.trace("EndUserService#row2EndUser(row)");
+
     final var user = new UserDetailsImpl();
     user.setUserId(row.getUserId());
     user.setLastName(row.getLastName());
@@ -531,6 +559,7 @@ public class EndUserService
       final Object value,
       final Class < T > type
     ) {
+      log.trace("EndUserService$Patch#enforceType(value, type)");
       try {
         return type.cast(value);
       } catch (Exception e) {
@@ -557,6 +586,7 @@ public class EndUserService
       final Map<String, Object> patch,
       final Consumer < String > func
     ) {
+      log.trace("EndUserService$Patch#strVal(patch, func)");
       switch ((String) patch.get(Keys.Json.KEY_OP)) {
         case "add", "replace":
           enforceNotNull(patch);
@@ -573,11 +603,13 @@ public class EndUserService
       final Function < String, T > map,
       final Consumer < T > func
     ) {
+      log.trace("EndUserService$Patch#enumVal(patch, map, func)");
       enforceNotNull(patch);
       func.accept(map.apply(enforceType(patch, String.class).toUpperCase()));
     }
 
     private static void enforceNotNull(final Map<String, Object> patch) {
+      log.trace("EndUserService$Patch#enforceNotNull(patch)");
       if (patch.get(Keys.Json.KEY_VALUE) == null)
         throw new ForbiddenException(
           String.format(errSetNull, patch.get(Keys.Json.KEY_PATH)));
@@ -587,6 +619,7 @@ public class EndUserService
       final Map < String, Object > patch,
       final OpType... in
     ) {
+      log.trace("EndUserService$Patch#enforceOpIn(patch, ...in)");
       for (final var i : in) {
         if (patch.get(Keys.Json.KEY_OP) == i)
           return;
