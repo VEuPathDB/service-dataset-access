@@ -620,6 +620,7 @@ public class EndUserService
       final Consumer < String > func
     ) {
       log.trace("EndUserService$Patch#strVal(patch, func)");
+      log.debug(patch.get(Keys.Json.KEY_OP));
       switch ((String) patch.get(Keys.Json.KEY_OP)) {
         case "add", "replace":
           enforceNotNull(patch);
@@ -657,10 +658,8 @@ public class EndUserService
       log.trace("EndUserService$Patch#enforceOpIn(patch, ...in)");
 
       final var op = OpType.valueOf(((String) patch.get(Keys.Json.KEY_OP)).toUpperCase());
-      log.warn("{} {}", op, in[0]);
 
       for (final var i : in) {
-        log.warn("{} {} = {}", i.toString(), op.toString(), i.equals(op));
         if (i.equals(op))
           return;
       }
