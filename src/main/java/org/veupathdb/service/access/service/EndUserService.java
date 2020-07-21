@@ -657,7 +657,7 @@ public class EndUserService
       log.trace("EndUserService$Patch#enforceOpIn(patch, ...in)");
 
       final var op = OpType.valueOf(((String) patch.get(Keys.Json.KEY_OP)).toUpperCase());
-      log.warn(op);
+      log.warn("{} {}", op, in[0]);
 
       for (final var i : in)
         if (i.equals(op))
