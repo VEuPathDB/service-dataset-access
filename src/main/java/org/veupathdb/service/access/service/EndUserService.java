@@ -137,13 +137,21 @@ public class EndUserService
     try {
       final var row = createRequest2EndUserRow(req);
 
-      if (row.getStartDate() == null)
+      if (req.getStartDate() == null) {
         row.setStartDate(null);
-      if (row.getApprovalStatus() == null)
+      }
+
+      if (req.getApprovalStatus() == null) {
+        log.debug("defaulting approval status");
         row.setApprovalStatus(ApprovalStatus.REQUESTED);
-      if (row.getRestrictionLevel() == null)
+      }
+
+      if (req.getRestrictionLevel() == null) {
+        log.debug("defaulting restriction level");
         row.setRestrictionLevel(RestrictionLevel.PUBLIC);
-      if (row.getDuration() == 0)
+      }
+
+      if (req.getDuration() == 0)
         row.setDuration(-1);
 
       EndUserRepo.Insert.newEndUser(row);
