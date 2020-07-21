@@ -163,6 +163,14 @@ public class EndUserService
     }
   }
 
+  public static boolean endUserExists(final long userId, final String datasetId) {
+    try {
+      return EndUserRepo.Select.endUser(userId, datasetId).isPresent();
+    } catch (Exception e) {
+      throw new InternalServerErrorException(e);
+    }
+  }
+
   /**
    * Validates the creation request for a user that is self-requesting access.
    * <p>

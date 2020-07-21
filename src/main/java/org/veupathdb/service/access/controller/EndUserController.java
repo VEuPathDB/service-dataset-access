@@ -1,6 +1,7 @@
 package org.veupathdb.service.access.controller;
 
 import java.util.List;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Request;
@@ -51,9 +52,13 @@ public class EndUserController implements DatasetEndUsers
 
     final String recordId;
     if (userIsManager(curUser.getUserId(), entity.getDatasetId()) || userIsOwner(curUser.getUserId())) {
+      if (EndUserService.endUserExists(entity.getUserId(), entity.getDatasetId()))
+        throw new BadRequestException("An end user already exists for the given dataset with the given id");
       EndUserService.validateManagerPost(entity);
       recordId = EndUserService.endUserManagerCreate(entity);
     } else if (curUser.getUserId() == entity.getUserId()) {
+      if (EndUserService.endUserExists(entity.getUserId(), entity.getDatasetId()))
+        throw new BadRequestException("An end user already exists for the given dataset with the given id");
       EndUserService.validateOwnPost(entity);
       recordId = EndUserService.endUserSelfCreate(entity);
     } else
