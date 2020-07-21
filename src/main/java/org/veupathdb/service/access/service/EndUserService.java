@@ -271,7 +271,11 @@ public class EndUserService
       // End users are only permitted to perform "replace" patch operations.
       Patch.enforceOpIn(patch, OpType.REPLACE);
 
-      switch (((String) patch.get(Keys.Json.KEY_PATH)).substring(1)) {
+      final var path = ((String) patch.get(Keys.Json.KEY_PATH)).substring(1);
+
+      log.debug(path);
+
+      switch (path) {
         case Keys.Json.KEY_PURPOSE:
           Patch.strVal(patch, row::setPurpose);
         case Keys.Json.KEY_RESEARCH_QUESTION:
