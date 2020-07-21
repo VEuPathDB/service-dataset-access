@@ -360,7 +360,6 @@ public class EndUserService
     }
   }
 
-  @SuppressWarnings("BooleanMethodIsAlwaysInverted")
   private static boolean datasetExists(final String datasetId) {
     log.trace("EndUserService#datasetExists(datasetId)");
     try {
