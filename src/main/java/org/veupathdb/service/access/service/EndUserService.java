@@ -320,39 +320,44 @@ public class EndUserService
 
       // Remove the leading '/' character from the path.
       switch (((String) patch.get(Keys.Json.KEY_PATH)).substring(1)) {
-        case Keys.Json.KEY_START_DATE:
+        case Keys.Json.KEY_START_DATE -> {
           if (patch.get(Keys.Json.KEY_VALUE) == null)
             row.setStartDate(null);
           else
             row.setStartDate(OffsetDateTime.parse(
               Patch.enforceType(patch.get(Keys.Json.KEY_VALUE), String.class)));
-        case Keys.Json.KEY_DURATION:
+        }
+        case Keys.Json.KEY_DURATION -> {
           if (patch.get(Keys.Json.KEY_VALUE) == null)
             row.setDuration(-1);
           else
-            row.setDuration(Patch.enforceType(patch.get(Keys.Json.KEY_VALUE), Number.class)
+            row.setDuration(Patch.enforceType(
+              patch.get(Keys.Json.KEY_VALUE),
+              Number.class
+            )
               .intValue());
-        case Keys.Json.KEY_PURPOSE:
+        }
+        case Keys.Json.KEY_PURPOSE ->
           Patch.strVal(patch, row::setPurpose);
-        case Keys.Json.KEY_RESEARCH_QUESTION:
+        case Keys.Json.KEY_RESEARCH_QUESTION ->
           Patch.strVal(patch, row::setResearchQuestion);
-        case Keys.Json.KEY_ANALYSIS_PLAN:
+        case Keys.Json.KEY_ANALYSIS_PLAN ->
           Patch.strVal(patch, row::setAnalysisPlan);
-        case Keys.Json.KEY_DISSEMINATION_PLAN:
+        case Keys.Json.KEY_DISSEMINATION_PLAN ->
           Patch.strVal(patch, row::setDisseminationPlan);
-        case Keys.Json.KEY_PRIOR_AUTH:
+        case Keys.Json.KEY_PRIOR_AUTH ->
           Patch.strVal(patch, row::setPriorAuth);
-        case Keys.Json.KEY_RESTRICTION_LEVEL:
+        case Keys.Json.KEY_RESTRICTION_LEVEL ->
           Patch.enumVal(
             patch,
             RestrictionLevel::valueOf,
             row::setRestrictionLevel
           );
-        case Keys.Json.KEY_APPROVAL_STATUS:
+        case Keys.Json.KEY_APPROVAL_STATUS ->
           Patch.enumVal(patch, ApprovalStatus::valueOf, row::setApprovalStatus);
-        case Keys.Json.KEY_DENIAL_REASON:
+        case Keys.Json.KEY_DENIAL_REASON ->
           Patch.strVal(patch, row::setDenialReason);
-        default:
+        default ->
           throw Patch.forbiddenOp(patch);
       }
     }
