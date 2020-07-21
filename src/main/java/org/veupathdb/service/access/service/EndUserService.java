@@ -656,8 +656,10 @@ public class EndUserService
     ) {
       log.trace("EndUserService$Patch#enforceOpIn(patch, ...in)");
 
+      final var op = OpType.valueOf(((String) patch.get(Keys.Json.KEY_OP)).toUpperCase());
+
       for (final var i : in)
-        if (patch.get(Keys.Json.KEY_OP) == i)
+        if (patch.get(Keys.Json.KEY_OP) == op)
           return;
 
       throw forbiddenOp(patch);
