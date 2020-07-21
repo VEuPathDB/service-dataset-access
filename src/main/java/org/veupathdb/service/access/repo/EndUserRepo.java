@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.logging.log4j.Logger;
+import org.veupathdb.lib.container.jaxrs.providers.LogProvider;
 import org.veupathdb.service.access.model.ApprovalStatus;
 import org.veupathdb.service.access.model.ApprovalStatusCache;
 import org.veupathdb.service.access.model.EndUserRow;
@@ -14,9 +16,12 @@ import org.veupathdb.service.access.model.RestrictionLevelCache;
 
 public final class EndUserRepo
 {
+  private static final Logger log = LogProvider.logger(EndUserRepo.class);
+
   public interface Insert
   {
     static void newEndUser(final EndUserRow row) throws Exception {
+      log.trace("EndUserRepo$Insert#newEndUser(row)");
       final var sql = SQL.Insert.EndUser;
       try (
         final var cn = Util.getAcctDbConnection();
@@ -47,6 +52,8 @@ public final class EndUserRepo
   public interface Select
   {
     static int countByDataset(final String datasetId) throws Exception {
+      log.trace("EndUserRepo$Select#countByDataset(datasetId)");
+
       final var sql = SQL.Select.EndUsers.CountByDataset;
       try (
         final var cn = Util.getAcctDbConnection();
@@ -65,6 +72,8 @@ public final class EndUserRepo
       final String datasetId,
       final ApprovalStatus status
     ) throws Exception {
+      log.trace("EndUserRepo$Select#countByDatasetFiltered(datasetId, status)");
+
       final var sql = SQL.Select.EndUsers.CountByDatasetFiltered;
       try (
         final var cn = Util.getAcctDbConnection();
@@ -93,6 +102,8 @@ public final class EndUserRepo
       final int limit,
       final int offset
     ) throws Exception {
+      log.trace("EndUserRepo$Select#list(datasetId, limit, offset)");
+
       final var sql = SQL.Select.EndUsers.ByDataset;
       try (
         final var cn = Util.getAcctDbConnection();
@@ -126,6 +137,8 @@ public final class EndUserRepo
       final int offset,
       final ApprovalStatus status
     ) throws Exception {
+      log.trace("EndUserRepo$Select#filteredList(datasetId, limit, offset)");
+
       final var sql = SQL.Select.EndUsers.ByDataset;
       try (
         final var cn = Util.getAcctDbConnection();
@@ -154,6 +167,8 @@ public final class EndUserRepo
       final long userId,
       final String datasetId
     ) throws Exception {
+      log.trace("EndUserRepo$Select#endUser(userId, datasetId)");
+
       final var sql = SQL.Select.EndUsers.ById;
       try (
         final var cn = Util.getAcctDbConnection();
@@ -177,6 +192,8 @@ public final class EndUserRepo
      */
     private static EndUserRow parseEndUserRow(final ResultSet rs)
     throws Exception {
+      log.trace("EndUserRepo$Select#parseEndUserRow(rs)");
+
       return (EndUserRow) new EndUserRow()
         .setAnalysisPlan(rs.getString(DB.Column.EndUser.AnalysisPlan))
         .setApprovalStatus(ApprovalStatusCache.getInstance()
@@ -207,6 +224,8 @@ public final class EndUserRepo
   public interface Update
   {
     static void self(EndUserRow row) throws Exception {
+      log.trace("EndUserRepo$Update#self(row)");
+
       final var sql = SQL.Update.EndUser.SelfUpdate;
       try (
         final var cn = Util.getAcctDbConnection();
@@ -225,6 +244,8 @@ public final class EndUserRepo
     }
 
     static void mod(EndUserRow row) throws Exception {
+      log.trace("EndUserRepo$Update#mod");
+
       final var sql = SQL.Update.EndUser.ModUpdate;
       try (
         final var cn = Util.getAcctDbConnection();
