@@ -604,12 +604,14 @@ public class EndUserService
       final Consumer < T > func
     ) {
       log.trace("EndUserService$Patch#enumVal(patch, map, func)");
+
       enforceNotNull(patch);
       func.accept(map.apply(enforceType(patch, String.class).toUpperCase()));
     }
 
     private static void enforceNotNull(final Map<String, Object> patch) {
       log.trace("EndUserService$Patch#enforceNotNull(patch)");
+
       if (patch.get(Keys.Json.KEY_VALUE) == null)
         throw new ForbiddenException(
           String.format(errSetNull, patch.get(Keys.Json.KEY_PATH)));
@@ -620,20 +622,20 @@ public class EndUserService
       final OpType... in
     ) {
       log.trace("EndUserService$Patch#enforceOpIn(patch, ...in)");
-      for (final var i : in) {
+
+      for (final var i : in)
         if (patch.get(Keys.Json.KEY_OP) == i)
           return;
-      }
 
       throw forbiddenOp(patch);
     }
 
     private static RuntimeException forbiddenOp(final Map<String, Object> op) {
       return new ForbiddenException(
-        String.format(errBadPatchOp,
-        op.get(Keys.Json.KEY_OP),
-        op.get(Keys.Json.KEY_PATH)
-      ));
+        String.format(
+          errBadPatchOp,
+          op.get(Keys.Json.KEY_OP),
+          op.get(Keys.Json.KEY_PATH)));
     }
   }
 }

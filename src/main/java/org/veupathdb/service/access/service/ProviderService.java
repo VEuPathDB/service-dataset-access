@@ -90,6 +90,18 @@ public class ProviderService
     }
   }
 
+  public static List < ProviderRow > lookupProviderByUserId(final long userId) {
+    log.trace("ProviderService#lookupProviderByUserId(userId)");
+
+    try {
+      return ProviderRepo.Select.byUserId(userId);
+    } catch (WebApplicationException e) {
+      throw e;
+    } catch (Exception e) {
+      throw new InternalServerErrorException(e);
+    }
+  }
+
   /**
    * Locates a provider with the given <code>userId</code> or throws a 404
    * exception.
@@ -97,18 +109,12 @@ public class ProviderService
   public static List < ProviderRow > requireProviderByUserId(long userId) {
     log.trace("ProviderService#requireProviderByUserId(userId)");
 
-    try {
-      final var out = ProviderRepo.Select.byUserId(userId);
+    final var out = lookupProviderByUserId(userId);
 
-      if (out.isEmpty())
-        throw new NotFoundException();
+    if (out.isEmpty())
+      throw new ForbiddenException();
 
-      return out;
-    } catch (WebApplicationException e) {
-      throw e;
-    } catch (Exception e) {
-      throw new InternalServerErrorException(e);
-    }
+    return out;
   }
 
   public static boolean userIsManager(
@@ -133,7 +139,7 @@ public class ProviderService
     log.trace("ProviderService#userIsManager(userId, datasetId)");
 
     final var ds = datasetId.toUpperCase();
-    return requireProviderByUserId(userId)
+    return lookupProviderByUserId(userId)
       .stream()
       .filter(row -> ds.equals(row.getDatasetId().toUpperCase()))
       .anyMatch(PartialProviderRow::isManager);
