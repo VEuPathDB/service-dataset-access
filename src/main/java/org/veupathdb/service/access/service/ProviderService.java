@@ -2,6 +2,7 @@ package org.veupathdb.service.access.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ws.rs.*;
@@ -210,6 +211,7 @@ public class ProviderService
       throw new UnprocessableEntityException(out);
   }
 
+  @SuppressWarnings("unchecked")
   public static void validatePatch(final List < DatasetProviderPatch > items) {
     log.trace("ProviderService#validatePatch(items)");
 
@@ -221,14 +223,17 @@ public class ProviderService
     if (items.size() > 1)
       throw new ForbiddenException();
 
-    var item = items.get(0);
+    // WARNING: This cast mess is due to a bug in the JaxRS generator, the type
+    // it actually passes up is not the declared type, but a list of linked hash
+    // maps instead.
+    final var item = ((List<LinkedHashMap<String, String>>)((Object) items)).get(0);
 
     // only allow replace ops
-    if (!"replace".equals(item.getOp()))
+    if (!"replace".equals(item.get(Keys.Json.KEY_OP)))
       throw new ForbiddenException();
 
     // only allow modifying the isManager property
-    if (!("/" + Keys.Json.KEY_IS_MANAGER).equals(item.getPath()))
+    if (!("/" + Keys.Json.KEY_IS_MANAGER).equals(item.get(Keys.Json.KEY_PATH)))
       throw new ForbiddenException();
   }
 

@@ -20,5 +20,12 @@ public interface Keys
       KEY_START_DATE         = "startDate",
       KEY_USER               = "user",
       KEY_USER_ID            = "userId";
+
+    // JSON Patch
+    String
+      KEY_FROM  = "from",
+      KEY_OP    = "op",
+      KEY_PATH  = "path",
+      KEY_VALUE = "value";
   }
 }
