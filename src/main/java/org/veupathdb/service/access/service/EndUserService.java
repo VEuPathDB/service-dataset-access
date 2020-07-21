@@ -38,6 +38,8 @@ public class EndUserService
    * @param limit     Max number of results to return
    * @param offset    Record offset.
    * @param approval  Optional (nullable) approval status filter.
+   *
+   * @return limited result set to return to the client.
    */
   public static EndUserList listEndUsers(
     final String datasetId,

@@ -2,11 +2,9 @@ package org.veupathdb.service.access.controller;
 
 import java.util.List;
 import javax.ws.rs.ForbiddenException;
-import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Request;
 
-import org.veupathdb.lib.container.jaxrs.providers.UserProvider;
 import org.veupathdb.lib.container.jaxrs.server.annotations.Authenticated;
 import org.veupathdb.service.access.generated.model.ApprovalStatus;
 import org.veupathdb.service.access.generated.model.EndUserCreateRequest;
@@ -36,8 +34,7 @@ public class EndUserController implements DatasetEndUsers
   ) {
     Util.requireDatasetId(datasetId);
 
-    final var curUser = UserProvider.lookupUser(request)
-      .orElseThrow(InternalServerErrorException::new);
+    final var curUser = Util.requireUser(request);
 
     if (!userIsManager(curUser.getUserId(), datasetId) && !userIsOwner(curUser.getUserId()))
       throw new ForbiddenException();
@@ -50,8 +47,7 @@ public class EndUserController implements DatasetEndUsers
   public PostDatasetEndUsersResponse postDatasetEndUsers(
     final EndUserCreateRequest entity
   ) {
-    final var curUser = UserProvider.lookupUser(request)
-      .orElseThrow(InternalServerErrorException::new);
+    final var curUser = Util.requireUser(request);
 
     final String recordId;
     if (curUser.getUserId() == entity.getUserId()) {
@@ -73,9 +69,7 @@ public class EndUserController implements DatasetEndUsers
   public GetDatasetEndUsersByEndUserIdResponse getDatasetEndUsersByEndUserId(
     final String endUserId
   ) {
-    final var curUser = UserProvider.lookupUser(request)
-      .orElseThrow(InternalServerErrorException::new);
-
+    final var curUser = Util.requireUser(request);
     final var endUser = EndUserService.getEndUser(endUserId);
 
     if (endUser.getUser().getUserId() == curUser.getUserId()
@@ -94,9 +88,7 @@ public class EndUserController implements DatasetEndUsers
     final String endUserId,
     final List < EndUserPatch > entity
   ) {
-    final var curUser = UserProvider.lookupUser(request)
-      .orElseThrow(InternalServerErrorException::new);
-
+    final var curUser = Util.requireUser(request);
     final var endUser = EndUserService.getRawEndUser(endUserId);
 
     if (endUser.getUserId() == curUser.getUserId()) {
@@ -107,6 +99,6 @@ public class EndUserController implements DatasetEndUsers
       throw new ForbiddenException();
     }
 
-    return null;
+    return PatchDatasetEndUsersByEndUserIdResponse.respond204();
   }
 }

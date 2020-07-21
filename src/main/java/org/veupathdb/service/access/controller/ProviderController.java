@@ -3,11 +3,9 @@ package org.veupathdb.service.access.controller;
 import java.util.LinkedHashMap;
 import java.util.List;
 import javax.ws.rs.ForbiddenException;
-import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Request;
 
-import org.veupathdb.lib.container.jaxrs.providers.UserProvider;
 import org.veupathdb.lib.container.jaxrs.server.annotations.Authenticated;
 import org.veupathdb.service.access.generated.model.DatasetProviderCreateRequest;
 import org.veupathdb.service.access.generated.model.DatasetProviderCreateResponseImpl;
@@ -35,9 +33,7 @@ public class ProviderController implements DatasetProviders
   ) {
     Util.requireDatasetId(datasetId);
 
-    // If the user isn't available, something went wrong in the auth filter.
-    var currentUser = UserProvider.lookupUser(request)
-      .orElseThrow(InternalServerErrorException::new);
+    final var currentUser = Util.requireUser(request);
 
     var allowed   = false;
     var providers = getProviderList(datasetId, limit, offset);
@@ -65,8 +61,7 @@ public class ProviderController implements DatasetProviders
   public PostDatasetProvidersResponse postDatasetProviders(
     final DatasetProviderCreateRequest entity
   ) {
-    final var currentUser = UserProvider.lookupUser(request)
-      .orElseThrow(InternalServerErrorException::new);
+    final var currentUser = Util.requireUser(request);
 
     validateCreate(entity);
 
@@ -88,8 +83,7 @@ public class ProviderController implements DatasetProviders
     int providerId,
     List <DatasetProviderPatch> entity
   ) {
-    final var currentUser = UserProvider.lookupUser(request)
-      .orElseThrow(InternalServerErrorException::new);
+    final var currentUser = Util.requireUser(request);
 
     validatePatch(entity);
     final var provider = requireProviderById(providerId);
