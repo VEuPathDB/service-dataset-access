@@ -659,9 +659,11 @@ public class EndUserService
       final var op = OpType.valueOf(((String) patch.get(Keys.Json.KEY_OP)).toUpperCase());
       log.warn("{} {}", op, in[0]);
 
-      for (final var i : in)
+      for (final var i : in) {
+        log.warn("{} {} = {}", i.toString(), op.toString(), i.equals(op));
         if (i.equals(op))
           return;
+      }
 
       throw forbiddenOp(patch);
     }
