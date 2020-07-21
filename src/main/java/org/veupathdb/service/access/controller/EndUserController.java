@@ -34,11 +34,10 @@ public class EndUserController implements DatasetEndUsers
     final int offset,
     final ApprovalStatus approval
   ) {
+    Util.requireDatasetId(datasetId);
+
     final var curUser = UserProvider.lookupUser(request)
       .orElseThrow(InternalServerErrorException::new);
-
-    if (datasetId == null || datasetId.isBlank())
-      throw new ForbiddenException();
 
     if (!userIsManager(curUser.getUserId(), datasetId) && !userIsOwner(curUser.getUserId()))
       throw new ForbiddenException();

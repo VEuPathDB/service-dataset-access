@@ -31,9 +31,12 @@ public class ProviderController implements DatasetProviders
     final int limit,
     final int offset
   ) {
+    Util.requireDatasetId(datasetId);
+
     // If the user isn't available, something went wrong in the auth filter.
     var currentUser = UserProvider.lookupUser(request)
       .orElseThrow(InternalServerErrorException::new);
+
     var allowed   = false;
     var providers = getProviderList(datasetId, limit, offset);
 
