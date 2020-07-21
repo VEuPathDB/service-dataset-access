@@ -28,7 +28,7 @@ public interface DB
     {
       String
         AnalysisPlan      = "analysis_plan",
-        ApprovalStatus    = "approval_status",
+        ApprovalStatus    = "approval_status_id",
         DatasetId         = "dataset_presenter_id",
         DenialReason      = "denial_reason",
         DisseminationPlan = "dissemination_plan",
@@ -36,7 +36,7 @@ public interface DB
         PriorAuth         = "prior_auth",
         Purpose           = "purpose",
         ResearchQuestion  = "research_question",
-        RestrictionLevel  = "restriction_level",
+        RestrictionLevel  = "restriction_level_id",
         StartDate         = "start_date",
         UserId            = "user_id";
     }
