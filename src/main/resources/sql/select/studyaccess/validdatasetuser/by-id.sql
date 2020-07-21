@@ -1,5 +1,14 @@
 SELECT
-  v.*
+  v.start_date
+, v.duration
+, v.purpose
+, v.research_question
+, v.analysis_plan
+, v.dissemination_plan
+, v.prior_auth
+, v.restriction_level_id
+, v.approval_status_id
+, v.denial_reason
 , (
     SELECT
       value
