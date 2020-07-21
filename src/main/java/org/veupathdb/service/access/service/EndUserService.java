@@ -195,6 +195,28 @@ public class EndUserService
       throw new ForbiddenException(String.format(
         errEndUserForbidden, Keys.Json.KEY_DENIAL_REASON));
 
+    final var validation = new HashMap<String, List<String>>();
+
+    if (req.getPurpose() == null || req.getPurpose().isBlank())
+      validation.put(Keys.Json.KEY_PURPOSE, new ArrayList <>(){{
+        add("The purpose field cannot be blank.");
+      }});
+
+    if (req.getResearchQuestion() == null || req.getResearchQuestion().isBlank())
+      validation.put(Keys.Json.KEY_RESEARCH_QUESTION, new ArrayList <>(){{
+        add("The research question field cannot be blank.");
+      }});
+
+    if (req.getAnalysisPlan() == null || req.getAnalysisPlan().isBlank())
+      validation.put(Keys.Json.KEY_ANALYSIS_PLAN, new ArrayList <>(){{
+        add("The analysis plan field cannot be blank.");
+      }});
+
+    if (req.getDisseminationPlan() == null || req.getDisseminationPlan().isBlank())
+      validation.put(Keys.Json.KEY_DISSEMINATION_PLAN, new ArrayList <>(){{
+        add("The dissemination plan field cannot be blank.");
+      }});
+
     if (!datasetExists(req.getDatasetId()))
       throw new UnprocessableEntityException(
         new HashMap < String, List < String > >(1)

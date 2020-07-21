@@ -74,7 +74,7 @@ public class EndUserController implements DatasetEndUsers
 
     if (endUser.getUser().getUserId() == curUser.getUserId()
       || userIsManager(curUser.getUserId(), endUser.getDatasetId())
-      ||userIsOwner(curUser.getUserId())
+      || userIsOwner(curUser.getUserId())
     ) {
       return GetDatasetEndUsersByEndUserIdResponse.respond200WithApplicationJson(
         endUser);
