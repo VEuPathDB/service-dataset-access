@@ -1,5 +1,6 @@
 package org.veupathdb.service.access.controller;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.InternalServerErrorException;
@@ -12,6 +13,7 @@ import org.veupathdb.service.access.generated.model.DatasetProviderCreateRequest
 import org.veupathdb.service.access.generated.model.DatasetProviderCreateResponseImpl;
 import org.veupathdb.service.access.generated.model.DatasetProviderPatch;
 import org.veupathdb.service.access.generated.resources.DatasetProviders;
+import org.veupathdb.service.access.util.Keys;
 
 import static org.veupathdb.service.access.service.ProviderService.*;
 import static org.veupathdb.service.access.service.StaffService.userIsOwner;
@@ -81,6 +83,7 @@ public class ProviderController implements DatasetProviders
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public PatchDatasetProvidersByProviderIdResponse patchDatasetProvidersByProviderId(
     int providerId,
     List <DatasetProviderPatch> entity
@@ -96,8 +99,13 @@ public class ProviderController implements DatasetProviders
     if (!userIsOwner(currentUser.getUserId()) && !userIsManager(currentUser.getUserId(), provider.getDatasetId()))
       throw new ForbiddenException();
 
+    // WARNING: This cast mess is due to a bug in the JaxRS generator, the type
+    // it actually passes up is not the declared type, but a list of linked hash
+    // maps instead.
+    final var item = ((List< LinkedHashMap <String, Object> >)((Object) entity)).get(0);
 
-    provider.setManager(entity.get(0).getValue());
+
+    provider.setManager((boolean) item.get(Keys.Json.KEY_VALUE));
     updateProvider(provider);
 
     return PatchDatasetProvidersByProviderIdResponse.respond204();

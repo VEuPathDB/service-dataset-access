@@ -226,7 +226,7 @@ public class ProviderService
     // WARNING: This cast mess is due to a bug in the JaxRS generator, the type
     // it actually passes up is not the declared type, but a list of linked hash
     // maps instead.
-    final var item = ((List<LinkedHashMap<String, String>>)((Object) items)).get(0);
+    final var item = ((List<LinkedHashMap<String, Object>>)((Object) items)).get(0);
 
     // only allow replace ops
     if (!"replace".equals(item.get(Keys.Json.KEY_OP)))
