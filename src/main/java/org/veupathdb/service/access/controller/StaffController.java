@@ -1,6 +1,7 @@
 package org.veupathdb.service.access.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.core.Context;
@@ -12,6 +13,7 @@ import org.veupathdb.service.access.generated.model.NewStaffResponseImpl;
 import org.veupathdb.service.access.generated.model.StaffPatch;
 import org.veupathdb.service.access.generated.resources.Staff;
 import org.veupathdb.service.access.service.StaffService;
+import org.veupathdb.service.access.util.Keys;
 
 @Authenticated
 public class StaffController implements Staff
@@ -42,6 +44,7 @@ public class StaffController implements Staff
     return PostStaffResponse.respond200WithApplicationJson(out);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public PatchStaffByStaffIdResponse patchStaffByStaffId(
     final int staffId,
@@ -54,7 +57,13 @@ public class StaffController implements Staff
 
     final var row = StaffService.requireStaffById(staffId);
 
-    row.setOwner(entity.get(0).getValue());
+    // WARNING: This cast mess is due to a bug in the JaxRS generator, the type
+    // it actually passes up is not the declared type, but a list of linked hash
+    // maps instead.
+    final var item = ((List< Map <String, Object> >)((Object) entity)).get(0);
+
+
+    row.setOwner((boolean) item.get(Keys.Json.KEY_VALUE));
     StaffService.updateStaffRow(row);
 
     return PatchStaffByStaffIdResponse.respond204();

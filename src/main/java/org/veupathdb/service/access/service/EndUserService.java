@@ -235,18 +235,24 @@ public class EndUserService
     return userId + "-" + datasetId;
   }
 
+  @SuppressWarnings("unchecked")
   public static void selfPatch(
     final EndUserRow row,
     final List < EndUserPatch > patches
   ) {
-    if (patches.isEmpty())
+    if (patches == null || patches.isEmpty())
       throw new BadRequestException();
 
-    for (var patch : patches) {
+    // WARNING: This cast mess is due to a bug in the JaxRS generator, the type
+    // it actually passes up is not the declared type, but a list of linked hash
+    // maps instead.
+    final var items = ((List < Map < String, Object > >) ((Object) patches));
+
+    for (var patch : items) {
       // End users are only permitted to perform "replace" patch operations.
       Patch.enforceOpIn(patch, OpType.REPLACE);
 
-      switch (patch.getPath()) {
+      switch (((String) patch.get(Keys.Json.KEY_PATH)).substring(1)) {
         case Keys.Json.KEY_PURPOSE:
           Patch.strVal(patch, row::setPurpose);
         case Keys.Json.KEY_RESEARCH_QUESTION:
@@ -271,6 +277,7 @@ public class EndUserService
     }
   }
 
+  @SuppressWarnings("unchecked")
   public static void modPatch(
     final EndUserRow row,
     final List < EndUserPatch > patches
@@ -278,22 +285,27 @@ public class EndUserService
     if (patches.isEmpty())
       throw new BadRequestException();
 
-    for (var patch : patches) {
+    // WARNING: This cast mess is due to a bug in the JaxRS generator, the type
+    // it actually passes up is not the declared type, but a list of linked hash
+    // maps instead.
+    final var items = ((List < Map < String, Object > >) ((Object) patches));
+
+    for (var patch : items) {
       Patch.enforceOpIn(patch, OpType.ADD, OpType.REMOVE, OpType.REPLACE);
 
       // Remove the leading '/' character from the path.
-      switch (patch.getPath().substring(1)) {
+      switch (((String) patch.get(Keys.Json.KEY_PATH)).substring(1)) {
         case Keys.Json.KEY_START_DATE:
-          if (patch.getValue() == null)
+          if (patch.get(Keys.Json.KEY_VALUE) == null)
             row.setStartDate(null);
           else
             row.setStartDate(OffsetDateTime.parse(
-              Patch.enforceType(patch.getValue(), String.class)));
+              Patch.enforceType(patch.get(Keys.Json.KEY_VALUE), String.class)));
         case Keys.Json.KEY_DURATION:
-          if (patch.getValue() == null)
+          if (patch.get(Keys.Json.KEY_VALUE) == null)
             row.setDuration(-1);
           else
-            row.setDuration(Patch.enforceType(patch.getValue(), Number.class)
+            row.setDuration(Patch.enforceType(patch.get(Keys.Json.KEY_VALUE), Number.class)
               .intValue());
         case Keys.Json.KEY_PURPOSE:
           Patch.strVal(patch, row::setPurpose);
@@ -306,7 +318,11 @@ public class EndUserService
         case Keys.Json.KEY_PRIOR_AUTH:
           Patch.strVal(patch, row::setPriorAuth);
         case Keys.Json.KEY_RESTRICTION_LEVEL:
-          Patch.enumVal(patch, RestrictionLevel::valueOf, row::setRestrictionLevel);
+          Patch.enumVal(
+            patch,
+            RestrictionLevel::valueOf,
+            row::setRestrictionLevel
+          );
         case Keys.Json.KEY_APPROVAL_STATUS:
           Patch.enumVal(patch, ApprovalStatus::valueOf, row::setApprovalStatus);
         case Keys.Json.KEY_DENIAL_REASON:
@@ -323,6 +339,7 @@ public class EndUserService
     }
   }
 
+  @SuppressWarnings("BooleanMethodIsAlwaysInverted")
   private static boolean datasetExists(final String datasetId) {
     try {
       return DatasetRepo.Select.datasetExists(datasetId);
@@ -340,10 +357,10 @@ public class EndUserService
     return status == null
       ? null
       : switch (status) {
-      case APPROVED -> ApprovalStatus.APPROVED;
-      case DENIED -> ApprovalStatus.DENIED;
-      case REQUESTED -> ApprovalStatus.REQUESTED;
-    };
+        case APPROVED -> ApprovalStatus.APPROVED;
+        case DENIED -> ApprovalStatus.DENIED;
+        case REQUESTED -> ApprovalStatus.REQUESTED;
+      };
   }
 
   /**
@@ -355,10 +372,10 @@ public class EndUserService
     return status == null
       ? null
       : switch (status) {
-      case APPROVED -> org.veupathdb.service.access.generated.model.ApprovalStatus.APPROVED;
-      case DENIED -> org.veupathdb.service.access.generated.model.ApprovalStatus.DENIED;
-      case REQUESTED -> org.veupathdb.service.access.generated.model.ApprovalStatus.REQUESTED;
-    };
+        case APPROVED -> org.veupathdb.service.access.generated.model.ApprovalStatus.APPROVED;
+        case DENIED -> org.veupathdb.service.access.generated.model.ApprovalStatus.DENIED;
+        case REQUESTED -> org.veupathdb.service.access.generated.model.ApprovalStatus.REQUESTED;
+      };
   }
 
   private static RestrictionLevel convertRestriction(
@@ -367,12 +384,12 @@ public class EndUserService
     return level == null
       ? null
       : switch (level) {
-      case ADMIN -> RestrictionLevel.ADMIN;
-      case CONTROLLED -> RestrictionLevel.CONTROLLED;
-      case LIMITED -> RestrictionLevel.LIMITED;
-      case PROTECTED -> RestrictionLevel.PROTECTED;
-      case PUBLIC -> RestrictionLevel.PUBLIC;
-    };
+        case ADMIN -> RestrictionLevel.ADMIN;
+        case CONTROLLED -> RestrictionLevel.CONTROLLED;
+        case LIMITED -> RestrictionLevel.LIMITED;
+        case PROTECTED -> RestrictionLevel.PROTECTED;
+        case PUBLIC -> RestrictionLevel.PUBLIC;
+      };
   }
 
   /**
@@ -385,14 +402,15 @@ public class EndUserService
     return level == null
       ? null
       : switch (level) {
-      case ADMIN -> org.veupathdb.service.access.generated.model.RestrictionLevel.ADMIN;
-      case CONTROLLED -> org.veupathdb.service.access.generated.model.RestrictionLevel.CONTROLLED;
-      case LIMITED -> org.veupathdb.service.access.generated.model.RestrictionLevel.LIMITED;
-      case PROTECTED -> org.veupathdb.service.access.generated.model.RestrictionLevel.PROTECTED;
-      case PUBLIC -> org.veupathdb.service.access.generated.model.RestrictionLevel.PUBLIC;
-    };
+        case ADMIN -> org.veupathdb.service.access.generated.model.RestrictionLevel.ADMIN;
+        case CONTROLLED -> org.veupathdb.service.access.generated.model.RestrictionLevel.CONTROLLED;
+        case LIMITED -> org.veupathdb.service.access.generated.model.RestrictionLevel.LIMITED;
+        case PROTECTED -> org.veupathdb.service.access.generated.model.RestrictionLevel.PROTECTED;
+        case PUBLIC -> org.veupathdb.service.access.generated.model.RestrictionLevel.PUBLIC;
+      };
   }
 
+  @SuppressWarnings("deprecation")
   private static EndUserRow createRequest2EndUserRow(
     final EndUserCreateRequest req
   ) {
@@ -534,14 +552,14 @@ public class EndUserService
     }
 
     private static void strVal(
-      final EndUserPatch patch,
+      final Map<String, Object> patch,
       final Consumer < String > func
     ) {
-      switch (patch.getOp()) {
-        case ADD, REPLACE:
+      switch ((String) patch.get(Keys.Json.KEY_OP)) {
+        case "add", "replace":
           enforceNotNull(patch);
           func.accept(enforceType(patch, String.class));
-        case REMOVE:
+        case "remove":
           func.accept(null);
         default:
           throw forbiddenOp(patch);
@@ -549,7 +567,7 @@ public class EndUserService
     }
 
     private static < T > void enumVal(
-      final EndUserPatch patch,
+      final Map<String, Object> patch,
       final Function < String, T > map,
       final Consumer < T > func
     ) {
@@ -557,27 +575,29 @@ public class EndUserService
       func.accept(map.apply(enforceType(patch, String.class).toUpperCase()));
     }
 
-    private static void enforceNotNull(final EndUserPatch patch) {
-      if (patch.getValue() == null)
+    private static void enforceNotNull(final Map<String, Object> patch) {
+      if (patch.get(Keys.Json.KEY_VALUE) == null)
         throw new ForbiddenException(
-          String.format(errSetNull, patch.getPath()));
+          String.format(errSetNull, patch.get(Keys.Json.KEY_PATH)));
     }
 
     private static void enforceOpIn(
-      final EndUserPatch patch,
+      final Map < String, Object > patch,
       final OpType... in
     ) {
       for (final var i : in) {
-        if (patch.getOp() == i)
+        if (patch.get(Keys.Json.KEY_OP) == i)
           return;
       }
 
       throw forbiddenOp(patch);
     }
 
-    private static RuntimeException forbiddenOp(final EndUserPatch op) {
-      return new ForbiddenException(String.format(errBadPatchOp, op.getOp(),
-        op.getPath()
+    private static RuntimeException forbiddenOp(final Map<String, Object> op) {
+      return new ForbiddenException(
+        String.format(errBadPatchOp,
+        op.get(Keys.Json.KEY_OP),
+        op.get(Keys.Json.KEY_PATH)
       ));
     }
   }

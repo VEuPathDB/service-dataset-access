@@ -1,6 +1,7 @@
 package org.veupathdb.service.access.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Request;
@@ -100,20 +101,25 @@ public class StaffService
     }
   }
 
+  @SuppressWarnings("unchecked")
   public static void validatePatch(List < StaffPatch > entity) {
     log.trace("StaffService#validatePatch(entity)");
-    if (entity.isEmpty())
+
+    if (entity == null || entity.isEmpty())
       throw new BadRequestException();
 
     if (entity.size() > 1)
       throw new ForbiddenException();
 
-    final var mod = entity.get(0);
+    // WARNING: This cast mess is due to a bug in the JaxRS generator, the type
+    // it actually passes up is not the declared type, but a list of linked hash
+    // maps instead.
+    final var mod = ((List< Map <String, Object> >)((Object) entity)).get(0);
 
-    if (!"replace".equals(mod.getOp()))
+    if (!"replace".equals(mod.get(Keys.Json.KEY_OP)))
       throw new ForbiddenException();
 
-    if (!("/" + Keys.Json.KEY_IS_OWNER).equals(mod.getPath()))
+    if (!("/" + Keys.Json.KEY_IS_OWNER).equals(mod.get(Keys.Json.KEY_PATH)))
       throw new ForbiddenException();
   }
 
