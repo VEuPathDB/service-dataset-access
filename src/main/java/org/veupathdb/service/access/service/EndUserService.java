@@ -623,7 +623,7 @@ public class EndUserService
       switch ((String) patch.get(Keys.Json.KEY_OP)) {
         case "add", "replace":
           enforceNotNull(patch);
-          func.accept(enforceType(patch, String.class));
+          func.accept(enforceType(patch.get(Keys.Json.KEY_VALUE), String.class));
         case "remove":
           func.accept(null);
         default:
