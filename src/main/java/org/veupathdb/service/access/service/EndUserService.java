@@ -621,15 +621,15 @@ public class EndUserService
     ) {
       log.trace("EndUserService$Patch#strVal(patch, func)");
       switch ((String) patch.get(Keys.Json.KEY_OP)) {
-        case "add", "replace":
+        case "add", "replace" -> {
           enforceNotNull(patch);
-          func.accept(enforceType(patch.get(Keys.Json.KEY_VALUE), String.class));
-          break;
-        case "remove":
-          func.accept(null);
-          break;
-        default:
-          throw forbiddenOp(patch);
+          func.accept(enforceType(
+            patch.get(Keys.Json.KEY_VALUE),
+            String.class
+          ));
+        }
+        case "remove" -> func.accept(null);
+        default -> throw forbiddenOp(patch);
       }
     }
 
