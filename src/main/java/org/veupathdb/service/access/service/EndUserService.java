@@ -620,7 +620,9 @@ public class EndUserService
       final Consumer < String > func
     ) {
       log.trace("EndUserService$Patch#strVal(patch, func)");
-      switch ((String) patch.get(Keys.Json.KEY_OP)) {
+
+      final var op = (String) patch.get(Keys.Json.KEY_OP);
+      switch (op) {
         case "add", "replace" -> {
           enforceNotNull(patch);
           func.accept(enforceType(
