@@ -50,12 +50,12 @@ public class EndUserController implements DatasetEndUsers
     final var curUser = Util.requireUser(request);
 
     final String recordId;
-    if (curUser.getUserId() == entity.getUserId()) {
-      EndUserService.validateOwnPost(entity);
-      recordId = EndUserService.endUserSelfCreate(entity);
-    } else if (userIsManager(curUser.getUserId(), entity.getDatasetId()) || userIsOwner(curUser.getUserId())) {
+    if (userIsManager(curUser.getUserId(), entity.getDatasetId()) || userIsOwner(curUser.getUserId())) {
       EndUserService.validateManagerPost(entity);
       recordId = EndUserService.endUserManagerCreate(entity);
+    } else if (curUser.getUserId() == entity.getUserId()) {
+      EndUserService.validateOwnPost(entity);
+      recordId = EndUserService.endUserSelfCreate(entity);
     } else
       throw new ForbiddenException();
 
