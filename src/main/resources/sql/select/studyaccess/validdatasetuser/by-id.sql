@@ -1,5 +1,7 @@
 SELECT
-  v.start_date
+  v.user_id
+, v.dataset_presenter_id
+, v.start_date
 , v.duration
 , v.purpose
 , v.research_question
