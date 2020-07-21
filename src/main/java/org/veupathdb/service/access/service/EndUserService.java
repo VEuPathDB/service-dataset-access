@@ -138,7 +138,8 @@ public class EndUserService
       final var row = createRequest2EndUserRow(req);
 
       if (req.getStartDate() == null) {
-        row.setStartDate(null);
+        log.debug("defaulting start date");
+        row.setStartDate(OffsetDateTime.now());
       }
 
       if (req.getApprovalStatus() == null) {
