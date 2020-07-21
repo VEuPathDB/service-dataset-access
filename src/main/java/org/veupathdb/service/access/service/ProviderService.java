@@ -214,7 +214,7 @@ public class ProviderService
     log.trace("ProviderService#validatePatch(items)");
 
     // If there is nothing in the patch, it's a bad request.
-    if (items.isEmpty())
+    if (items == null || items.isEmpty())
       throw new BadRequestException();
 
     // not allowed to do more than one thing
