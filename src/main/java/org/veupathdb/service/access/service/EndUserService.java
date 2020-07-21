@@ -659,7 +659,7 @@ public class EndUserService
       final var op = OpType.valueOf(((String) patch.get(Keys.Json.KEY_OP)).toUpperCase());
 
       for (final var i : in)
-        if (i == op)
+        if (i.equals(op))
           return;
 
       throw forbiddenOp(patch);
