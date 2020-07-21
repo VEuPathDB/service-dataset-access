@@ -226,14 +226,13 @@ public class EndUserService
       }});
 
     if (!datasetExists(req.getDatasetId()))
-      throw new UnprocessableEntityException(
-        new HashMap < String, List < String > >(1)
+      validation.put(Keys.Json.KEY_DATASET_ID, new ArrayList <>(1)
         {{
-          put(Keys.Json.KEY_DATASET_ID, new ArrayList <>(1)
-          {{
-            add(errBadDatasetId);
-          }});
+          add(errBadDatasetId);
         }});
+
+    if (!validation.isEmpty())
+      throw new UnprocessableEntityException(validation);
   }
 
   /**
