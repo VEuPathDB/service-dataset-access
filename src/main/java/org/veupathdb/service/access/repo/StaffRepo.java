@@ -32,7 +32,7 @@ public final class StaffRepo
         final var ps = Util.prepareStatement(cn, sql, ret)
       ) {
         ps.setLong(1, row.getUserId());
-        ps.setBoolean(1, row.isOwner());
+        ps.setBoolean(2, row.isOwner());
 
         try (final var rs = Util.executeQueryLogged(ps, sql)) {
           rs.next();
