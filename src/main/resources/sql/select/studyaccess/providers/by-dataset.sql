@@ -2,6 +2,7 @@ SELECT
   p.provider_id
 , p.user_id
 , a.email
+, p.is_manager
 , (
     SELECT value
     FROM useraccounts.account_properties
@@ -27,6 +28,6 @@ FROM
 WHERE
   p.dataset_id = ?
 ORDER BY
-  p.provider_id ASC
+  p.provider_id
 OFFSET ? ROWS
 FETCH NEXT ? ROWS ONLY
