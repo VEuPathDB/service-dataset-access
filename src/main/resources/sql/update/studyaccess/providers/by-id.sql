@@ -1,5 +1,5 @@
 UPDATE
-  studyaccess.provider
+  studyaccess.providers
 SET
   is_manager = ?
 WHERE
