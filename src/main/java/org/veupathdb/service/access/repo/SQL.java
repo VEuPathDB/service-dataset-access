@@ -11,7 +11,10 @@ interface SQL
 
   enum Method
   {
-    SELECT, UPDATE, INSERT, DELETE
+    SELECT,
+    UPDATE,
+    INSERT,
+    DELETE
   }
 
   interface Delete
@@ -79,6 +82,12 @@ interface SQL
       String Exists = select(Table.Datasets, "exists");
     }
 
+    interface Enums
+    {
+      String
+        ApprovalStatus   = select(Table.ApprovalStatus, "all"),
+        RestrictionLevel = select(Table.RestrictionLevel, "all");
+    }
   }
 
   interface Update

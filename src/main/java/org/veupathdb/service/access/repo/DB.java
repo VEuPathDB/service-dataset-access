@@ -13,11 +13,13 @@ public interface DB
   interface Table
   {
     String
-      Accounts  = Schema.UserAccounts + ".accounts",
-      Datasets  = Schema.Tuning + ".datasetpresenter",
-      EndUsers  = Schema.StudyAccess + ".validdatasetuser",
-      Providers = Schema.StudyAccess + ".providers",
-      Staff     = Schema.StudyAccess + ".staff";
+      Accounts         = Schema.UserAccounts + ".accounts",
+      ApprovalStatus   = Schema.StudyAccess + ".approval_status",
+      Datasets         = Schema.Tuning + ".datasetpresenter",
+      EndUsers         = Schema.StudyAccess + ".validdatasetuser",
+      Providers        = Schema.StudyAccess + ".providers",
+      RestrictionLevel = Schema.StudyAccess + ".restriction_level",
+      Staff            = Schema.StudyAccess + ".staff";
   }
 
   interface Column
