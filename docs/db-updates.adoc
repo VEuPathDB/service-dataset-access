@@ -11,7 +11,7 @@ New controlled vocabulary table for end user dataset request approval status.
 .Create Table
 [source, sql]
 ----
-CREATE TABLE approval_status
+CREATE TABLE studyaccess.approval_status
 (
   approval_status_id NUMBER(1) GENERATED AS IDENTITY
     CONSTRAINT approval_status_pk PRIMARY KEY,
@@ -82,6 +82,7 @@ CREATE TABLE studyaccess.staff
 .Populate Table
 [source, sql]
 ----
+INSERT INTO studyaccess.staff (user_id, is_owner) VALUES (376, 1);
 ----
 
 .Grant Access
