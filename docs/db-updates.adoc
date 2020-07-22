@@ -82,7 +82,11 @@ CREATE TABLE studyaccess.staff
 .Populate Table
 [source, sql]
 ----
+INSERT INTO studyaccess.staff (user_id, is_owner) VALUES (48, 1);
 INSERT INTO studyaccess.staff (user_id, is_owner) VALUES (376, 1);
+INSERT INTO studyaccess.staff (user_id, is_owner) VALUES (220902410, 1);
+INSERT INTO studyaccess.staff (user_id, is_owner) VALUES (295652793, 1);
+INSERT INTO studyaccess.staff (user_id, is_owner) VALUES (276765373, 1);
 ----
 
 .Grant Access
