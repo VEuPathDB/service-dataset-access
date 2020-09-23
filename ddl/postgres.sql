@@ -63,12 +63,14 @@ CREATE TABLE access.validdatasetuser
   duration             BIGINT                   NOT NULL DEFAULT -1,
   restriction_level_id SMALLINT                 NOT NULL
     REFERENCES access.restriction_level (restriction_level_id),
-  purpose              VARCHAR                  NOT NULL,
-  research_question    VARCHAR                  NOT NULL,
-  analysis_plan        VARCHAR                  NOT NULL,
-  dissemination_plan   VARCHAR                  NOT NULL,
-  prior_auth           VARCHAR                  NOT NULL,
+  purpose              VARCHAR,
+  research_question    VARCHAR,
+  analysis_plan        VARCHAR,
+  dissemination_plan   VARCHAR,
+  prior_auth           VARCHAR,
   approval_status_id   SMALLINT                 NOT NULL
     REFERENCES access.approval_status (approval_status_id),
-  denial_reason        VARCHAR
+  denial_reason        VARCHAR,
+  date_denied          TIMESTAMP WITH TIME ZONE,
+  allow_self_edits     BOOLEAN                  NOT NULL DEFAULT FALSE
 );

@@ -2,6 +2,7 @@ package org.veupathdb.service.access.repo;
 
 import org.veupathdb.service.access.model.RestrictionLevel;
 import org.veupathdb.service.access.model.RestrictionLevelCache;
+import org.veupathdb.service.access.service.QueryUtil;
 
 public final class RestrictionLevelRepo
 {
@@ -9,9 +10,9 @@ public final class RestrictionLevelRepo
   {
     static void populateRestrictionLevelCache() throws Exception {
       try (
-        final var cn = Util.getAcctDbConnection();
+        final var cn = QueryUtil.acctDbConnection();
         final var st = cn.createStatement();
-        final var rs = Util.executeQueryLogged(st, SQL.Select.Enums.RestrictionLevel)
+        final var rs = QueryUtil.executeQueryLogged(st, SQL.Select.Enums.RestrictionLevel)
       ) {
         final var cache = RestrictionLevelCache.getInstance();
 

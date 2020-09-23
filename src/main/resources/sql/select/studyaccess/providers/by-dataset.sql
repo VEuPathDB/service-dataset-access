@@ -1,8 +1,6 @@
 SELECT
-  p.provider_id
-, p.user_id
+  p.*
 , a.email
-, p.is_manager
 , (
     SELECT value
     FROM useraccounts.account_properties

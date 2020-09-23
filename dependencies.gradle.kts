@@ -3,11 +3,11 @@ val jackson = "2.+"
 val junit   = "5.+"
 val log4j   = "2.+"
 
-val implementation by configurations
-val runtimeOnly    by configurations
-
-val testImplementation by configurations
-val testRuntimeOnly    by configurations
+val implementation      by configurations
+val runtimeOnly         by configurations
+val annotationProcessor by configurations
+val testImplementation  by configurations
+val testRuntimeOnly     by configurations
 
 dependencies {
 
@@ -47,7 +47,7 @@ dependencies {
 
 
   // Core lib, prefers local checkout if available
-  implementation(findProject(":core") ?: "org.veupathdb.lib:jaxrs-container-core:2.4.0")
+  implementation(/*findProject(":core") ?: */"org.veupathdb.lib:jaxrs-container-core:2.6.0")
 
 
   // Jersey
@@ -71,11 +71,17 @@ dependencies {
 
   // Utils
   implementation("io.vulpine.lib:Jackfish:1.+")
-  implementation("com.devskiller.friendly-id:friendly-id:1.+")
   implementation("io.vulpine.lib:sql-import:0.2.1")
+  implementation("io.vulpine.lib:lib-query-util:2.0.2")
+  implementation("com.devskiller.friendly-id:friendly-id:1.+")
+  implementation("javax.mail", "mail", "1.5.0-b01")
+  implementation("info.picocli:picocli:4.5.1")
+  annotationProcessor("info.picocli:picocli-codegen:4.5.1")
+
 
   // Unit Testing
   testImplementation("org.junit.jupiter:junit-jupiter-api:${junit}")
   testImplementation("org.mockito:mockito-core:2.+")
+  testImplementation("org.veupathdb.lib.test", "test-utils", "1.1.2")
   testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junit}")
 }

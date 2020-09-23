@@ -57,8 +57,30 @@ public interface DatasetEndUsers {
       super(response, entity);
     }
 
+    private GetDatasetEndUsersResponse(Response response) {
+      super(response);
+    }
+
     public static GetDatasetEndUsersResponse respond200WithApplicationJson(EndUserList entity) {
       Response.ResponseBuilder responseBuilder = Response.status(200).header("Content-Type", "application/json");
+      responseBuilder.entity(entity);
+      return new GetDatasetEndUsersResponse(responseBuilder.build(), entity);
+    }
+
+    public static GetDatasetEndUsersResponse respond401WithApplicationJson(Unauthorized entity) {
+      Response.ResponseBuilder responseBuilder = Response.status(401).header("Content-Type", "application/json");
+      responseBuilder.entity(entity);
+      return new GetDatasetEndUsersResponse(responseBuilder.build(), entity);
+    }
+
+    public static GetDatasetEndUsersResponse respond403WithApplicationJson(Forbidden entity) {
+      Response.ResponseBuilder responseBuilder = Response.status(403).header("Content-Type", "application/json");
+      responseBuilder.entity(entity);
+      return new GetDatasetEndUsersResponse(responseBuilder.build(), entity);
+    }
+
+    public static GetDatasetEndUsersResponse respond500WithApplicationJson(Server entity) {
+      Response.ResponseBuilder responseBuilder = Response.status(500).header("Content-Type", "application/json");
       responseBuilder.entity(entity);
       return new GetDatasetEndUsersResponse(responseBuilder.build(), entity);
     }
@@ -69,9 +91,44 @@ public interface DatasetEndUsers {
       super(response, entity);
     }
 
+    private PostDatasetEndUsersResponse(Response response) {
+      super(response);
+    }
+
     public static PostDatasetEndUsersResponse respond200WithApplicationJson(
         EndUserCreateResponse entity) {
       Response.ResponseBuilder responseBuilder = Response.status(200).header("Content-Type", "application/json");
+      responseBuilder.entity(entity);
+      return new PostDatasetEndUsersResponse(responseBuilder.build(), entity);
+    }
+
+    public static PostDatasetEndUsersResponse respond400WithApplicationJson(BadRequest entity) {
+      Response.ResponseBuilder responseBuilder = Response.status(400).header("Content-Type", "application/json");
+      responseBuilder.entity(entity);
+      return new PostDatasetEndUsersResponse(responseBuilder.build(), entity);
+    }
+
+    public static PostDatasetEndUsersResponse respond401WithApplicationJson(Unauthorized entity) {
+      Response.ResponseBuilder responseBuilder = Response.status(401).header("Content-Type", "application/json");
+      responseBuilder.entity(entity);
+      return new PostDatasetEndUsersResponse(responseBuilder.build(), entity);
+    }
+
+    public static PostDatasetEndUsersResponse respond403WithApplicationJson(Forbidden entity) {
+      Response.ResponseBuilder responseBuilder = Response.status(403).header("Content-Type", "application/json");
+      responseBuilder.entity(entity);
+      return new PostDatasetEndUsersResponse(responseBuilder.build(), entity);
+    }
+
+    public static PostDatasetEndUsersResponse respond422WithApplicationJson(
+        UnprocessableEntity entity) {
+      Response.ResponseBuilder responseBuilder = Response.status(422).header("Content-Type", "application/json");
+      responseBuilder.entity(entity);
+      return new PostDatasetEndUsersResponse(responseBuilder.build(), entity);
+    }
+
+    public static PostDatasetEndUsersResponse respond500WithApplicationJson(Server entity) {
+      Response.ResponseBuilder responseBuilder = Response.status(500).header("Content-Type", "application/json");
       responseBuilder.entity(entity);
       return new PostDatasetEndUsersResponse(responseBuilder.build(), entity);
     }
@@ -82,15 +139,51 @@ public interface DatasetEndUsers {
       super(response, entity);
     }
 
+    private GetDatasetEndUsersByEndUserIdResponse(Response response) {
+      super(response);
+    }
+
     public static GetDatasetEndUsersByEndUserIdResponse respond200WithApplicationJson(
         EndUser entity) {
       Response.ResponseBuilder responseBuilder = Response.status(200).header("Content-Type", "application/json");
       responseBuilder.entity(entity);
       return new GetDatasetEndUsersByEndUserIdResponse(responseBuilder.build(), entity);
     }
+
+    public static GetDatasetEndUsersByEndUserIdResponse respond401WithApplicationJson(
+        Unauthorized entity) {
+      Response.ResponseBuilder responseBuilder = Response.status(401).header("Content-Type", "application/json");
+      responseBuilder.entity(entity);
+      return new GetDatasetEndUsersByEndUserIdResponse(responseBuilder.build(), entity);
+    }
+
+    public static GetDatasetEndUsersByEndUserIdResponse respond403WithApplicationJson(
+        Forbidden entity) {
+      Response.ResponseBuilder responseBuilder = Response.status(403).header("Content-Type", "application/json");
+      responseBuilder.entity(entity);
+      return new GetDatasetEndUsersByEndUserIdResponse(responseBuilder.build(), entity);
+    }
+
+    public static GetDatasetEndUsersByEndUserIdResponse respond404WithApplicationJson(
+        NotFound entity) {
+      Response.ResponseBuilder responseBuilder = Response.status(404).header("Content-Type", "application/json");
+      responseBuilder.entity(entity);
+      return new GetDatasetEndUsersByEndUserIdResponse(responseBuilder.build(), entity);
+    }
+
+    public static GetDatasetEndUsersByEndUserIdResponse respond500WithApplicationJson(
+        Server entity) {
+      Response.ResponseBuilder responseBuilder = Response.status(500).header("Content-Type", "application/json");
+      responseBuilder.entity(entity);
+      return new GetDatasetEndUsersByEndUserIdResponse(responseBuilder.build(), entity);
+    }
   }
 
   class PatchDatasetEndUsersByEndUserIdResponse extends ResponseDelegate {
+    private PatchDatasetEndUsersByEndUserIdResponse(Response response, Object entity) {
+      super(response, entity);
+    }
+
     private PatchDatasetEndUsersByEndUserIdResponse(Response response) {
       super(response);
     }
@@ -98,6 +191,48 @@ public interface DatasetEndUsers {
     public static PatchDatasetEndUsersByEndUserIdResponse respond204() {
       Response.ResponseBuilder responseBuilder = Response.status(204);
       return new PatchDatasetEndUsersByEndUserIdResponse(responseBuilder.build());
+    }
+
+    public static PatchDatasetEndUsersByEndUserIdResponse respond400WithApplicationJson(
+        BadRequest entity) {
+      Response.ResponseBuilder responseBuilder = Response.status(400).header("Content-Type", "application/json");
+      responseBuilder.entity(entity);
+      return new PatchDatasetEndUsersByEndUserIdResponse(responseBuilder.build(), entity);
+    }
+
+    public static PatchDatasetEndUsersByEndUserIdResponse respond401WithApplicationJson(
+        Unauthorized entity) {
+      Response.ResponseBuilder responseBuilder = Response.status(401).header("Content-Type", "application/json");
+      responseBuilder.entity(entity);
+      return new PatchDatasetEndUsersByEndUserIdResponse(responseBuilder.build(), entity);
+    }
+
+    public static PatchDatasetEndUsersByEndUserIdResponse respond403WithApplicationJson(
+        Forbidden entity) {
+      Response.ResponseBuilder responseBuilder = Response.status(403).header("Content-Type", "application/json");
+      responseBuilder.entity(entity);
+      return new PatchDatasetEndUsersByEndUserIdResponse(responseBuilder.build(), entity);
+    }
+
+    public static PatchDatasetEndUsersByEndUserIdResponse respond404WithApplicationJson(
+        NotFound entity) {
+      Response.ResponseBuilder responseBuilder = Response.status(404).header("Content-Type", "application/json");
+      responseBuilder.entity(entity);
+      return new PatchDatasetEndUsersByEndUserIdResponse(responseBuilder.build(), entity);
+    }
+
+    public static PatchDatasetEndUsersByEndUserIdResponse respond422WithApplicationJson(
+        UnprocessableEntity entity) {
+      Response.ResponseBuilder responseBuilder = Response.status(422).header("Content-Type", "application/json");
+      responseBuilder.entity(entity);
+      return new PatchDatasetEndUsersByEndUserIdResponse(responseBuilder.build(), entity);
+    }
+
+    public static PatchDatasetEndUsersByEndUserIdResponse respond500WithApplicationJson(
+        Server entity) {
+      Response.ResponseBuilder responseBuilder = Response.status(500).header("Content-Type", "application/json");
+      responseBuilder.entity(entity);
+      return new PatchDatasetEndUsersByEndUserIdResponse(responseBuilder.build(), entity);
     }
   }
 }

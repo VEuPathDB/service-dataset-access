@@ -13,8 +13,8 @@ import org.veupathdb.service.access.generated.model.DatasetProviderPatch;
 import org.veupathdb.service.access.generated.resources.DatasetProviders;
 import org.veupathdb.service.access.util.Keys;
 
-import static org.veupathdb.service.access.service.ProviderService.*;
-import static org.veupathdb.service.access.service.StaffService.userIsOwner;
+import static org.veupathdb.service.access.service.provider.ProviderService.*;
+import static org.veupathdb.service.access.service.staff.StaffService.userIsOwner;
 
 @Authenticated
 public class ProviderController implements DatasetProviders

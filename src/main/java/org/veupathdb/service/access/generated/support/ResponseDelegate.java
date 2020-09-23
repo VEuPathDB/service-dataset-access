@@ -173,7 +173,7 @@ public class ResponseDelegate extends Response {
     public Response.ResponseBuilder toResponseBuilder(final Response.ResponseBuilder builder) {
       for (String s : headerMap.keySet())  {
         if (headerMap.get(s) != null )  {
-          builder.header(s, headerMap.get(s));
+          builder.header(s, headerMap.get(s));;
         }
       }
       return builder;

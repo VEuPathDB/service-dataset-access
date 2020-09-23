@@ -6,6 +6,7 @@ import org.veupathdb.service.access.model.UserRow;
 
 abstract class UserQuery
 {
+  @Deprecated
   static void parseUser(UserRow row, ResultSet rs) throws Exception {
     row.setEmail(rs.getString(DB.Column.Accounts.Email));
     row.setFirstName(rs.getString(DB.Column.Misc.FirstName));

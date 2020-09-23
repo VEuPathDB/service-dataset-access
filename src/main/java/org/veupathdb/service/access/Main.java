@@ -4,10 +4,13 @@ import org.veupathdb.lib.container.jaxrs.config.Options;
 import org.veupathdb.lib.container.jaxrs.server.ContainerResources;
 import org.veupathdb.lib.container.jaxrs.server.Server;
 import org.veupathdb.service.access.model.ApprovalStatusCache;
+import org.veupathdb.service.access.model.Config;
 import org.veupathdb.service.access.repo.ApprovalStatusRepo;
 import org.veupathdb.service.access.repo.RestrictionLevelRepo;
 
 public class Main extends Server {
+  public static final Config config = new Config();
+
   public static void main(String[] args) {
     var server = new Main();
     server.enableAccountDB();
@@ -24,6 +27,11 @@ public class Main extends Server {
     out.enableCors();
 
     return out;
+  }
+
+  @Override
+  protected Options newOptions() {
+    return config;
   }
 
   @Override

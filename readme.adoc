@@ -1,1 +1,321 @@
 = Dataset Access Service
+:linkcss: true
+:table-caption!:
+:source-highlighter: pygments
+:toc: preamble
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+ifndef::env-github[]
+:stylesdir: /home/ellie/Code/3rd/asciidoctor-skins/css
+:stylesheet: adoc-github.css
+endif::[]
+
+https://veupathdb.github.io/service-dataset-access/api.html[API Docs]
+
+REST API microservice enabling HTTP clients to view and manage user access to
+study datasets.
+
+== Deployment
+
+=== Required Configuration
+
+==== Authentication Salt
+
+Used to authenticate user WDK session token values.
+
+Value must be the MD5 hash of the entire salt file used by WDK sites.
+
+.Provided using
+[cols=">1h,4m"]
+|===
+| CLI | --auth-secret=<string>
+| ENV | AUTH_SECRET_KEY=<string>
+|===
+//------------------------------------------------------------------------------
+
+==== LDAP Server
+
+Defines the LDAP server(s) that are used to look up Oracle connection details.
+
+Individual values must be formatted as `<host.addr>:<port>`, for example
+`ldap.mysite.org:123`.
+
+Multiple servers may be specified using a comma to separate them:
+`ldap1.mysite.org:123,ldap2.mysite.org:123`
+
+.Provided using
+[cols=">1h,4m"]
+|===
+| CLI | --ldap-server=<string>
+| ENV | LDAP_SERVER=<string>
+|===
+//------------------------------------------------------------------------------
+
+==== Oracle Base Distinguished Name
+
+The base context in which Oracle database TNS Names will be resolved.
+
+Required if the web service connects to Oracle database(s) using a TNS Name
+rather than individual connection details.
+
+.Example DN
+----
+cn=OracleContext,cn=MyTnsName,dc=Some,dc=Domain,dc=Component
+----
+
+.Provided using
+[cols=">1h,4m"]
+|===
+| CLI | --oracle-base-dn=<string>
+| ENV | ORACLE_BASE_DN=<string>
+|===
+//------------------------------------------------------------------------------
+
+==== Application DB TNS Name
+
+Sets the TNS Name to use when connecting to an Oracle application DB instance.
+
+.Provided using
+[cols=">1h,4m"]
+|===
+| CLI | --app-db-ora=<string>
+| ENV | APP_DB_TNS_NAME=<string>
+|===
+//------------------------------------------------------------------------------
+
+==== Application DB Username
+
+Sets the connection username for the application DB that this web service will
+connect to.
+
+.Provided using
+[cols=">1h,4m"]
+|===
+| CLI | --app-db-user=<string>
+| ENV | APP_DB_USER=<string>
+|===
+//------------------------------------------------------------------------------
+
+==== Application DB Password
+
+Sets the connection password for the application DB that this web service will
+connect to.
+
+.Provided using
+[cols=">1h,4m"]
+|===
+| ENV | APP_DB_PASS=<string>
+|===
+//------------------------------------------------------------------------------
+
+==== Account DB TNS Name
+
+Sets the TNS Name to use when connecting to an Oracle account DB instance.
+
+.Provided using
+[cols=">1h,4m"]
+|===
+| CLI | --acct-db-ora=<string>
+| ENV | ACCT_DB_TNS_NAME=<string>
+|===
+//------------------------------------------------------------------------------
+
+==== Account DB Username
+
+Sets the connection username for the account DB that this web service will
+connect to.
+
+.Provided using
+[cols=">1h,4m"]
+|===
+| CLI | --acct-db-user=<string>
+| ENV | ACCT_DB_USER=<string>
+|===
+//------------------------------------------------------------------------------
+
+==== Account DB Password
+
+Sets the connection password for the account DB that this web service will
+connect to.
+
+.Provided using
+[cols=">1h,4m"]
+|===
+| ENV | ACCT_DB_PASS=<string>
+|===
+//------------------------------------------------------------------------------
+
+==== User DB TNS Name
+
+Sets the TNS Name to use when connecting to an Oracle user DB instance.
+
+.Provided using
+[cols=">1h,4m"]
+|===
+| CLI | --user-db-ora=<string>
+| ENV | USER_DB_TNS_NAME=<string>
+|===
+//------------------------------------------------------------------------------
+
+==== User DB Username
+
+Sets the connection username for the user DB that this web service will
+connect to.
+
+.Provided using
+[cols=">1h,4m"]
+|===
+| CLI | --user-db-user=<string>
+| ENV | USER_DB_USER=<string>
+|===
+//------------------------------------------------------------------------------
+
+==== User DB Password
+
+Sets the connection password for the user DB that this web service will
+connect to.
+
+.Provided using
+[cols=">1h,4m"]
+|===
+| ENV | USER_DB_PASS=<string>
+|===
+//------------------------------------------------------------------------------
+
+==== SMTP Host
+
+Used for sending emails this service will generate.
+
+.Provided using
+[cols=">1h,4m"]
+|===
+| CLI | --smtp-host=<string>
+| ENV | SMTP_HOST=<string>
+|===
+//------------------------------------------------------------------------------
+
+==== Support Email
+
+Used to set the ReplyTo value on emails sent from this service.
+
+.Provided using
+[cols=">1h,4m"]
+|===
+| CLI | --support-email=<string>
+| ENV | SUPPORT_EMAIL=<string>
+|===
+//------------------------------------------------------------------------------
+
+
+=== Optional Configuration
+
+==== Server Port
+
+Used to configure the port the web server to listens to.
+
+Defaults to port `80` if unset.
+
+.Provided using
+[cols=">1h,4m"]
+|===
+| CLI | --server-port=<int16>
+| ENV | SERVER_PORT=<int16>
+|===
+//------------------------------------------------------------------------------
+
+==== Application DB Connection Pool Size
+
+Sets the connection pool size for the application DB that this web service will
+connect to.
+
+Defaults to `20`
+
+.Provided using
+[cols=">1h,4m"]
+|===
+| CLI | --app-db-pool-size=<int32>
+| ENV | APP_DB_POOL_SIZE=<int32>
+|===
+//------------------------------------------------------------------------------
+
+==== Account DB Connection Pool Size
+
+Sets the connection pool size for the account DB that this web service will
+connect to.
+
+Defaults to `20`
+
+.Provided using
+[cols=">1h,4m"]
+|===
+| CLI | --acct-db-pool-size=<int32>
+| ENV | ACCT_DB_POOL_SIZE=<int32>
+|===
+//------------------------------------------------------------------------------
+
+==== User DB Connection Pool Size
+
+Sets the connection pool size for the user DB that this web service will
+connect to.
+
+Defaults to `20`
+
+.Provided using
+[cols=">1h,4m"]
+|===
+| CLI | --user-db-pool-size=<int32>
+| ENV | USER_DB_POOL_SIZE=<int32>
+|===
+
+==== Enable Email Debug
+
+Sets the `javax.mail.Session` property `mail.debug`.
+
+Defaults to `false`.
+
+.Provided using
+[cols=">1h,4m"]
+|===
+| CLI | --mail-debug=true\|false
+| ENV | EMAIL_DEBUG=true\|false
+|===
+//------------------------------------------------------------------------------
+
+=== Template `.env` File
+
+[source, shell]
+----
+# Required #############################
+
+AUTH_SECRET_KEY=
+LDAP_SERVER=
+ORACLE_BASE_DN=
+
+APP_DB_TNS_NAME=
+APP_DB_USER=
+APP_DB_PASS=
+
+ACCT_DB_TNS_NAME=
+ACCT_DB_USER=
+ACCT_DB_PASS=
+
+USER_DB_TNS_NAME=
+USER_DB_USER=
+USER_DB_PASS=
+
+SMTP_HOST=
+SUPPORT_EMAIL=
+
+# Optional #############################
+
+#SERVER_PORT=80
+#APP_DB_POOL_SIZE=20
+#ACCT_DB_POOL_SIZE=20
+#USER_DB_POOL_SIZE=20
+#EMAIL_DEBUG=false
+----

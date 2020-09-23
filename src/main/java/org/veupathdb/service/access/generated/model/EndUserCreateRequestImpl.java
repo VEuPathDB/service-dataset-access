@@ -10,6 +10,7 @@ import java.util.Date;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "userId",
+    "email",
     "purpose",
     "researchQuestion",
     "analysisPlan",
@@ -24,7 +25,10 @@ import java.util.Date;
 })
 public class EndUserCreateRequestImpl implements EndUserCreateRequest {
   @JsonProperty("userId")
-  private long userId;
+  private Long userId;
+
+  @JsonProperty("email")
+  private String email;
 
   @JsonProperty("purpose")
   private String purpose;
@@ -67,13 +71,23 @@ public class EndUserCreateRequestImpl implements EndUserCreateRequest {
   private String denialReason;
 
   @JsonProperty("userId")
-  public long getUserId() {
+  public Long getUserId() {
     return this.userId;
   }
 
   @JsonProperty("userId")
-  public void setUserId(long userId) {
+  public void setUserId(Long userId) {
     this.userId = userId;
+  }
+
+  @JsonProperty("email")
+  public String getEmail() {
+    return this.email;
+  }
+
+  @JsonProperty("email")
+  public void setEmail(String email) {
+    this.email = email;
   }
 
   @JsonProperty("purpose")

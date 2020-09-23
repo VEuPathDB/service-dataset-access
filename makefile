@@ -78,6 +78,10 @@ fix-path:
 
 gen-jaxrs: api.raml merge-raml
 	@$(BIN_DIR)/generate-jaxrs.sh $(APP_PACKAGE)
+	# Monkey-patching generated classes
+	#   Fixing primitive types in EndUserCreateRequest
+	@ sed -i 's/long/Long/g' $(GEN_DIR)/model/EndUserCreateRequest.java
+	@ sed -i 's/long/Long/g' $(GEN_DIR)/model/EndUserCreateRequestImpl.java
 
 gen-docs: api.raml merge-raml
 	@$(BIN_DIR)/generate-docs.sh

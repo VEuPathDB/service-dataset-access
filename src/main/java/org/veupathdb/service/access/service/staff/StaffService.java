@@ -1,4 +1,4 @@
-package org.veupathdb.service.access.service;
+package org.veupathdb.service.access.service.staff;
 
 import java.util.List;
 import java.util.Map;
@@ -12,23 +12,35 @@ import org.veupathdb.lib.container.jaxrs.providers.UserProvider;
 import org.veupathdb.service.access.generated.model.*;
 import org.veupathdb.service.access.model.PartialStaffRow;
 import org.veupathdb.service.access.model.StaffRow;
-import org.veupathdb.service.access.repo.StaffRepo;
 import org.veupathdb.service.access.util.Keys;
 
 public class StaffService
 {
-  private static final Logger log = LogProvider.logger(StaffService.class);
+  private static StaffService instance = new StaffService();
+
+  private final Logger log = LogProvider.logger(StaffService.class);
+
+  StaffService() {}
+
+  public static StaffService getInstance() {
+    return instance;
+  }
 
   /**
    * Looks up the current user and checks if they are a site owner.
    *
    * @return whether or not the current user is a site owner.
    */
-  public static boolean userIsOwner(Request req) {
-    log.trace("StaffService#userIsOwner(req)");
-    return userIsOwner(UserProvider.lookupUser(req)
+  public boolean isUserOwner(final Request req) {
+    log.trace("StaffService#isUserOwner(Request)");
+
+    return isUserOwner(UserProvider.lookupUser(req)
       .orElseThrow(InternalServerErrorException::new)
       .getUserId());
+  }
+
+  public static boolean userIsOwner(final Request req) {
+    return getInstance().isUserOwner(req);
   }
 
   /**
@@ -36,12 +48,11 @@ public class StaffService
    *
    * @return whether or not the given userId belongs to a site owner.
    */
-  public static boolean userIsOwner(long userId) {
-    log.trace("StaffService#userIsOwner(userId)");
+  public boolean isUserOwner(final long userId) {
+    log.trace("StaffService#isUserOwner(long)");
+
     try {
-      return StaffRepo.Select.byUserId(userId)
-        .filter(StaffRow::isOwner)
-        .isPresent();
+      return StaffRepo.Select.byUserId(userId).filter(StaffRow::isOwner).isPresent();
     } catch (WebApplicationException e) {
       throw e;
     } catch (Throwable e) {
@@ -49,8 +60,12 @@ public class StaffService
     }
   }
 
-  public static void updateStaffRow(final StaffRow row) {
-    log.trace("StaffService#updateStaffRow(row)");
+  public static boolean userIsOwner(final long userId) {
+    return getInstance().isUserOwner(userId);
+  }
+
+  public void updateStaffRecord(final StaffRow row) {
+    log.trace("StaffService#updateStaffRecord(StaffRow)");
     try {
       StaffRepo.Update.ownerFlagById(row);
     } catch (Throwable e) {
@@ -58,20 +73,27 @@ public class StaffService
     }
   }
 
-  public static StaffList getStaffList(int limit, int offset) {
-    log.trace("StaffService#getStaffList(limit, offset)");
+  public static void updateStaffRow(final StaffRow row) {
+    getInstance().updateStaffRecord(row);
+  }
+
+  public StaffList getStaffList(final int limit, final int offset) {
+    log.trace("StaffService#getStaffList(int, int)");
+
     try {
-      return rows2StaffList(
-        StaffRepo.Select.list(limit, offset),
-        offset,
-        StaffRepo.Select.count());
+      return rows2StaffList(StaffRepo.Select.list(limit, offset), offset, StaffRepo.Select.count());
     } catch (Throwable e) {
       throw new InternalServerErrorException(e);
     }
   }
 
-  public static StaffRow requireStaffById(final int staffId) {
-    log.trace("StaffService#requireStaffById(staffId)");
+  public static StaffList getStaff(final int limit, final int offset) {
+    return getInstance().getStaffList(limit, offset);
+  }
+
+  public StaffRow mustGetStaffById(final int staffId) {
+    log.trace("StaffService#mustGetStaffById(int)");
+
     try {
       return StaffRepo.Select.byId(staffId).orElseThrow(NotFoundException::new);
     } catch (Throwable e) {
@@ -79,9 +101,15 @@ public class StaffService
     }
   }
 
-  public static int createStaff(final NewStaffRequest req) {
-    log.trace("StaffService#createStaff(req)");
+  public static StaffRow requireStaffById(final int staffId) {
+    return getInstance().mustGetStaffById(staffId);
+  }
+
+  public int createNewStaff(final NewStaffRequest req) {
+    log.trace("StaffService#createStaff(NewStaffRequest)");
+
     final var row = new PartialStaffRow();
+
     row.setUserId(req.getUserId());
     row.setOwner(req.getIsOwner());
 
@@ -92,8 +120,14 @@ public class StaffService
     }
   }
 
-  public static void deleteStaff(final int staffId) {
-    log.trace("StaffService#deleteStaff(staffId)");
+  public static int createStaff(final NewStaffRequest req) {
+    return getInstance().createNewStaff(req);
+  }
+
+
+  public void deleteStaffRecord(final int staffId) {
+    log.trace("StaffService#deleteStaff(int)");
+
     try {
       StaffRepo.Delete.byId(staffId);
     } catch (Exception e) {
@@ -101,9 +135,13 @@ public class StaffService
     }
   }
 
+  public static void deleteStaff(final int staffId) {
+    getInstance().deleteStaffRecord(staffId);
+  }
+
   @SuppressWarnings("unchecked")
-  public static void validatePatch(List < StaffPatch > entity) {
-    log.trace("StaffService#validatePatch(entity)");
+  public void validatePatchRequest(final List < StaffPatch > entity) {
+    log.trace("StaffService#validatePatchRequest(List)");
 
     if (entity == null || entity.isEmpty())
       throw new BadRequestException();
@@ -123,26 +161,32 @@ public class StaffService
       throw new ForbiddenException();
   }
 
-  private static StaffList rows2StaffList(
+  public static void validatePatch(final List < StaffPatch > entity) {
+    getInstance().validatePatchRequest(entity);
+  }
+
+  private StaffList rows2StaffList(
     final List < StaffRow > rows,
     final int offset,
     final int total
   ) {
     log.trace("StaffService#rows2StaffList(rows, offset, total)");
+
     final var out = new StaffListImpl();
 
     out.setOffset(offset);
     out.setTotal(total);
     out.setRows(rows.size());
     out.setData(rows.stream()
-      .map(StaffService::row2Staff)
+      .map(this::row2Staff)
       .collect(Collectors.toList()));
 
     return out;
   }
 
-  private static Staff row2Staff(final StaffRow row) {
+  private Staff row2Staff(final StaffRow row) {
     log.trace("StaffService#row2Staff(row)");
+
     final var user = new UserDetailsImpl();
     user.setOrganization(row.getOrganization());
     user.setFirstName(row.getFirstName());

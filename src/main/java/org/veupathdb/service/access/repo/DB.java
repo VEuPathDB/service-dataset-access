@@ -13,13 +13,14 @@ public interface DB
   interface Table
   {
     String
-      Accounts         = Schema.UserAccounts + ".accounts",
-      ApprovalStatus   = Schema.StudyAccess + ".approval_status",
-      Datasets         = Schema.Tuning + ".datasetpresenter",
-      EndUsers         = Schema.StudyAccess + ".validdatasetuser",
-      Providers        = Schema.StudyAccess + ".providers",
-      RestrictionLevel = Schema.StudyAccess + ".restriction_level",
-      Staff            = Schema.StudyAccess + ".staff";
+      Accounts          = Schema.UserAccounts + ".accounts",
+      ApprovalStatus    = Schema.StudyAccess + ".approval_status",
+      Datasets          = Schema.Tuning + ".datasetpresenter",
+      EndUsers          = Schema.StudyAccess + ".validdatasetuser",
+      Providers         = Schema.StudyAccess + ".providers",
+      RestrictionLevel  = Schema.StudyAccess + ".restriction_level",
+      Staff             = Schema.StudyAccess + ".staff",
+      DatasetProperties = Schema.Tuning + ".datasetproperty";
   }
 
   interface Column
@@ -27,9 +28,11 @@ public interface DB
     interface EndUser
     {
       String
+        AllowSelfEdits    = "allow_self_edits",
         AnalysisPlan      = "analysis_plan",
         ApprovalStatus    = "approval_status_id",
         DatasetId         = "dataset_presenter_id",
+        DateDenied        = "date_denied",
         DenialReason      = "denial_reason",
         DisseminationPlan = "dissemination_plan",
         Duration          = "duration",

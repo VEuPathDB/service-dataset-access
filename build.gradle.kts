@@ -5,6 +5,15 @@ plugins {
   java
 }
 
+repositories {
+  jcenter()
+  mavenCentral()
+  maven {
+    name = "Bintray"
+    url = uri("https://dl.bintray.com/veupathdb")
+  }
+}
+
 apply(from = "dependencies.gradle.kts")
 
 // Load Props
@@ -16,9 +25,6 @@ val fullPack = "${buildProps["app.package.root"]}.${buildProps["app.package.serv
 group = buildProps["project.group"] ?: error("empty 1")
 version = buildProps["project.version"] ?: error("empty 2")
 
-repositories {
-  jcenter()
-}
 
 tasks.jar {
   manifest {

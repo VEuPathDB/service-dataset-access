@@ -9,10 +9,16 @@ import java.util.Date;
 )
 public interface EndUserCreateRequest {
   @JsonProperty("userId")
-  long getUserId();
+  Long getUserId();
 
   @JsonProperty("userId")
-  void setUserId(long userId);
+  void setUserId(Long userId);
+
+  @JsonProperty("email")
+  String getEmail();
+
+  @JsonProperty("email")
+  void setEmail(String email);
 
   @JsonProperty("purpose")
   String getPurpose();

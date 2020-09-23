@@ -71,6 +71,10 @@ ALTER TABLE studyaccess.validdatasetuser
 ALTER TABLE studyaccess.validdatasetuser
   ADD approval_status_id NUMBER(1)
     REFERENCES studyaccess.approval_status (approval_status_id);
+ALTER TABLE studyaccess.validdatasetuser
+  ADD date_denied TIMESTAMP;
+ALTER TABLE studyaccess.validdatasetuser
+  ADD allow_self_edits NUMBER(1) DEFAULT 0 NOT NULL;
 
 UPDATE
   studyaccess.validdatasetuser v

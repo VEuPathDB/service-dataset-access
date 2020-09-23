@@ -1,6 +1,5 @@
 SELECT
-  p.provider_id
-, p.is_manager
+  p.*
 , a.email
 , (
     SELECT value

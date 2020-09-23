@@ -11,6 +11,8 @@ SET
 , restriction_level_id = ?     -- 8, short
 , approval_status_id = ?       -- 9, short
 , denial_reason = ?            -- 10, string
+, date_denied = ?              -- 11, timestamp
+, allow_self_edits = ?         -- 12, boolean
 WHERE
-  user_id = ?                  -- 11, long
-  AND dataset_presenter_id = ? -- 12, string
+  user_id = ?                  -- 13, long
+  AND dataset_presenter_id = ? -- 14, string

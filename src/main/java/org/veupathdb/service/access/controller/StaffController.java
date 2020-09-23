@@ -12,7 +12,7 @@ import org.veupathdb.service.access.generated.model.NewStaffRequest;
 import org.veupathdb.service.access.generated.model.NewStaffResponseImpl;
 import org.veupathdb.service.access.generated.model.StaffPatch;
 import org.veupathdb.service.access.generated.resources.Staff;
-import org.veupathdb.service.access.service.StaffService;
+import org.veupathdb.service.access.service.staff.StaffService;
 import org.veupathdb.service.access.util.Keys;
 
 @Authenticated
@@ -30,7 +30,7 @@ public class StaffController implements Staff
       throw new ForbiddenException();
 
     return GetStaffResponse.respond200WithApplicationJson(
-      StaffService.getStaffList(limit, offset));
+      StaffService.getStaff(limit, offset));
   }
 
   @Override

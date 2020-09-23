@@ -15,6 +15,8 @@ public class EndUserRow extends UserRow
   private ApprovalStatus   approvalStatus;
   private String           priorAuth;
   private String           denialReason;
+  private OffsetDateTime   dateDenied;
+  private boolean          allowSelfEdits;
 
   public String getDatasetId() {
     return datasetId;
@@ -112,6 +114,24 @@ public class EndUserRow extends UserRow
 
   public EndUserRow setDenialReason(String denialReason) {
     this.denialReason = denialReason;
+    return this;
+  }
+
+  public OffsetDateTime getDateDenied() {
+    return dateDenied;
+  }
+
+  public EndUserRow setDateDenied(OffsetDateTime dateDenied) {
+    this.dateDenied = dateDenied;
+    return this;
+  }
+
+  public boolean isAllowSelfEdits() {
+    return allowSelfEdits;
+  }
+
+  public EndUserRow setAllowSelfEdits(boolean allowSelfEdits) {
+    this.allowSelfEdits = allowSelfEdits;
     return this;
   }
 }

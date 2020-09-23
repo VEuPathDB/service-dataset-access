@@ -5,10 +5,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder("endUserId")
+@JsonPropertyOrder({
+    "created",
+    "endUserId"
+})
 public class EndUserCreateResponseImpl implements EndUserCreateResponse {
+  @JsonProperty("created")
+  private boolean created;
+
   @JsonProperty("endUserId")
   private String endUserId;
+
+  @JsonProperty("created")
+  public boolean getCreated() {
+    return this.created;
+  }
+
+  @JsonProperty("created")
+  public void setCreated(boolean created) {
+    this.created = created;
+  }
 
   @JsonProperty("endUserId")
   public String getEndUserId() {

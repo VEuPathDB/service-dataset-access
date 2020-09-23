@@ -12,10 +12,11 @@ import org.veupathdb.service.access.generated.model.EndUserCreateRequest;
 import org.veupathdb.service.access.generated.model.EndUserCreateResponseImpl;
 import org.veupathdb.service.access.generated.model.EndUserPatch;
 import org.veupathdb.service.access.generated.resources.DatasetEndUsers;
-import org.veupathdb.service.access.service.EndUserService;
+import org.veupathdb.service.access.service.user.EndUserService;
+import org.veupathdb.service.access.service.user.EndUserValidate;
 
-import static org.veupathdb.service.access.service.ProviderService.userIsManager;
-import static org.veupathdb.service.access.service.StaffService.userIsOwner;
+import static org.veupathdb.service.access.service.provider.ProviderService.userIsManager;
+import static org.veupathdb.service.access.service.staff.StaffService.userIsOwner;
 
 @Authenticated
 public class EndUserController implements DatasetEndUsers
@@ -35,9 +36,7 @@ public class EndUserController implements DatasetEndUsers
   ) {
     Util.requireDatasetId(datasetId);
 
-    final var curUser = Util.requireUser(request);
-
-    if (!userIsManager(curUser.getUserId(), datasetId) && !userIsOwner(curUser.getUserId()))
+    if (!userIsManager(request, datasetId) && !userIsOwner(request))
       throw new ForbiddenException();
 
     return GetDatasetEndUsersResponse.respond200WithApplicationJson(
@@ -45,22 +44,22 @@ public class EndUserController implements DatasetEndUsers
   }
 
   @Override
-  public PostDatasetEndUsersResponse postDatasetEndUsers(
-    final EndUserCreateRequest entity
-  ) {
+  public PostDatasetEndUsersResponse postDatasetEndUsers(final EndUserCreateRequest entity) {
     final var curUser = Util.requireUser(request);
 
     final String recordId;
     if (userIsManager(curUser.getUserId(), entity.getDatasetId()) || userIsOwner(curUser.getUserId())) {
       if (EndUserService.endUserExists(entity.getUserId(), entity.getDatasetId()))
         throw new BadRequestException("An end user already exists for the given dataset with the given id");
-      EndUserService.validateManagerPost(entity);
-      recordId = EndUserService.endUserManagerCreate(entity);
+
+      EndUserValidate.validateMgrPost(entity);
+      recordId = EndUserService.endUserMgrCreate(entity);
     } else if (curUser.getUserId() == entity.getUserId()) {
       if (EndUserService.endUserExists(entity.getUserId(), entity.getDatasetId()))
         throw new BadRequestException("An end user already exists for the given dataset with the given id");
-      EndUserService.validateOwnPost(entity);
-      recordId = EndUserService.endUserSelfCreate(entity);
+
+      EndUserValidate.validateSelfCreate(entity);
+      recordId = EndUserService.userSelfCreate(entity);
     } else
       throw new ForbiddenException();
 

@@ -7,6 +7,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
     as = EndUserCreateResponseImpl.class
 )
 public interface EndUserCreateResponse {
+  @JsonProperty("created")
+  boolean getCreated();
+
+  @JsonProperty("created")
+  void setCreated(boolean created);
+
   @JsonProperty("endUserId")
   String getEndUserId();
 
