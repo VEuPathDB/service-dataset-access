@@ -6,5 +6,6 @@ public enum RestrictionLevel
   LIMITED,
   PROTECTED,
   CONTROLLED,
+  PRERELEASE,
   ADMIN
 }
