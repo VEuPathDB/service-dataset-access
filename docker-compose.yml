@@ -2,7 +2,7 @@ version: "3.5"
 
 services:
   service:
-    image: veupathdb/dataset-access-service:{$SERVICE_TAG:-latest}
+    image: veupathdb/dataset-access-service:${SERVICE_TAG:-latest}
     environment:
       SERVER_PORT: ${SERVER_PORT:-80}
 
