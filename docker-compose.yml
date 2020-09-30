@@ -1,41 +1,43 @@
-version: "3.8"
+version: "3.5"
 
 services:
   service:
-    image: veupathdb/user-dataset-import-service:latest
+    image: veupathdb/dataset-access-service:{$SERVICE_TAG:-latest}
     environment:
-      SERVER_PORT: 80
+      SERVER_PORT: ${SERVER_PORT:-80}
 
       # User authentication salt
-      AUTH_SECRET_KEY:
+      AUTH_SECRET_KEY: ${AUTH_SECRET_KEY?required}
 
       # Application DB
-      APP_DB_TNS_NAME:
-      APP_DB_USER:
-      APP_DB_PASS:
+      APP_DB_TNS_NAME: ${APP_DB_TNS_NAME?required}
+      APP_DB_USER: ${APP_DB_USER?required}
+      APP_DB_PASS: ${APP_DB_PASS?required}
 
       # Account DB
-      ACCT_DB_TNS_NAME:
-      ACCT_DB_USER:
-      ACCT_DB_PASS:
+      ACCT_DB_TNS_NAME: ${ACCT_DB_TNS_NAME?required}
+      ACCT_DB_USER: ${ACCT_DB_USER?required}
+      ACCT_DB_PASS: ${ACCT_DB_PASS?required}
 
       # User DB
-      USER_DB_TNS_NAME:
-      USER_DB_USER:
-      USER_DB_PASS:
+      USER_DB_TNS_NAME: ${USER_DB_TNS_NAME?required}
+      USER_DB_USER: ${USER_DB_USER?required}
+      USER_DB_PASS: ${USER_DB_PASS?required}
 
       # LDAP
-      LDAP_SERVER:
-      ORACLE_BASE_DN:
+      LDAP_SERVER: ${LDAP_SERVER?required}
+      ORACLE_BASE_DN: ${ORACLE_BASE_DN?required}
     ports:
     - 8088:80
     networks:
     - traefik
     labels:
-    - "traefik.http.routers.dataset-access-service-dev.rule=Host(`dataset-access-service-dev.local.apidb.org`)"
-    - "traefik.http.routers.dataset-access-service-dev.tls=true"
-    - "traefik.http.routers.dataset-access-service-dev.entrypoints=local"
-    - "traefik.http.services.dataset-access-service-dev.loadbalancer.server.port=80"
+    - "traefik.http.routers.${TRAEFIK_ROUTER:-das-dev}.rule=Host(`${TRAEFIK_HOST:-das-dev.local.apidb.org}`)"
+    - "traefik.http.routers.${TRAEFIK_ROUTER:-das-dev}.tls=true"
+    - "traefik.http.routers.${TRAEFIK_ROUTER:-das-dev}.entrypoints=local"
+    - "com.centurylinklabs.watchtower.enable=${SERVICE_WATCHTOWER:-false}"
+
+
 networks:
   traefik:
     external: true
