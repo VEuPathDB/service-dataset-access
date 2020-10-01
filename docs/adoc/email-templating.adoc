@@ -21,7 +21,7 @@ example: `\https://clinepidb.org/ce`.
 `$app-link$`:: A derived value based on the `{siteUrl}` variable, containing
 the full url to the dataset access page.
 
-`$sign-up-link$:: A derived value based on the `{siteUrl}` variable containing
+`$sign-up-link$`:: A derived value based on the `{siteUrl}` variable containing
 the full url to the user registration page
 
 === Dataset
