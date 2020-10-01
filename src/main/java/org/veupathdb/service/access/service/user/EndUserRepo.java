@@ -9,10 +9,8 @@ import io.vulpine.lib.query.util.basic.BasicPreparedReadQuery;
 import io.vulpine.lib.query.util.basic.BasicPreparedWriteQuery;
 import org.apache.logging.log4j.Logger;
 import org.veupathdb.lib.container.jaxrs.providers.LogProvider;
-import org.veupathdb.service.access.model.ApprovalStatus;
-import org.veupathdb.service.access.model.ApprovalStatusCache;
-import org.veupathdb.service.access.model.EndUserRow;
-import org.veupathdb.service.access.model.RestrictionLevelCache;
+import org.veupathdb.service.access.model.*;
+import org.veupathdb.service.access.repo.ApprovalStatusRepo;
 import org.veupathdb.service.access.repo.SQL;
 import org.veupathdb.service.access.service.QueryUtil;
 import org.veupathdb.service.access.util.PsBuilder;
@@ -54,6 +52,54 @@ public class EndUserRepo
 
   public interface Select
   {
+    static List<EndUserRow> find(final SearchQuery query) throws Exception {
+      return new BasicPreparedListReadQuery<>(
+        SQL.Select.EndUsers.ByQuery,
+        QueryUtil.getInstance()::getAcctDbConnection,
+        EndUserUtil::parseEndUserRow,
+        ps -> {
+          if (query.hasDatasetId())
+            ps.setString(1, query.getDatasetId());
+          else
+            ps.setNull(1, Types.VARCHAR);
+          if (query.hasLimit())
+            ps.setInt(2, query.getLimit());
+          else
+            ps.setNull(2, Types.INTEGER);
+          if (query.hasOffset())
+            ps.setInt(3, query.getOffset());
+          else
+            ps.setNull(3, Types.INTEGER);
+          if (query.hasApprovalStatus())
+            ps.setShort(4, ApprovalStatusCache.getInstance()
+              .get(query.getApprovalStatus())
+              .orElseThrow());
+          else
+            ps.setNull(4, Types.SMALLINT);
+        }
+      ).execute().getValue();
+    }
+
+    static int count(final SearchQuery query) throws Exception {
+      return new BasicPreparedReadQuery<>(
+        SQL.Select.EndUsers.CountByQuery,
+        QueryUtil.getInstance()::getAcctDbConnection,
+        SqlUtil.reqParser(SqlUtil::parseSingleInt),
+        ps -> {
+          if (query.hasDatasetId())
+            ps.setString(1, query.getDatasetId());
+          else
+            ps.setNull(1, Types.VARCHAR);
+          if (query.hasApprovalStatus())
+            ps.setShort(2, ApprovalStatusCache.getInstance()
+              .get(query.getApprovalStatus())
+              .orElseThrow());
+          else
+            ps.setNull(2, Types.SMALLINT);
+        }
+      ).execute().getValue();
+    }
+
     static int countByDataset(final String datasetId) throws Exception {
       log.trace("EndUserRepo$Select#countByDataset(String)");
 

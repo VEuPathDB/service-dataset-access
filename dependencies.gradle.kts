@@ -1,5 +1,5 @@
 val jersey  = "2.+"
-val jackson = "2.+"
+val jackson = "2.11.2"
 val junit   = "5.+"
 val log4j   = "2.+"
 
@@ -75,6 +75,7 @@ dependencies {
   implementation("io.vulpine.lib:lib-query-util:2.0.2")
   implementation("com.devskiller.friendly-id:friendly-id:1.+")
   implementation("javax.mail", "mail", "1.5.0-b01")
+  implementation("org.antlr", "ST4", "4.3.1")
   implementation("info.picocli:picocli:4.5.1")
   annotationProcessor("info.picocli:picocli-codegen:4.5.1")
 

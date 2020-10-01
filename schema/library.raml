@@ -9,6 +9,34 @@
 ################################################################################
 
 types:
+  DatastoreId:
+    type: integer
+    minimum: 1
+  UserDetails:
+    type: object
+    additionalProperties: false
+    properties:
+      userId:
+        type: integer
+        format: int64
+        minimum: 1
+      firstName: string
+      lastName: string
+      organization: string
+  RestrictionLevel:
+    type: string
+    enum:
+      - public
+      - limited
+      - protected
+      - controlled
+      - admin
+  ApprovalStatus:
+    type: string
+    enum:
+      - approved
+      - requested
+      - denied
   EndUser:
     type: object
     additionalProperties: false
@@ -130,16 +158,30 @@ types:
     additionalProperties: false
     properties:
       datasetId: string
-      userId:
+      userId?:
         type: integer
         format: int64
         minimum: 1
+      email?: string
       isManager: boolean
   DatasetProviderCreateResponse:
     type: object
     additionalProperties: false
     properties:
-      providerId:
+      created:
+        description: |
+          Indicates whether a new provider record was created or not.
+
+          If this value is `false` the `"providerId"` property will not be set.
+          This happens when the request was sent using an email address that is
+          not in our user database.  In this case no provider record was created
+          but instead an email was sent to the given address requesting that the
+          user register.
+
+          If this value is `true` the `"providerId"` property will be set
+          containing the primary key value of the newly created provider record.
+        type: boolean
+      providerId?:
         type: integer
         minimum: 1
   DatasetProviderPatchRequest:
@@ -210,32 +252,4 @@ types:
         type: string
         pattern: ^/isOwner$
       value: boolean
-  DatastoreId:
-    type: integer
-    minimum: 1
-  UserDetails:
-    type: object
-    additionalProperties: false
-    properties:
-      userId:
-        type: integer
-        format: int64
-        minimum: 1
-      firstName: string
-      lastName: string
-      organization: string
-  RestrictionLevel:
-    type: string
-    enum:
-      - public
-      - limited
-      - protected
-      - controlled
-      - admin
-  ApprovalStatus:
-    type: string
-    enum:
-      - approved
-      - requested
-      - denied
 

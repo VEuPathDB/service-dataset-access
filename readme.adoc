@@ -150,43 +150,6 @@ connect to.
 |===
 //------------------------------------------------------------------------------
 
-==== User DB TNS Name
-
-Sets the TNS Name to use when connecting to an Oracle user DB instance.
-
-.Provided using
-[cols=">1h,4m"]
-|===
-| CLI | --user-db-ora=<string>
-| ENV | USER_DB_TNS_NAME=<string>
-|===
-//------------------------------------------------------------------------------
-
-==== User DB Username
-
-Sets the connection username for the user DB that this web service will
-connect to.
-
-.Provided using
-[cols=">1h,4m"]
-|===
-| CLI | --user-db-user=<string>
-| ENV | USER_DB_USER=<string>
-|===
-//------------------------------------------------------------------------------
-
-==== User DB Password
-
-Sets the connection password for the user DB that this web service will
-connect to.
-
-.Provided using
-[cols=">1h,4m"]
-|===
-| ENV | USER_DB_PASS=<string>
-|===
-//------------------------------------------------------------------------------
-
 ==== SMTP Host
 
 Used for sending emails this service will generate.
@@ -209,6 +172,23 @@ Used to set the ReplyTo value on emails sent from this service.
 | CLI | --support-email=<string>
 | ENV | SUPPORT_EMAIL=<string>
 |===
+//------------------------------------------------------------------------------
+
+==== Site URL
+
+The base URL for the site to which this service is paired.
+
+.Provided using
+[cols=">1h,4m"]
+|===
+| CLI | --site-url=<string>
+| ENV | SITE_URL=<string>
+|===
+
+.Example
+----
+SITE_URL=https://clinepidb.org/ce
+----
 //------------------------------------------------------------------------------
 
 
@@ -258,20 +238,6 @@ Defaults to `20`
 |===
 //------------------------------------------------------------------------------
 
-==== User DB Connection Pool Size
-
-Sets the connection pool size for the user DB that this web service will
-connect to.
-
-Defaults to `20`
-
-.Provided using
-[cols=">1h,4m"]
-|===
-| CLI | --user-db-pool-size=<int32>
-| ENV | USER_DB_POOL_SIZE=<int32>
-|===
-
 ==== Enable Email Debug
 
 Sets the `javax.mail.Session` property `mail.debug`.
@@ -283,6 +249,35 @@ Defaults to `false`.
 |===
 | CLI | --mail-debug=true\|false
 | ENV | EMAIL_DEBUG=true\|false
+|===
+//------------------------------------------------------------------------------
+
+==== Registration Path
+
+Path to the registration client component relative to the site URL.
+
+Defaults to `/app/user/registration`.
+
+.Provided using
+[cols=">1h,4m"]
+|===
+| CLI | --registration-path=<string>
+| ENV | REGISTRATION_PATH=<string>
+|===
+
+//------------------------------------------------------------------------------
+
+==== Application Path
+
+Path to the dataset access management client component relative to the site URL.
+
+Defaults to `/app/study-access`.
+
+.Provided using
+[cols=">1h,4m"]
+|===
+| CLI | --application-path=<string>
+| ENV | APPLICATION_PATH=<string>
 |===
 //------------------------------------------------------------------------------
 
@@ -304,18 +299,17 @@ ACCT_DB_TNS_NAME=
 ACCT_DB_USER=
 ACCT_DB_PASS=
 
-USER_DB_TNS_NAME=
-USER_DB_USER=
-USER_DB_PASS=
-
 SMTP_HOST=
 SUPPORT_EMAIL=
+
+SITE_URL=
 
 # Optional #############################
 
 #SERVER_PORT=80
 #APP_DB_POOL_SIZE=20
 #ACCT_DB_POOL_SIZE=20
-#USER_DB_POOL_SIZE=20
 #EMAIL_DEBUG=false
+#REGISTRATION_PATH=/app/user/registration
+#APPLICATION_PATH=/app/study-access
 ----

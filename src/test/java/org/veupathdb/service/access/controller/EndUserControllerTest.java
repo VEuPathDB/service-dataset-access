@@ -11,8 +11,7 @@ import org.veupathdb.service.access.generated.model.ApprovalStatus;
 import org.veupathdb.service.access.generated.model.EndUserCreateRequest;
 import org.veupathdb.service.access.generated.model.EndUserCreateResponse;
 import org.veupathdb.service.access.generated.model.EndUserList;
-import org.veupathdb.service.access.service.user.EndUserService;
-import org.veupathdb.service.access.service.user.EndUserValidate;
+import org.veupathdb.service.access.service.user.EndUserCreationService;
 import org.veupathdb.service.access.service.provider.ProviderService;
 import org.veupathdb.service.access.service.staff.StaffService;
 import org.veupathdb.lib.test.MockUtil;
@@ -23,22 +22,20 @@ import static org.mockito.Mockito.*;
 @DisplayName("EndUserController")
 class EndUserControllerTest
 {
-  private Util            mockUtil;
-  private EndUserService  mockUserService;
-  private ProviderService mockProviderService;
+  private Util                   mockUtil;
+  private EndUserCreationService mockUserService;
+  private ProviderService        mockProviderService;
   private StaffService    mockStaffService;
   private Request         mockRequest;
   private UserProfile     mockUser;
-  private EndUserValidate mockValidate;
 
 
   @BeforeEach
   void setUp() throws Exception {
     mockUtil            = MockUtil.mockSingleton(Util.class);
-    mockUserService     = MockUtil.mockSingleton(EndUserService.class);
+    mockUserService     = MockUtil.mockSingleton(EndUserCreationService.class);
     mockProviderService = MockUtil.mockSingleton(ProviderService.class);
     mockStaffService    = MockUtil.mockSingleton(StaffService.class);
-    mockValidate        = MockUtil.mockSingleton(EndUserValidate.class);
     mockRequest         = mock(Request.class);
     mockUser            = mock(UserProfile.class);
   }
@@ -46,8 +43,7 @@ class EndUserControllerTest
   @AfterEach
   void tearDown() throws Exception {
     MockUtil.resetSingleton(Util.class);
-    MockUtil.resetSingleton(EndUserService.class);
-    MockUtil.resetSingleton(EndUserValidate.class);
+    MockUtil.resetSingleton(EndUserCreationService.class);
     MockUtil.resetSingleton(ProviderService.class);
     MockUtil.resetSingleton(StaffService.class);
   }
@@ -118,7 +114,7 @@ class EndUserControllerTest
 
         doReturn(true).when(mockStaffService).isUserOwner(mockRequest);
         doReturn(false).when(mockProviderService).isUserManager(mockRequest, dsId);
-        doReturn(out).when(mockUserService).findEndUsers(dsId, 1, 1, ApprovalStatus.APPROVED);
+//        doReturn(out).when(mockUserService).findEndUsers(dsId, 1, 1, ApprovalStatus.APPROVED);
 
         var ret = new EndUserController(mockRequest)
           .getDatasetEndUsers(dsId, 1, 1, ApprovalStatus.APPROVED);
@@ -135,7 +131,7 @@ class EndUserControllerTest
 
         doReturn(false).when(mockStaffService).isUserOwner(mockRequest);
         doReturn(true).when(mockProviderService).isUserManager(mockRequest, dsId);
-        doReturn(out).when(mockUserService).findEndUsers(dsId, 1, 1, ApprovalStatus.APPROVED);
+//        doReturn(out).when(mockUserService).findEndUsers(dsId, 1, 1, ApprovalStatus.APPROVED);
 
         var ret = new EndUserController(mockRequest)
           .getDatasetEndUsers(dsId, 1, 1, ApprovalStatus.APPROVED);
@@ -196,7 +192,7 @@ class EndUserControllerTest
         doReturn(userId).when(mockUser).getUserId();
         doReturn(entityId).when(entity).getUserId();
         doReturn(dsId).when(entity).getDatasetId();
-        doReturn(true).when(mockUserService).checkEndUserExists(entityId, dsId);
+//        doReturn(true).when(mockUserService).checkEndUserExists(entityId, dsId);
 
         var target = new EndUserController(mockRequest);
 
@@ -220,7 +216,7 @@ class EndUserControllerTest
         doReturn(userId).when(mockUser).getUserId();
         doReturn(entityId).when(entity).getUserId();
         doReturn(dsId).when(entity).getDatasetId();
-        doReturn(true).when(mockUserService).checkEndUserExists(entityId, dsId);
+//        doReturn(true).when(mockUserService).checkEndUserExists(entityId, dsId);
 
         var target = new EndUserController(mockRequest);
 
@@ -243,7 +239,7 @@ class EndUserControllerTest
         doReturn(userId).when(mockUser).getUserId();
         doReturn(userId).when(entity).getUserId();
         doReturn(dsId).when(entity).getDatasetId();
-        doReturn(true).when(mockUserService).checkEndUserExists(userId, dsId);
+//        doReturn(true).when(mockUserService).checkEndUserExists(userId, dsId);
 
         var target = new EndUserController(mockRequest);
 
@@ -273,8 +269,8 @@ class EndUserControllerTest
         doReturn(userId).when(mockUser).getUserId();
         doReturn(entityId).when(entity).getUserId();
         doReturn(dsId).when(entity).getDatasetId();
-        doReturn(false).when(mockUserService).checkEndUserExists(entityId, dsId);
-        doReturn(recId).when(mockUserService).endUserManagerCreate(entity);
+//        doReturn(false).when(mockUserService).checkEndUserExists(entityId, dsId);
+//        doReturn(recId).when(mockUserService).endUserManagerCreate(entity);
 
         var res = new EndUserController(mockRequest).postDatasetEndUsers(entity);
 
@@ -299,8 +295,8 @@ class EndUserControllerTest
         doReturn(userId).when(mockUser).getUserId();
         doReturn(entityId).when(entity).getUserId();
         doReturn(dsId).when(entity).getDatasetId();
-        doReturn(false).when(mockUserService).checkEndUserExists(entityId, dsId);
-        doReturn(recId).when(mockUserService).endUserManagerCreate(entity);
+//        doReturn(false).when(mockUserService).checkEndUserExists(entityId, dsId);
+//        doReturn(recId).when(mockUserService).endUserManagerCreate(entity);
 
         var res = new EndUserController(mockRequest).postDatasetEndUsers(entity);
 
@@ -324,8 +320,8 @@ class EndUserControllerTest
         doReturn(userId).when(mockUser).getUserId();
         doReturn(userId).when(entity).getUserId();
         doReturn(dsId).when(entity).getDatasetId();
-        doReturn(false).when(mockUserService).checkEndUserExists(userId, dsId);
-        doReturn(recId).when(mockUserService).endUserSelfCreate(entity);
+//        doReturn(false).when(mockUserService).checkEndUserExists(userId, dsId);
+//        doReturn(recId).when(mockUserService).endUserSelfCreate(entity);
 
         var res = new EndUserController(mockRequest).postDatasetEndUsers(entity);
 

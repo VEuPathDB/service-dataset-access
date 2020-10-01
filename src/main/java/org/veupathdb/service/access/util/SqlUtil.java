@@ -43,6 +43,10 @@ public class SqlUtil
     return rs.getInt(1);
   }
 
+  public static long parseSingleLong(final ResultSet rs) throws SQLException {
+    return rs.getLong(1);
+  }
+
   public static StatementPreparer prepareSingleInt(final int value) {
     return ps -> ps.setInt(1, value);
   }

@@ -208,4 +208,10 @@ public class EndUserUtil
 
     return out;
   }
+
+  static String formatEndUserId(final long userId, final String datasetId) {
+    log.trace("EndUserService#formatEndUserId(long, String)");
+
+    return userId + "-" + datasetId;
+  }
 }

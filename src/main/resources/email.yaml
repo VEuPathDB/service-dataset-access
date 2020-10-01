@@ -1,0 +1,65 @@
+####################################################################################################
+#                                                                                                  #
+#   Generally Available Template Params                                                            #
+#                                                                                                  #
+#     The following parameters are available for all email templates.                              #
+#                                                                                                  #
+#     - $study-name$     = Name of the study/dataset                                               #
+#     - $dataset-id$     = dataset_presenter_id value                                              #
+#     - $app-link$       = Link to the access management view in the target site                   #
+#     - $sign-up-link$   = Link to the user registration page for the target site                  #
+#     - $site-url$       = URL to the home page of the target site                                 #
+#                                                                                                  #
+#   End User Update Template Params                                                                #
+#                                                                                                  #
+#     The following attributes ar only available for the "edit-notification"                       #
+#     template.                                                                                    #
+#                                                                                                  #
+#     - $end-user$ = Representation of a single studyaccess.end_user row (with additional info
+#                    from useraccounts.accounts and useraccounts.account_properties).
+#
+#                    For a full list of properties
+
+#     - $end-user-lname$ = Last name of the target end user (only populated for end user record    #
+#                          updates)                                                                #
+#     - $end-user-email  = Email address of the target end user (only populated for end user       #
+#                          record updates)                                                         #
+#                                                                                                  #
+#   To add additional template params, see EmailUtil#populateTemplate().                           #
+#                                                                                                  #
+####################################################################################################
+
+# Email sent when a new provider creation was attempted, but the given provider
+# email address was not in our user db.
+provider-register:
+  subject: $study-name$ Provider Account
+  body: |
+    Hi study provider
+
+    We attempted to add you to our database so you may manage the end users accessing your study,
+    but unfortunately your email is not in our system.
+
+    Please register at $sign-up-link$ or, if you already have an account, please provide the email
+    address linked to your account.
+
+# Email sent when a new end user creation was attempted but the given end user
+# email address was not in our user db.
+end-user-register:
+  subject: $study-name$ End User Account
+  body: |
+    Hi study enduser
+
+    We attempted to add you to our database so you may access the study $study-name$, but
+    unfortunately your email is not in our system.
+
+    Please register at $sign-up-link$ or, if you already have an account, please provide the email
+    address linked to your account.
+
+# Email sent to providers when an end user updates their access request fields.
+edit-notification:
+  subject: $study-name$ Access Request Update
+  body: |
+    Dear provider,
+
+    This is to let you know that enduser $end-user-lname$, $end-user-fname$ ($end-user-email$) just
+    updated their access request information. Please check their updates at $app-link$/$dataset-id$.

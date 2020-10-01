@@ -1,0 +1,54 @@
+= Email Templating
+
+Email templating is performed using https://github.com/antlr/stringtemplate4[Antlr's ST4 library].
+
+All templating is based on the public getters on the POJOs passed to the
+template parser.  This means that the POJO class definitions are the point of
+truth for all available template variables.
+
+== General Attributes
+
+The following attributes are available to all email templates.
+
+=== Service Config
+
+The config attributes are simple strings that need no property accessors.
+
+:siteUrl: $site-url$
+`{siteUrl}`:: The configured target site this service is paired with.  For
+example: `\https://clinepidb.org/ce`.
+
+`$app-link$`:: A derived value based on the `{siteUrl}` variable, containing
+the full url to the dataset access page.
+
+`$sign-up-link$:: A derived value based on the `{siteUrl}` variable containing
+the full url to the user registration page
+
+=== Dataset
+
+The properties listed here are the ones needed by the current email templates.
+For a full listing of available properties, see the `Dataset.java` class.
+
+`$dataset.name$`:: Accesses `Dataset.getName()`, representing the
+`DATASETPRESENTER.NAME` field in the database.
+
+`$dataset.datasetId$`:: Accesses `Dataset.getDatasetId()`, representing the
+`DATASETPRESENTER.DATASET_PRESENTER_ID` field in the database.
+
+== End User Access Request Update Attributes
+
+The following attributes are only available in the context of emails being sent
+to providers notifying them of an end-user updating their access request.
+
+The list below is not a comprehensive list of available properties, it only
+lists the properties currently used by the email template.  For a full list of
+available properties see `EndUserRow.java` and it's parent class `UserRow.java`.
+
+`$end-user.email$`:: Accesses `UserRow.getEmail()`, representing the
+`ACCOUNTS.EMAIL` field in the database.
+
+`$end-user.firstName$`:: Accesses `UserRow.getFirstName()`, representing the
+`first_name` property from the `ACCOUNT_PROPERTIES` database table.
+
+`$end-user.lastName$`:: Accesses `UserRow.getLastName()`, representing the
+`last_name` property from the `ACCOUNT_PROPERTIES` database table.

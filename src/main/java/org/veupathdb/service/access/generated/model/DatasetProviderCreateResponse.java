@@ -7,6 +7,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
     as = DatasetProviderCreateResponseImpl.class
 )
 public interface DatasetProviderCreateResponse {
+  @JsonProperty("created")
+  boolean getCreated();
+
+  @JsonProperty("created")
+  void setCreated(boolean created);
+
   @JsonProperty("providerId")
   int getProviderId();
 

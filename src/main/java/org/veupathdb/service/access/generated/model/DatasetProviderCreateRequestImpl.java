@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonPropertyOrder({
     "datasetId",
     "userId",
+    "email",
     "isManager"
 })
 public class DatasetProviderCreateRequestImpl implements DatasetProviderCreateRequest {
@@ -15,7 +16,10 @@ public class DatasetProviderCreateRequestImpl implements DatasetProviderCreateRe
   private String datasetId;
 
   @JsonProperty("userId")
-  private long userId;
+  private Long userId;
+
+  @JsonProperty("email")
+  private String email;
 
   @JsonProperty("isManager")
   private boolean isManager;
@@ -31,13 +35,23 @@ public class DatasetProviderCreateRequestImpl implements DatasetProviderCreateRe
   }
 
   @JsonProperty("userId")
-  public long getUserId() {
+  public Long getUserId() {
     return this.userId;
   }
 
   @JsonProperty("userId")
-  public void setUserId(long userId) {
+  public void setUserId(Long userId) {
     this.userId = userId;
+  }
+
+  @JsonProperty("email")
+  public String getEmail() {
+    return this.email;
+  }
+
+  @JsonProperty("email")
+  public void setEmail(String email) {
+    this.email = email;
   }
 
   @JsonProperty("isManager")

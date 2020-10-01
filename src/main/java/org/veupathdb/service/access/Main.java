@@ -11,16 +11,15 @@ import org.veupathdb.service.access.repo.RestrictionLevelRepo;
 public class Main extends Server {
   public static final Config config = new Config();
 
-  public static void main(String[] args) {
+  public static void main(final String[] args) {
     var server = new Main();
     server.enableAccountDB();
     server.enableApplicationDB();
-    server.enableUserDB();
     server.start(args);
   }
 
   @Override
-  protected ContainerResources newResourceConfig(Options options) {
+  protected ContainerResources newResourceConfig(final Options options) {
     final var out =  new Resources(options);
     out.enableAuth();
     out.enableJerseyTrace();

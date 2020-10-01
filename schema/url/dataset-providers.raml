@@ -4,6 +4,7 @@ uses:
   lib: ../common.raml
 
 types:
+
   DatasetProvider:
     type: object
     properties:
@@ -12,6 +13,7 @@ types:
       user: lib.UserDetails
       isManager: boolean
     additionalProperties: false
+
   DatasetProviderList:
     type: object
     properties:
@@ -27,28 +29,46 @@ types:
         type: integer
         minimum: 0
     additionalProperties: false
+
   DatasetProviderCreateRequest:
     type: object
     properties:
       datasetId: string
-      userId:
+      userId?:
         type: integer
         format: int64
         minimum: 1
+      email?: string
       isManager: boolean
     additionalProperties: false
+
   DatasetProviderCreateResponse:
     type: object
     properties:
-      providerId:
+      created:
+        type: boolean
+        description: |
+          Indicates whether a new provider record was created or not.
+
+          If this value is `false` the `"providerId"` property will not be set.
+          This happens when the request was sent using an email address that is
+          not in our user database.  In this case no provider record was created
+          but instead an email was sent to the given address requesting that the
+          user register.
+
+          If this value is `true` the `"providerId"` property will be set
+          containing the primary key value of the newly created provider record.
+      providerId?:
         type: integer
         minimum: 1
     additionalProperties: false
+
   DatasetProviderPatchRequest:
     type: array
     items: DatasetProviderPatch
     minItems: 1
     maxItems: 1
+
   DatasetProviderPatch:
     type: object
     properties:
