@@ -1,5 +1,7 @@
 package org.veupathdb.service.access.model;
 
+import java.util.Objects;
+
 public class Email
 {
   private String[] to;
@@ -14,12 +16,23 @@ public class Email
 
   private String body;
 
+  public Email() {
+    var empty = new String[0];
+
+    to      = empty;
+    cc      = empty;
+    bcc     = empty;
+    from    = "";
+    subject = "";
+    body    = "";
+  }
+
   public String[] getTo() {
     return to;
   }
 
   public Email setTo(String[] to) {
-    this.to = to;
+    this.to = Objects.requireNonNull(to);
     return this;
   }
 
@@ -28,7 +41,7 @@ public class Email
   }
 
   public Email setCc(String[] cc) {
-    this.cc = cc;
+    this.cc = Objects.requireNonNull(cc);
     return this;
   }
 
@@ -37,7 +50,7 @@ public class Email
   }
 
   public Email setBcc(String[] bcc) {
-    this.bcc = bcc;
+    this.bcc = Objects.requireNonNull(bcc);
     return this;
   }
 
@@ -46,7 +59,7 @@ public class Email
   }
 
   public Email setFrom(String from) {
-    this.from = from;
+    this.from = Objects.requireNonNull(from);
     return this;
   }
 
@@ -55,7 +68,7 @@ public class Email
   }
 
   public Email setSubject(String subject) {
-    this.subject = subject;
+    this.subject = Objects.requireNonNull(subject);
     return this;
   }
 
@@ -64,7 +77,7 @@ public class Email
   }
 
   public Email setBody(String body) {
-    this.body = body;
+    this.body = Objects.requireNonNull(body);
     return this;
   }
 }

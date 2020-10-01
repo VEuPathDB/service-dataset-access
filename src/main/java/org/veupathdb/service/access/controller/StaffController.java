@@ -2,7 +2,6 @@ package org.veupathdb.service.access.controller;
 
 import java.util.List;
 import java.util.Map;
-
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Request;

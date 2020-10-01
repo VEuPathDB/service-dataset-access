@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.regex.Pattern;
-
 import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.Session;

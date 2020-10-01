@@ -9,8 +9,6 @@ import org.apache.logging.log4j.Logger;
 import org.veupathdb.lib.container.jaxrs.providers.LogProvider;
 import org.veupathdb.service.access.generated.model.EndUser;
 import org.veupathdb.service.access.model.EndUserRow;
-import org.veupathdb.service.access.service.account.AccountRepo;
-import org.veupathdb.service.access.service.dataset.DatasetRepo;
 
 public class EndUserLookupService
 {

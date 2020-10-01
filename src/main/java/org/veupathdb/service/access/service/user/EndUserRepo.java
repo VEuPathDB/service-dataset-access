@@ -10,7 +10,6 @@ import io.vulpine.lib.query.util.basic.BasicPreparedWriteQuery;
 import org.apache.logging.log4j.Logger;
 import org.veupathdb.lib.container.jaxrs.providers.LogProvider;
 import org.veupathdb.service.access.model.*;
-import org.veupathdb.service.access.repo.ApprovalStatusRepo;
 import org.veupathdb.service.access.repo.SQL;
 import org.veupathdb.service.access.service.QueryUtil;
 import org.veupathdb.service.access.util.PsBuilder;

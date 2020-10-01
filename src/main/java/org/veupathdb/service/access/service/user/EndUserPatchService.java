@@ -1,11 +1,11 @@
 package org.veupathdb.service.access.service.user;
 
 import java.time.OffsetDateTime;
-import java.util.Collection;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import javax.ws.rs.*;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.ForbiddenException;
+import javax.ws.rs.InternalServerErrorException;
+import javax.ws.rs.WebApplicationException;
 
 import org.apache.logging.log4j.Logger;
 import org.veupathdb.lib.container.jaxrs.providers.LogProvider;
@@ -14,13 +14,19 @@ import org.veupathdb.service.access.generated.model.EndUserPatch.OpType;
 import org.veupathdb.service.access.model.ApprovalStatus;
 import org.veupathdb.service.access.model.EndUserRow;
 import org.veupathdb.service.access.model.RestrictionLevel;
+import org.veupathdb.service.access.model.UserRow;
+import org.veupathdb.service.access.service.dataset.DatasetRepo;
 import org.veupathdb.service.access.service.email.EmailService;
+import org.veupathdb.service.access.service.provider.ProviderRepo;
 import org.veupathdb.service.access.util.Keys;
 
 public class EndUserPatchService
 {
+  private static final String
+    ERR_NOT_EDITABLE = "This record is not marked as editable.";
+
   @SuppressWarnings("FieldMayBeFinal")
-  private static EndUserPatchService instance = new EndUserPatchService();
+  private static EndUserPatchService instance;
 
   private final Logger log = LogProvider.logger(EndUserPatchService.class);
 
@@ -38,10 +44,13 @@ public class EndUserPatchService
     final List<EndUserPatch> patches
   ) {
     log.trace("EndUserService#selfPatch(EndUserRow, List)");
-    var pVal = new Patch();
+    var pVal = new PatchUtil();
 
     if (patches == null || patches.isEmpty())
       throw new BadRequestException();
+
+    if (!row.isAllowSelfEdits())
+      throw new ForbiddenException(ERR_NOT_EDITABLE);
 
     for (var patch : patches) {
       // End users are only permitted to perform "replace" patch operations.
@@ -59,8 +68,23 @@ public class EndUserPatchService
       }
     }
 
+    // End users are only allowed to edit their access request once without a
+    // manager or provider stepping in to re-enable self edits.
+    row.setAllowSelfEdits(false);
+
     try {
+      final var ds = DatasetRepo.Select.getInstance()
+        .selectDataset(row.getDatasetId())
+        .orElseThrow();
+      final var ccs = ProviderRepo.Select.byDataset(row.getDatasetId(), 100, 0)
+        .stream()
+        .map(UserRow::getEmail)
+        .toArray(String[]::new);
       EndUserRepo.Update.self(row);
+      EmailService.getInstance()
+        .sendEndUserUpdateNotificationEmail(ccs, ds, row);
+    } catch (WebApplicationException e) {
+      throw e;
     } catch (Exception e) {
       throw new InternalServerErrorException(e);
     }
@@ -72,7 +96,7 @@ public class EndUserPatchService
 
   public void applyModPatch(final EndUserRow row, final List<EndUserPatch> patches) {
     log.trace("EndUserService#modPatch(row, patches)");
-    var pVal = new Patch();
+    var pVal = new PatchUtil();
 
     if (patches.isEmpty())
       throw new BadRequestException();
@@ -117,7 +141,6 @@ public class EndUserPatchService
 
     try {
       EndUserRepo.Update.mod(row);
-//      EmailService.getInstance().sendEndUserUpdateNotificationEmail();
     } catch (Exception e) {
       throw new InternalServerErrorException(e);
     }
@@ -128,106 +151,9 @@ public class EndUserPatchService
   }
 
   public static EndUserPatchService getInstance() {
+    if (instance == null)
+      instance = new EndUserPatchService();
+
     return instance;
-  }
-
-  private static class Patch
-  {
-    private static final String
-      errBadPatchOp = "Cannot perform operation \"%s\" on field \"%s\".",
-      errSetNull    = "Cannot set field \"%s\" to null.",
-      errBadType    = "Expected a value of type \"%s\", got \"%s\"";
-
-    private final Logger log = LogProvider.logger(getClass());
-
-    private <T> T enforceType(
-      final Object value,
-      final Class<T> type
-    ) {
-      log.trace("EndUserService$Patch#enforceType(value, type)");
-
-      try {
-        return type.cast(value);
-      } catch (Exception e) {
-        final String name;
-        if (type.getName().endsWith("[]") || Collection.class.isAssignableFrom(type))
-          name = "array";
-        else if (type.equals(String.class))
-          name = "string";
-        else if (Number.class.isAssignableFrom(type))
-          name = "number";
-        else if (type.equals(Boolean.class))
-          name = "boolean";
-        else
-          name = "object";
-
-        throw new BadRequestException(String.format(errBadType, name,
-          value.getClass().getSimpleName()
-        ));
-      }
-    }
-
-    private void strVal(
-      final EndUserPatch patch,
-      final Consumer<String> func
-    ) {
-      log.trace("EndUserService$Patch#strVal(patch, func)");
-
-      switch (patch.getOp()) {
-        case ADD, REPLACE:
-          enforceNotNull(patch);
-          func.accept(enforceType(
-            patch.getValue(),
-            String.class
-          ));
-        case REMOVE:
-          func.accept(null);
-        default:
-          throw forbiddenOp(patch);
-      }
-    }
-
-    private <T> void enumVal(
-      final EndUserPatch patch,
-      final Function<String, T> map,
-      final Consumer<T> func
-    ) {
-      log.trace("EndUserService$Patch#enumVal(patch, map, func)");
-
-      enforceNotNull(patch);
-      func.accept(map.apply(enforceType(patch, String.class).toUpperCase()));
-    }
-
-
-    private void enforceOpIn(
-      final EndUserPatch patch,
-      final OpType... in
-    ) {
-      log.trace("EndUserService$Patch#enforceOpIn(patch, ...in)");
-
-      for (final var i : in) {
-        if (i.equals(patch.getOp()))
-          return;
-      }
-
-      throw forbiddenOp(patch);
-    }
-
-    private RuntimeException forbiddenOp(final EndUserPatch op) {
-      return new ForbiddenException(
-        String.format(
-          errBadPatchOp,
-          op.getOp().name(),
-          op.getPath()
-        ));
-    }
-
-    private void enforceNotNull(final EndUserPatch patch) {
-      log.trace("EndUserService$Patch#enforceNotNull(patch)");
-
-      if (patch.getValue() == null)
-        throw new ForbiddenException(
-          String.format(errSetNull, patch.getPath()));
-    }
   }
 }

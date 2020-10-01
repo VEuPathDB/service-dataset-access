@@ -2,7 +2,6 @@ package org.veupathdb.service.access.service.email;
 
 
 import java.util.Properties;
-
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.MimeBodyPart;
@@ -13,7 +12,6 @@ import org.apache.logging.log4j.Logger;
 import org.veupathdb.lib.container.jaxrs.providers.LogProvider;
 import org.veupathdb.service.access.Main;
 import org.veupathdb.service.access.model.Dataset;
-import org.veupathdb.service.access.model.DatasetEmails;
 import org.veupathdb.service.access.model.Email;
 import org.veupathdb.service.access.model.EndUserRow;
 
@@ -28,36 +26,32 @@ public class EmailService
     log = LogProvider.logger(getClass());
   }
 
-  public static DatasetEmails getDatasetEmails(final String datasetId) throws Exception {
-    return EmailRepo.getDatasetEmails(datasetId);
-  }
-
   public void sendEndUserRegistrationEmail(final String address, final Dataset dataset)
   throws Exception {
+    log.trace("EmailService#sendEndUserRegistrationEmail(String, Dataset)");
+
     final var template = Const.EndUserTemplate;
     final var util     = EmailUtil.getInstance();
 
-    final var email = new Email()
+    sendEmail(new Email()
       .setSubject(util.populateTemplate(template.getSubject(), dataset))
       .setBody(util.populateTemplate(template.getBody(), dataset))
       .setFrom(dataset.getProperties().get(Dataset.Property.REQUEST_EMAIL))
-      .setTo(new String[]{address});
-
-    sendEmail(email);
+      .setTo(new String[]{address}));
   }
 
   public void sendProviderRegistrationEmail(final String address, final Dataset dataset)
   throws Exception {
+    log.trace("EmailService#sendProviderRegistrationEmail(String, Dataset)");
+
     final var template = Const.ProviderTemplate;
     final var util     = EmailUtil.getInstance();
 
-    final var email = new Email()
+    sendEmail(new Email()
       .setSubject(util.populateTemplate(template.getSubject(), dataset))
       .setBody(util.populateTemplate(template.getBody(), dataset))
       .setFrom(dataset.getProperties().get(Dataset.Property.REQUEST_EMAIL))
-      .setTo(new String[]{address});
-
-    sendEmail(email);
+      .setTo(new String[]{address}));
   }
 
   public void sendEndUserUpdateNotificationEmail(
@@ -65,12 +59,19 @@ public class EmailService
     final Dataset dataset,
     final EndUserRow user
   ) throws Exception {
+    log.trace("EmailService#sendEndUserUpdateNotificationEmail(String[], Dataset, EndUserRow)");
+
     final var template = Const.EditNotification;
     final var util     = EmailUtil.getInstance();
 
+    if (cc.length == 0)
+      throw new IllegalStateException("Dataset " + dataset.getDatasetId() + " has no providers");
+
     sendEmail(new Email()
-      .setSubject(util.populateTemplate(template.getSubject(), dataset)));
-    throw new Exception("unfinished stub");
+      .setSubject(util.populateTemplate(template.getSubject(), dataset))
+      .setBody(util.populateTemplate(template.getBody(), dataset, user))
+      .setTo(cc)
+      .setFrom(dataset.getProperties().get(Dataset.Property.REQUEST_EMAIL)));
   }
 
   public void sendEmail(final Email mail) throws Exception {

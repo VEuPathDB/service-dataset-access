@@ -10,9 +10,9 @@ import java.util.stream.Collectors;
 import org.apache.logging.log4j.Logger;
 import org.veupathdb.lib.container.jaxrs.providers.LogProvider;
 import org.veupathdb.service.access.generated.model.*;
-import org.veupathdb.service.access.model.*;
 import org.veupathdb.service.access.model.ApprovalStatus;
 import org.veupathdb.service.access.model.RestrictionLevel;
+import org.veupathdb.service.access.model.*;
 import org.veupathdb.service.access.repo.DB;
 
 public class EndUserUtil

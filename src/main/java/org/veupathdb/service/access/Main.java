@@ -3,7 +3,6 @@ package org.veupathdb.service.access;
 import org.veupathdb.lib.container.jaxrs.config.Options;
 import org.veupathdb.lib.container.jaxrs.server.ContainerResources;
 import org.veupathdb.lib.container.jaxrs.server.Server;
-import org.veupathdb.service.access.model.ApprovalStatusCache;
 import org.veupathdb.service.access.model.Config;
 import org.veupathdb.service.access.repo.ApprovalStatusRepo;
 import org.veupathdb.service.access.repo.RestrictionLevelRepo;
