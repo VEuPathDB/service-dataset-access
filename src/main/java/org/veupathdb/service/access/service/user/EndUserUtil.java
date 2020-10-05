@@ -91,9 +91,9 @@ public class EndUserUtil
     return level == null
       ? null
       : switch (level) {
-        case ADMIN -> RestrictionLevel.ADMIN;
+        case PRERELEASE -> RestrictionLevel.PRERELEASE;
         case CONTROLLED -> RestrictionLevel.CONTROLLED;
-        case LIMITED -> RestrictionLevel.LIMITED;
+        case PRIVATE -> RestrictionLevel.PRIVATE;
         case PROTECTED -> RestrictionLevel.PROTECTED;
         case PUBLIC -> RestrictionLevel.PUBLIC;
       };
@@ -109,9 +109,9 @@ public class EndUserUtil
     return level == null
       ? null
       : switch (level) {
-        case ADMIN -> org.veupathdb.service.access.generated.model.RestrictionLevel.ADMIN;
+        case PRIVATE -> org.veupathdb.service.access.generated.model.RestrictionLevel.PRIVATE;
         case CONTROLLED -> org.veupathdb.service.access.generated.model.RestrictionLevel.CONTROLLED;
-        case LIMITED -> org.veupathdb.service.access.generated.model.RestrictionLevel.LIMITED;
+        case PRERELEASE -> org.veupathdb.service.access.generated.model.RestrictionLevel.PRERELEASE;
         case PROTECTED -> org.veupathdb.service.access.generated.model.RestrictionLevel.PROTECTED;
         case PUBLIC -> org.veupathdb.service.access.generated.model.RestrictionLevel.PUBLIC;
       };

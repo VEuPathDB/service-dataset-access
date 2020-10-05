@@ -12,10 +12,7 @@ public final class DatasetRepo
 {
   public static final class Select
   {
-    static Select instance = new Select();
-
-    Select() {
-    }
+    static Select instance;
 
     /**
      * @param datasetId ID string for the dataset to check.
@@ -51,11 +48,18 @@ public final class DatasetRepo
     }
 
     public static Select getInstance() {
+      if (instance == null)
+        instance = new Select();
+
       return instance;
     }
 
     public static boolean datasetExists(final String datasetId) throws Exception {
       return getInstance().getDatasetExists(datasetId);
+    }
+
+    public static Optional<Dataset> getDataset(final String datasetId) throws Exception {
+      return getInstance().selectDataset(datasetId);
     }
   }
 }

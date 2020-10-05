@@ -10,6 +10,7 @@ import org.veupathdb.service.access.generated.model.ApprovalStatus;
 import org.veupathdb.service.access.generated.model.EndUserCreateRequest;
 import org.veupathdb.service.access.generated.model.EndUserPatch;
 import org.veupathdb.service.access.generated.resources.DatasetEndUsers;
+import org.veupathdb.service.access.service.provider.ProviderService;
 import org.veupathdb.service.access.service.user.EndUserCreationService;
 import org.veupathdb.service.access.service.user.EndUserLookupService;
 import org.veupathdb.service.access.service.user.EndUserPatchService;
@@ -52,7 +53,7 @@ public class EndUserController implements DatasetEndUsers
     final var endUser = EndUserLookupService.getEndUser(endUserId);
 
     if (endUser.getUser().getUserId() == curUser.getUserId()
-      || userIsManager(curUser.getUserId(), endUser.getDatasetId())
+      || ProviderService.getInstance().isUserProvider(curUser.getUserId(), endUser.getDatasetId())
       || userIsOwner(curUser.getUserId())
     ) {
       return GetDatasetEndUsersByEndUserIdResponse.respond200WithApplicationJson(

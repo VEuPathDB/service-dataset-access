@@ -1,5 +1,5 @@
 UPDATE
-  studyaccess.validdatasetuser
+  studyaccess.end_users
 SET
   start_date = ?               -- 1, date
 , duration = ?                 -- 2, long

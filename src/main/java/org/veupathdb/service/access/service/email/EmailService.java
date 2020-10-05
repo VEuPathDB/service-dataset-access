@@ -17,7 +17,6 @@ import org.veupathdb.service.access.model.EndUserRow;
 
 public class EmailService
 {
-
   private static EmailService instance;
 
   private final Logger log;

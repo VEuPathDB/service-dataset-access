@@ -6,8 +6,8 @@ public enum RestrictionLevel {
   @JsonProperty("public")
   PUBLIC("public"),
 
-  @JsonProperty("limited")
-  LIMITED("limited"),
+  @JsonProperty("prerelease")
+  PRERELEASE("prerelease"),
 
   @JsonProperty("protected")
   PROTECTED("protected"),
@@ -15,8 +15,8 @@ public enum RestrictionLevel {
   @JsonProperty("controlled")
   CONTROLLED("controlled"),
 
-  @JsonProperty("admin")
-  ADMIN("admin");
+  @JsonProperty("private")
+  PRIVATE("private");
 
   private String name;
 

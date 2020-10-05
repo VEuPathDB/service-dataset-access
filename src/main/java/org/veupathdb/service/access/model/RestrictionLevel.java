@@ -3,8 +3,8 @@ package org.veupathdb.service.access.model;
 public enum RestrictionLevel
 {
   PUBLIC,
-  LIMITED,
+  PRERELEASE,
   PROTECTED,
   CONTROLLED,
-  ADMIN
+  PRIVATE
 }

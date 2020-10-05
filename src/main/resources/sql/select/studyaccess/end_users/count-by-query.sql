@@ -8,7 +8,7 @@ FROM
     SELECT
       row_number() OVER (ORDER BY user_id, dataset_presenter_id) AS rn
     FROM
-      studyaccess.validdatasetuser u
+      studyaccess.end_users u
       INNER JOIN dataset d
         ON d.id IS NULL
         OR d.id = u.dataset_presenter_id

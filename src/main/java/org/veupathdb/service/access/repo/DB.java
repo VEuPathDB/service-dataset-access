@@ -16,7 +16,7 @@ public interface DB
       Accounts          = Schema.UserAccounts + ".accounts",
       ApprovalStatus    = Schema.StudyAccess + ".approval_status",
       Datasets          = Schema.Tuning + ".datasetpresenter",
-      EndUsers          = Schema.StudyAccess + ".validdatasetuser",
+      EndUsers          = Schema.StudyAccess + ".end_users",
       Providers         = Schema.StudyAccess + ".providers",
       RestrictionLevel  = Schema.StudyAccess + ".restriction_level",
       Staff             = Schema.StudyAccess + ".staff",

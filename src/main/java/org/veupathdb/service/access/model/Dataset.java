@@ -13,7 +13,9 @@ public class Dataset
 
   public enum Property
   {
+    // FROM address
     REQUEST_EMAIL("requestEmail"),
+    // TO address
     REQUEST_EMAIL_BCC("requestEmailBcc"),
     REQUEST_EMAIL_BODY("requestEmailBody"),
     REQUEST_NEEDS_APPROVAL("requestNeedsApproval");

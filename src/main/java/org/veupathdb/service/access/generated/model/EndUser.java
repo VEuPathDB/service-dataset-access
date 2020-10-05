@@ -1,9 +1,8 @@
 package org.veupathdb.service.access.generated.model;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.util.Date;
 
 @JsonDeserialize(
     as = EndUserImpl.class

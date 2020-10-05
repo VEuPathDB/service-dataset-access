@@ -180,7 +180,7 @@ public class EndUserCreationService
    * Inserts a new end user record with defaulted values in place of data that
    * cannot be self-set by end users.
    */
-  EndUserCreateResponse endUserSelfCreate(final EndUserCreateRequest req) {
+  public EndUserCreateResponse endUserSelfCreate(final EndUserCreateRequest req) {
     log.trace("EndUserService#endUserSelfCreate(EndUserCreateRequest)");
 
     validateSelfCreate(req);
@@ -236,7 +236,7 @@ public class EndUserCreationService
    *   <li>duration</li>
    * </ul>
    */
-  EndUserCreateResponse endUserManagerCreate(final EndUserCreateRequest req) throws Exception {
+  public EndUserCreateResponse endUserManagerCreate(final EndUserCreateRequest req) throws Exception {
     log.trace("EndUserService#endUserManagerCreate(EndUserCreateRequest)");
 
     var row = endUserToInsertable(req);

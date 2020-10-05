@@ -44,7 +44,6 @@ public class ProviderService
     if (!userIsOwner(user.getUserId()) && !userIsManager(user.getUserId(), body.getDatasetId()))
       throw new ForbiddenException();
 
-
     try {
       final var out = new DatasetProviderCreateResponseImpl();
 
@@ -175,13 +174,22 @@ public class ProviderService
   }
 
   public boolean isUserManager(final long userId, final String datasetId) {
-    log.trace("ProviderService#userIsManager(long, String)");
+    log.trace("ProviderService#isUserManager(long, String)");
 
     final var ds = datasetId.toUpperCase();
     return lookupProviderByUserId(userId)
       .stream()
       .filter(row -> ds.equals(row.getDatasetId().toUpperCase()))
       .anyMatch(PartialProviderRow::isManager);
+  }
+
+  public boolean isUserProvider(final long userId, final String datasetId) {
+    log.trace("ProviderService#isUserProvider");
+
+    final var ds = datasetId.toUpperCase();
+    return lookupProviderByUserId(userId)
+      .stream()
+      .anyMatch(row -> ds.equals(row.getDatasetId().toUpperCase()));
   }
 
   public void deleteProviderRecord(final int providerId) {
@@ -203,7 +211,6 @@ public class ProviderService
       throw new InternalServerErrorException(e);
     }
   }
-
 
   public void validatePatchRequest(final List<DatasetProviderPatch> items) {
     log.trace("ProviderService#validatePatch(List)");
@@ -248,8 +255,6 @@ public class ProviderService
 
     return out;
   }
-
-
 
   public static ProviderService getInstance() {
     return instance;
