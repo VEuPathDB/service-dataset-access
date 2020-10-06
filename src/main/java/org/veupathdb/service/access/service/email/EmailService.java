@@ -1,7 +1,9 @@
 package org.veupathdb.service.access.service.email;
 
 
+import java.util.Arrays;
 import java.util.Properties;
+import java.util.stream.Stream;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.MimeBodyPart;
@@ -63,17 +65,19 @@ public class EmailService
     final var template = Const.EditNotification;
     final var util     = EmailUtil.getInstance();
 
-    if (cc.length == 0)
-      throw new IllegalStateException("Dataset " + dataset.getDatasetId() + " has no providers");
-
     sendEmail(new Email()
       .setSubject(util.populateTemplate(template.getSubject(), dataset))
       .setBody(util.populateTemplate(template.getBody(), dataset, user))
-      .setTo(cc)
+      .setTo(
+        Stream.concat(Arrays.stream(cc), Stream.of(Main.config.getSupportEmail()))
+          .distinct()
+          .toArray(String[]::new)
+      )
       .setFrom(dataset.getProperties().get(Dataset.Property.REQUEST_EMAIL)));
   }
 
   public void sendEmail(final Email mail) throws Exception {
+    log.trace("EmailService#sendEmail(Email)");
     final var util = EmailUtil.getInstance();
 
     final var props = new Properties();
