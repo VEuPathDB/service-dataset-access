@@ -168,12 +168,12 @@ public class EmailUtil
     inject.add(
       "sign-up-link",
       URI.create(Main.config.getSiteUrl())
-        .resolve(Main.config.getRegistrationPath())
+        .resolve(Main.config.getRegistrationPath().replaceFirst("^/", ""))
     );
     inject.add(
       "app-link",
       URI.create(Main.config.getSiteUrl())
-        .resolve(Main.config.getApplicationPath())
+        .resolve(Main.config.getApplicationPath().replaceFirst("^/", ""))
     );
   }
 }

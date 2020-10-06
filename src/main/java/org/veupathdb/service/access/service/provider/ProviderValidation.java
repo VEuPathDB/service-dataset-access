@@ -84,16 +84,24 @@ public class ProviderValidation
     final var out = new HashMap<String, List<String>>();
 
     try {
+      // Verify that the given dataset id actually exists.
       lookupDataset(body.getDatasetId(), out);
+
+      // Attempt to lookup the user, returns a state indicator that informs
+      // whether the user was found or not.
       final var st = fillUser(body, out);
 
+      // If the above methods appended errors to the
       if (!out.isEmpty())
         throw new UnprocessableEntityException(out);
+
+      if (st == FILL_STATE_DO_EMAIL)
+        return CreateState.SEND_EMAIL;
 
       if (ProviderRepo.Select.byUserAndDataset(body.getUserId(), body.getDatasetId()).isPresent())
         throw new ForbiddenException("A provider record already exists for this user and dataset.");
 
-      return st == FILL_STATE_DO_EMAIL ? CreateState.SEND_EMAIL : CreateState.CREATE_PROVIDER;
+      return CreateState.CREATE_PROVIDER;
     } catch (WebApplicationException e) {
       throw e;
     } catch (Throwable e) {

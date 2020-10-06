@@ -34,7 +34,11 @@ public class StaffRepo
         SQL.Insert.Staff,
         QueryUtil.getInstance()::getAcctDbConnection,
         SqlUtil.reqParser(SqlUtil::parseSingleInt),
-        new PsBuilder().setLong(row.getUserId()).setBoolean(row.isOwner())::build
+        new PsBuilder()
+          .setLong(row.getUserId())
+          .setBoolean(row.isOwner())
+          .setReturnInt()
+          ::build
       ).execute().getValue();
     }
   }

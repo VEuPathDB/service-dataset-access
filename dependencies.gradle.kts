@@ -27,7 +27,7 @@ dependencies {
   runtimeOnly("org.apache.logging.log4j:log4j-1.2-api:${log4j}")
 
   // Extra FgpUtil dependencies
-  runtimeOnly("org.apache.commons:commons-dbcp2:2.+")
+  implementation("org.apache.commons:commons-dbcp2:2.+")
   runtimeOnly("org.json:json:20190722")
   runtimeOnly("com.fasterxml.jackson.datatype:jackson-datatype-json-org:${jackson}")
   runtimeOnly("com.fasterxml.jackson.module:jackson-module-parameter-names:${jackson}")
@@ -39,7 +39,7 @@ dependencies {
   //
 
   // Oracle
-  runtimeOnly(files(
+  implementation(files(
     "vendor/ojdbc8.jar",
     "vendor/ucp.jar",
     "vendor/xstreams.jar"

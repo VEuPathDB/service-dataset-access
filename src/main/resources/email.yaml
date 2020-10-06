@@ -10,26 +10,22 @@
 provider-register:
   subject: $dataset.name$ Provider Account
   body: |
-    Hi study provider
+    Hi study provider,
 
-    We attempted to add you to our database so you may manage the end users accessing your study,
-    but unfortunately your email is not in our system.
+    We attempted to add you to our database so you may manage the end users accessing your study, but unfortunately your email is not in our system.
 
-    Please register at $sign-up-link$ or, if you already have an account, please provide the email
-    address linked to your account.
+    Please register at $sign-up-link$ or, if you already have an account, please provide the email address linked to your account.
 
 # Email sent when a new end user creation was attempted but the given end user
 # email address was not in our user db.
 end-user-register:
   subject: $dataset.name$ End User Account
   body: |
-    Hi study enduser
+    Hi study enduser,
 
-    We attempted to add you to our database so you may access the study $dataset.name$, but
-    unfortunately your email is not in our system.
+    We attempted to add you to our database so you may access the study $dataset.name$, but unfortunately your email is not in our system.
 
-    Please register at $sign-up-link$ or, if you already have an account, please provide the email
-    address linked to your account.
+    Please register at $sign-up-link$ or, if you already have an account, please provide the email address linked to your account.
 
 # Email sent to providers when an end user updates their access request fields.
 edit-notification:
@@ -37,6 +33,4 @@ edit-notification:
   body: |
     Dear provider,
 
-    This is to let you know that end user $end-user.lastName$, $end-user.firstName$
-    ($end-user.email$) just updated their access request information. Please check their updates at
-    $app-link$/$dataset.datasetId$.
+    This is to let you know that end user $end-user.lastName$, $end-user.firstName$ ($end-user.email$) just updated their access request information. Please check their updates at $app-link$/$dataset.datasetId$.
