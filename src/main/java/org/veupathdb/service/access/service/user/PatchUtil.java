@@ -23,7 +23,7 @@ class PatchUtil
     final Object value,
     final Class<T> type
   ) {
-    log.trace("EndUserService$Patch#enforceType(value, type)");
+    log.trace("PatchUtil#enforceType(Object, Class)");
 
     try {
       return type.cast(value);
@@ -50,19 +50,18 @@ class PatchUtil
     final EndUserPatch patch,
     final Consumer<String> func
   ) {
-    log.trace("EndUserService$Patch#strVal(patch, func)");
+    log.trace("PatchUtil#strVal(EndUserPatch, Consumer)");
 
     switch (patch.getOp()) {
-      case ADD, REPLACE:
+      case ADD, REPLACE -> {
         enforceNotNull(patch);
         func.accept(enforceType(
           patch.getValue(),
           String.class
         ));
-      case REMOVE:
-        func.accept(null);
-      default:
-        throw forbiddenOp(patch);
+      }
+      case REMOVE -> func.accept(null);
+      default -> throw forbiddenOp(patch);
     }
   }
 
@@ -71,7 +70,7 @@ class PatchUtil
     final Function<String, T> map,
     final Consumer<T> func
   ) {
-    log.trace("EndUserService$Patch#enumVal(patch, map, func)");
+    log.trace("PatchUtil#enumVal(EndUserPatch, Function, Consumer)");
 
     enforceNotNull(patch);
     func.accept(map.apply(enforceType(patch, String.class).toUpperCase()));
@@ -82,7 +81,7 @@ class PatchUtil
     final EndUserPatch patch,
     final EndUserPatch.OpType... in
   ) {
-    log.trace("EndUserService$Patch#enforceOpIn(patch, ...in)");
+    log.trace("PatchUtil#enforceOpIn(EndUserPatch, EndUserPatch.OpType...)");
 
     for (final var i : in) {
       if (i.equals(patch.getOp()))
@@ -93,6 +92,8 @@ class PatchUtil
   }
 
   RuntimeException forbiddenOp(final EndUserPatch op) {
+    log.trace("PatchUtil#forbiddenOp(EndUserPatch)");
+
     return new ForbiddenException(
       String.format(
         errBadPatchOp,
@@ -102,7 +103,7 @@ class PatchUtil
   }
 
   void enforceNotNull(final EndUserPatch patch) {
-    log.trace("EndUserService$Patch#enforceNotNull(patch)");
+    log.trace("PatchUtil#enforceNotNull(EndUserPatch)");
 
     if (patch.getValue() == null)
       throw new ForbiddenException(
