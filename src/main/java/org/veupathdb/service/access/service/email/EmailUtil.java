@@ -58,9 +58,7 @@ public class EmailUtil
     final var inject = new ST(tpl, TEMPLATE_DELIM, TEMPLATE_DELIM);
     populateInjection(inject, dataset);
 
-    inject.add("end-user-fname", user.getFirstName());
-//    inject.add("end-user-lname")
-
+    inject.add("end-user", user);
 
     return inject.render();
   }
@@ -143,7 +141,7 @@ public class EmailUtil
 
     message.setFrom(mail.getFrom());
 
-//    message.setReplyTo();
+    message.setReplyTo(toAddresses(new String[]{Main.config.getSupportEmail()}));
     message.setRecipients(Message.RecipientType.TO, toAddresses(mail.getTo()));
     message.setSubject(mail.getSubject());
     message.setSentDate(new Date());
@@ -162,18 +160,13 @@ public class EmailUtil
   }
 
   void populateInjection(final ST inject, final Dataset ds) {
-    inject.add("study-name", ds.getName());
-    inject.add("dataset-id", ds.getDatasetId());
+    inject.add("dataset", ds);
     inject.add("site-url", Main.config.getSiteUrl());
-    inject.add(
-      "sign-up-link",
-      URI.create(Main.config.getSiteUrl())
-        .resolve(Main.config.getRegistrationPath().replaceFirst("^/", ""))
-    );
-    inject.add(
-      "app-link",
-      URI.create(Main.config.getSiteUrl())
-        .resolve(Main.config.getApplicationPath().replaceFirst("^/", ""))
-    );
+    inject.add("sign-up-link", URI.create(makeUrl(Main.config.getRegistrationPath())));
+    inject.add("app-link", URI.create(makeUrl(Main.config.getApplicationPath())));
+  }
+
+  String makeUrl(final String path) {
+    return Main.config.getSiteUrl() + (path.charAt(0) == '/' ? path : "/" + path);
   }
 }
