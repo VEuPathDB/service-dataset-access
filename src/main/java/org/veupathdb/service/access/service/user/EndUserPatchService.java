@@ -57,11 +57,20 @@ public class EndUserPatchService
       pVal.enforceOpIn(patch, OpType.REPLACE);
 
       switch (patch.getPath().substring(1)) {
-        case Keys.Json.KEY_PURPOSE -> pVal.strVal(patch, row::setPurpose);
-        case Keys.Json.KEY_RESEARCH_QUESTION -> pVal.strVal(patch, row::setResearchQuestion);
-        case Keys.Json.KEY_ANALYSIS_PLAN -> pVal.strVal(patch, row::setAnalysisPlan);
-        case Keys.Json.KEY_DISSEMINATION_PLAN -> pVal.strVal(patch, row::setDisseminationPlan);
-        case Keys.Json.KEY_PRIOR_AUTH -> pVal.strVal(patch, row::setPriorAuth);
+        case Keys.Json.KEY_PURPOSE
+          -> pVal.strVal(patch, row::setPurpose);
+
+        case Keys.Json.KEY_RESEARCH_QUESTION
+          -> pVal.strVal(patch, row::setResearchQuestion);
+
+        case Keys.Json.KEY_ANALYSIS_PLAN
+          -> pVal.strVal(patch, row::setAnalysisPlan);
+
+        case Keys.Json.KEY_DISSEMINATION_PLAN
+          -> pVal.strVal(patch, row::setDisseminationPlan);
+
+        case Keys.Json.KEY_PRIOR_AUTH
+          -> pVal.strVal(patch, row::setPriorAuth);
 
         // do nothing
         default -> throw pVal.forbiddenOp(patch);
