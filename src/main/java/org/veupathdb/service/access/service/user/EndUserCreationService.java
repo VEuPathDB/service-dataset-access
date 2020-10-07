@@ -4,10 +4,7 @@ import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import javax.ws.rs.ForbiddenException;
-import javax.ws.rs.InternalServerErrorException;
-import javax.ws.rs.NotAuthorizedException;
-import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Request;
 
 import org.apache.logging.log4j.Logger;
@@ -30,6 +27,9 @@ import static org.veupathdb.service.access.util.Keys.Json.*;
 
 public class EndUserCreationService
 {
+  private static final String
+    ERR_DUPLICATE_USER = "The given end user already has an access request for the given dataset.";
+
   private static EndUserCreationService instance;
 
   private final Logger log = LogProvider.logger(EndUserCreationService.class);
@@ -86,6 +86,10 @@ public class EndUserCreationService
 
         body.setUserId(optId.get());
       }
+
+      // Verify no such end user already exists.
+      if (EndUserRepo.Select.endUser(body.getUserId(), body.getDatasetId()).isPresent())
+        throw new BadRequestException(ERR_DUPLICATE_USER);
 
       // If the user sent this request in themself then pass to the self-create
       // specific logic.
