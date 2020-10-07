@@ -1,0 +1,46 @@
+version: "3.5"
+
+services:
+  # Fake SMTP server for testing email sending.
+  email-spoof:
+    image: reachfive/fake-smtp-server
+    ports:
+      - 25:1025
+      - 1080:1080
+
+  service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      SERVER_PORT: 8080
+
+      # User authentication salt
+      AUTH_SECRET_KEY:
+
+      # LDAP
+      LDAP_SERVER:
+      ORACLE_BASE_DN:
+
+      # Application DB
+      APP_DB_TNS_NAME:
+      APP_DB_USER:
+      APP_DB_PASS:
+      APP_DB_POOL_SIZE: 20
+
+      # Account DB
+      ACCT_DB_TNS_NAME:
+      ACCT_DB_USER:
+      ACCT_DB_PASS:
+      ACCT_DB_POOL_SIZE: 20
+
+      # EMAIL STUFF
+      SMTP_HOST: localhost
+      SUPPORT_EMAIL:
+      EMAIL_DEBUG: !!str false
+
+      # Site stuff
+      SITE_URL: # https://clinepidb.org/ce
+      REGISTRATION_PATH: /app/user/registration
+      APPLICATION_PATH: /app/study-access
+    network_mode: host
