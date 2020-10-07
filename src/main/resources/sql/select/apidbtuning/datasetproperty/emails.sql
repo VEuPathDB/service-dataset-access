@@ -1,5 +1,6 @@
 SELECT
-  property
+  dataset_presenter_id
+, property
 , value
 FROM
   apidbtuning.datasetproperty

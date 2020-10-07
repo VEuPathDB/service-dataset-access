@@ -39,8 +39,20 @@ public class SqlUtil
     };
   }
 
-  public static int parseSingleInt(final ResultSet rs) throws SQLException {
-    return rs.getInt(1);
+  public static int parseSingleInt(final ResultSet rs) throws Exception {
+    try {
+      return rs.getInt(1);
+    } catch (SQLException e) {
+      throw new Exception("Failed to look up int value at position 1", e);
+    }
+  }
+
+  public static long parseSingleLong(final ResultSet rs) throws Exception {
+    try {
+      return rs.getLong(1);
+    } catch (SQLException e) {
+      throw new Exception("Failed to look up long value at position 1", e);
+    }
   }
 
   public static StatementPreparer prepareSingleInt(final int value) {

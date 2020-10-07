@@ -1,5 +1,5 @@
 UPDATE
-  studyaccess.validdatasetuser
+  studyaccess.end_users
 SET
   purpose = ?            -- 1, string
 , research_question = ?  -- 2, string

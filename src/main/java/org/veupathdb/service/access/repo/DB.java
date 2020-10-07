@@ -16,7 +16,7 @@ public interface DB
       Accounts          = Schema.UserAccounts + ".accounts",
       ApprovalStatus    = Schema.StudyAccess + ".approval_status",
       Datasets          = Schema.Tuning + ".datasetpresenter",
-      EndUsers          = Schema.StudyAccess + ".validdatasetuser",
+      EndUsers          = Schema.StudyAccess + ".end_users",
       Providers         = Schema.StudyAccess + ".providers",
       RestrictionLevel  = Schema.StudyAccess + ".restriction_level",
       Staff             = Schema.StudyAccess + ".staff",
@@ -67,12 +67,50 @@ public interface DB
         Email = "email";
     }
 
+    interface DatasetPresenters
+    {
+      String
+        DatasetId             = "dataset_presenter_id",
+        Name                  = "name",
+        DatasetNamePattern    = "dataset_name_pattern",
+        DisplayName           = "display_name",
+        ShortDisplayName      = "short_display_name",
+        ShortAttribution      = "short_attribution",
+        Summary               = "summary",
+        Protocol              = "protocol",
+        Description           = "description",
+        Usage                 = "usage",
+        Caveat                = "caveat",
+        Acknowledgement       = "acknowledgement",
+        ReleasePolicy         = "release_policy",
+        DisplayCategory       = "display_category",
+        Type                  = "type",
+        Subtype               = "subtype",
+        Category              = "category",
+        IsSpeciesScope        = "is_species_scope",
+        BuildNumberIntroduced = "build_number_introduced",
+        DatasetSha1Digest     = "dataset_sha1_digest";
+    }
+
+    interface DatasetProperties
+    {
+      String
+        DatasetId = "dataset_presenter_id",
+        Property  = "property",
+        Value     = "value";
+    }
+
     interface Misc
     {
+      // User properties
       String
         FirstName    = "first_name",
         LastName     = "last_name",
         Organization = "organization";
+
+      // dataset properties
+      String
+        Properties = "properties";
     }
   }
 }

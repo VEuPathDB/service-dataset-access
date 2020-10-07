@@ -11,6 +11,7 @@ public interface Keys
       KEY_DENIAL_REASON      = "denialReason",
       KEY_DISSEMINATION_PLAN = "disseminationPlan",
       KEY_DURATION           = "duration",
+      KEY_EMAIL              = "email",
       KEY_IS_MANAGER         = "isManager",
       KEY_IS_OWNER           = "isOwner",
       KEY_PRIOR_AUTH         = "priorAuth",

@@ -1,5 +1,5 @@
 val jersey  = "2.+"
-val jackson = "2.+"
+val jackson = "2.11.2"
 val junit   = "5.+"
 val log4j   = "2.+"
 
@@ -27,7 +27,7 @@ dependencies {
   runtimeOnly("org.apache.logging.log4j:log4j-1.2-api:${log4j}")
 
   // Extra FgpUtil dependencies
-  runtimeOnly("org.apache.commons:commons-dbcp2:2.+")
+  implementation("org.apache.commons:commons-dbcp2:2.+")
   runtimeOnly("org.json:json:20190722")
   runtimeOnly("com.fasterxml.jackson.datatype:jackson-datatype-json-org:${jackson}")
   runtimeOnly("com.fasterxml.jackson.module:jackson-module-parameter-names:${jackson}")
@@ -39,7 +39,7 @@ dependencies {
   //
 
   // Oracle
-  runtimeOnly(files(
+  implementation(files(
     "vendor/ojdbc8.jar",
     "vendor/ucp.jar",
     "vendor/xstreams.jar"
@@ -75,6 +75,7 @@ dependencies {
   implementation("io.vulpine.lib:lib-query-util:2.0.2")
   implementation("com.devskiller.friendly-id:friendly-id:1.+")
   implementation("javax.mail", "mail", "1.5.0-b01")
+  implementation("org.antlr", "ST4", "4.3.1")
   implementation("info.picocli:picocli:4.5.1")
   annotationProcessor("info.picocli:picocli-codegen:4.5.1")
 

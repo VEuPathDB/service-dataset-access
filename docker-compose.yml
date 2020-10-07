@@ -9,26 +9,32 @@ services:
       # User authentication salt
       AUTH_SECRET_KEY: ${AUTH_SECRET_KEY?required}
 
+      # LDAP
+      LDAP_SERVER: ${LDAP_SERVER?required}
+      ORACLE_BASE_DN: ${ORACLE_BASE_DN?required}
+
       # Application DB
       APP_DB_TNS_NAME: ${APP_DB_TNS_NAME?required}
       APP_DB_USER: ${APP_DB_USER?required}
       APP_DB_PASS: ${APP_DB_PASS?required}
+      APP_DB_POOL_SIZE: 20
 
       # Account DB
       ACCT_DB_TNS_NAME: ${ACCT_DB_TNS_NAME?required}
       ACCT_DB_USER: ${ACCT_DB_USER?required}
       ACCT_DB_PASS: ${ACCT_DB_PASS?required}
+      ACCT_DB_POOL_SIZE: 20
 
-      # User DB
-      USER_DB_TNS_NAME: ${USER_DB_TNS_NAME?required}
-      USER_DB_USER: ${USER_DB_USER?required}
-      USER_DB_PASS: ${USER_DB_PASS?required}
+      # EMAIL STUFF
+      SMTP_HOST:
+      SUPPORT_EMAIL:
+      EMAIL_DEBUG: !!str false
 
-      # LDAP
-      LDAP_SERVER: ${LDAP_SERVER?required}
-      ORACLE_BASE_DN: ${ORACLE_BASE_DN?required}
-    ports:
-    - 8088:80
+      # Site stuff
+      SITE_URL: # https://clinepidb.org/ce
+      REGISTRATION_PATH: /app/user/registration
+      APPLICATION_PATH: /app/study-access
+
     networks:
     - traefik
     labels:
@@ -36,7 +42,6 @@ services:
     - "traefik.http.routers.${TRAEFIK_ROUTER:-das-dev}.tls=true"
     - "traefik.http.routers.${TRAEFIK_ROUTER:-das-dev}.entrypoints=local"
     - "com.centurylinklabs.watchtower.enable=${SERVICE_WATCHTOWER:-false}"
-
 
 networks:
   traefik:

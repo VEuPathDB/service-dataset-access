@@ -2,7 +2,6 @@ package org.veupathdb.service.access.controller;
 
 import java.util.List;
 import java.util.Map;
-
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Request;
@@ -25,7 +24,7 @@ public class StaffController implements Staff
   }
 
   @Override
-  public GetStaffResponse getStaff(int limit, int offset) {
+  public GetStaffResponse getStaff(final int limit, final int offset) {
     if (!StaffService.userIsOwner(request))
       throw new ForbiddenException();
 

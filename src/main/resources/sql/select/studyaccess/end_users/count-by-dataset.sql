@@ -1,6 +1,6 @@
 SELECT
   COUNT(1)
 FROM
-  studyaccess.validdatasetuser
+  studyaccess.end_users
 WHERE
   dataset_presenter_id = ?

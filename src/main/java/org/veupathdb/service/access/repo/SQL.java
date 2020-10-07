@@ -42,7 +42,9 @@ public interface SQL
   {
     interface Accounts
     {
-      String exists = select(Table.Accounts, "exists-by-id");
+      String
+        Exists = select(Table.Accounts, "exists-by-id"),
+        IdByEmail = select(Table.Accounts, "id-by-email");
     }
 
     interface EndUsers
@@ -54,8 +56,10 @@ public interface SQL
           Table.EndUsers,
           "count-by-dataset-filtered"
         ),
+        CountByQuery           = select(Table.EndUsers, "count-by-query"),
         ByDataset              = select(Table.EndUsers, "by-dataset"),
-        ByDatasetFiltered      = select(Table.EndUsers, "by-dataset-filtered");
+        ByDatasetFiltered      = select(Table.EndUsers, "by-dataset-filtered"),
+        ByQuery                = select(Table.EndUsers, "by-query");
     }
 
     interface Providers
@@ -81,6 +85,7 @@ public interface SQL
     {
       String
         Exists = select(Table.Datasets, "exists"),
+        ById   = select(Table.Datasets, "by-id"),
         Emails = select(Table.DatasetProperties, "emails");
     }
 

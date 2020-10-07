@@ -4,7 +4,7 @@ MAIN_DIR     := src/main/java/$(shell echo $(APP_PACKAGE) | sed 's/\./\//g')
 TEST_DIR     := $(shell echo $(MAIN_DIR) | sed 's/main/test/')
 GEN_DIR      := $(MAIN_DIR)/generated
 ALL_PACKABLE := $(shell find src/main -type f)
-BIN_DIR := .tools/bin
+BIN_DIR      := .tools/bin
 
 EXAMPLE_DIR      := src/main/java/org/veupathdb/service/demo
 EXAMPLE_TEST_DIR := src/test/java/org/veupathdb/service/demo
@@ -82,6 +82,9 @@ gen-jaxrs: api.raml merge-raml
 	#   Fixing primitive types in EndUserCreateRequest
 	@ sed -i 's/long/Long/g' $(GEN_DIR)/model/EndUserCreateRequest.java
 	@ sed -i 's/long/Long/g' $(GEN_DIR)/model/EndUserCreateRequestImpl.java
+	#   Fixing primitive types in ProviderCreateRequest
+	@ sed -i 's/long/Long/g' $(GEN_DIR)/model/DatasetProviderCreateRequest.java
+	@ sed -i 's/long/Long/g' $(GEN_DIR)/model/DatasetProviderCreateRequestImpl.java
 
 gen-docs: api.raml merge-raml
 	@$(BIN_DIR)/generate-docs.sh

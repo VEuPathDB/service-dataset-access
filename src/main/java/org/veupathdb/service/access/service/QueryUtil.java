@@ -1,6 +1,9 @@
 package org.veupathdb.service.access.service;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 import io.vulpine.lib.jcfi.CheckedBiFunction;
 import io.vulpine.lib.jcfi.CheckedFunction;

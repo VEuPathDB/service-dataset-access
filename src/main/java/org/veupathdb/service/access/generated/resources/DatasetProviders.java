@@ -29,7 +29,7 @@ public interface DatasetProviders {
   @GET
   @Produces("application/json")
   GetDatasetProvidersResponse getDatasetProviders(@QueryParam("datasetId") String datasetId,
-      @QueryParam("limit") @DefaultValue("100") int limit,
+      @QueryParam("limit") @DefaultValue("1000") int limit,
       @QueryParam("offset") @DefaultValue("0") int offset);
 
   @POST

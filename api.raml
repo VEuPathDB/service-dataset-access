@@ -26,12 +26,12 @@ securitySchemes:
     displayName: Staff List
     description: List dataset staff in ascending order by ID.
     queryParameters:
-      limit:
+      limit?:
         type: integer
         minimum: 0
-        default: 100
+        default: 1000
         description: Number of rows to include in the result
-      offset:
+      offset?:
         type: integer
         minimum: 0
         default: 0
@@ -130,12 +130,12 @@ securitySchemes:
       datasetId:
         type: string
         required: true
-      limit:
+      limit?:
         type: integer
         minimum: 0
-        default: 100
+        default: 1000
         description: Number of rows to include in the result
-      offset:
+      offset?:
         type: integer
         minimum: 0
         default: 0
@@ -236,19 +236,19 @@ securitySchemes:
       datasetId:
         displayName: Dataset ID
         type: string
-      limit:
+      limit?:
         displayName: Result Limit
         description: Number of rows to include in the result
         type: integer
         minimum: 0
         default: 100
-      offset:
+      offset?:
         displayName: Result Offset
         description: Number of rows to skip from the result
         type: integer
         minimum: 0
         default: 0
-      approval:
+      approval?:
         displayName: Approval Status
         description: Filter results by the approval status of the users.
         type: lib.ApprovalStatus

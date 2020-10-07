@@ -1,8 +1,5 @@
 package org.veupathdb.service.access.service.provider;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ws.rs.*;
@@ -10,21 +7,24 @@ import javax.ws.rs.core.Request;
 
 import org.apache.logging.log4j.Logger;
 import org.gusdb.fgputil.accountdb.UserProfile;
-import org.veupathdb.lib.container.jaxrs.errors.UnprocessableEntityException;
 import org.veupathdb.lib.container.jaxrs.providers.LogProvider;
 import org.veupathdb.lib.container.jaxrs.providers.UserProvider;
 import org.veupathdb.service.access.generated.model.*;
 import org.veupathdb.service.access.model.PartialProviderRow;
 import org.veupathdb.service.access.model.ProviderRow;
-import org.veupathdb.service.access.repo.AccountRepo;
-import org.veupathdb.service.access.repo.DatasetRepo;
+import org.veupathdb.service.access.service.dataset.DatasetRepo;
+import org.veupathdb.service.access.service.email.EmailService;
+import org.veupathdb.service.access.service.staff.StaffService;
 import org.veupathdb.service.access.util.Keys;
+
+import static org.veupathdb.service.access.service.staff.StaffService.userIsOwner;
 
 public class ProviderService
 {
   static ProviderService instance = new ProviderService();
 
-  ProviderService() {}
+  ProviderService() {
+  }
 
   private static final Logger log = LogProvider.logger(ProviderService.class);
 
@@ -33,16 +33,46 @@ public class ProviderService
    *
    * @return the ID of the newly created record.
    */
-  public int createNewProvider(DatasetProviderCreateRequest body) {
+  public DatasetProviderCreateResponse createNewProvider(
+    final DatasetProviderCreateRequest body,
+    final UserProfile user
+  ) {
     log.trace("ProviderService#createNewProvider(DatasetProviderCreateRequest)");
 
-    final var row = new PartialProviderRow();
-    row.setDatasetId(body.getDatasetId());
-    row.setManager(body.getIsManager());
-    row.setUserId(body.getUserId());
+    // To add a new provider, a user must be a site owner or a manager for the
+    // dataset.
+    if (!userIsOwner(user.getUserId()) && !userIsManager(user.getUserId(), body.getDatasetId()))
+      throw new ForbiddenException();
 
     try {
-      return ProviderRepo.Insert.newProvider(row);
+      final var out = new DatasetProviderCreateResponseImpl();
+
+      return switch (ProviderValidation.getInstance().validateCreateRequest(body)) {
+        case SEND_EMAIL -> {
+          EmailService.getInstance().sendProviderRegistrationEmail(
+            body.getEmail(),
+            DatasetRepo.Select.getInstance().selectDataset(body.getDatasetId()).orElseThrow()
+          );
+
+          out.setCreated(false);
+
+          yield out;
+        }
+
+        case CREATE_PROVIDER -> {
+          final var row = new PartialProviderRow();
+          row.setDatasetId(body.getDatasetId());
+          row.setManager(body.getIsManager());
+          row.setUserId(body.getUserId());
+
+          out.setCreated(true);
+          out.setProviderId(ProviderRepo.Insert.newProvider(row));
+
+          yield out;
+        }
+      };
+    } catch (WebApplicationException e) {
+      throw e;
     } catch (Exception e) {
       throw new InternalServerErrorException(e);
     }
@@ -59,15 +89,31 @@ public class ProviderService
   public DatasetProviderList getDatasetProviderList(
     final String datasetId,
     final int limit,
-    final int offset
+    final int offset,
+    final UserProfile currentUser
   ) {
-    log.trace("ProviderService#getDatasetProviderList(String, int, int)");
-    if (datasetId == null || datasetId.isBlank())
-      throw new BadRequestException("datasetId query param is required");
+    log.trace("ProviderService#getDatasetProviderList(String, int, int, UserProfile)");
 
     try {
+      var allowed = false;
+      var rows    = ProviderRepo.Select.byDataset(datasetId, limit, offset);
+
+      // Determine if the user is a manager for the dataset.
+      for (var pro : rows) {
+        if (pro.getUserId() == currentUser.getUserId() && pro.isManager()) {
+          allowed = true;
+          break;
+        }
+      }
+
+      if (StaffService.userIsOwner(currentUser.getUserId()))
+        allowed = true;
+
+      if (!allowed)
+        throw new ForbiddenException();
+
       final var total = ProviderRepo.Select.countByDataset(datasetId);
-      final var rows  = ProviderRepo.Select.byDataset(datasetId, limit, offset);
+
       return list2Providers(rows, offset, total);
     } catch (WebApplicationException e) {
       throw e;
@@ -84,8 +130,7 @@ public class ProviderService
     log.trace("ProviderService#requireProviderById(int)");
 
     try {
-      return ProviderRepo.Select.byId(providerId)
-        .orElseThrow(NotFoundException::new);
+      return ProviderRepo.Select.byId(providerId).orElseThrow(NotFoundException::new);
     } catch (WebApplicationException e) {
       throw e;
     } catch (Exception e) {
@@ -93,7 +138,7 @@ public class ProviderService
     }
   }
 
-  public List < ProviderRow > getProviderByUserId(final long userId) {
+  public List<ProviderRow> getProviderByUserId(final long userId) {
     log.trace("ProviderService#getProviderByUserId(long)");
 
     try {
@@ -109,8 +154,8 @@ public class ProviderService
    * Locates a provider with the given <code>userId</code> or throws a 404
    * exception.
    */
-  public List < ProviderRow > mustGetProviderByUserId(long userId) {
-    log.trace("ProviderService#mustGetProviderByUserId(userId)");
+  public List<ProviderRow> mustGetProviderByUserId(final long userId) {
+    log.trace("ProviderService#mustGetProviderByUserId(long)");
 
     final var out = lookupProviderByUserId(userId);
 
@@ -121,22 +166,15 @@ public class ProviderService
   }
 
   public boolean isUserManager(final Request req, final String datasetId) {
-    log.trace("ProviderService#userIsManager(req, datasetId)");
+    log.trace("ProviderService#userIsManager(Request, String)");
 
     return isUserManager(UserProvider.lookupUser(req)
       .map(UserProfile::getUserId)
       .orElseThrow(InternalServerErrorException::new), datasetId);
   }
 
-  /**
-   * Looks up the user provider record and returns whether or not the provider
-   * with the given <code>userId</code> is marked as a manager.
-   * <p>
-   * If provider exists with the given <code>userId</code>, a 404 exception
-   * will be thrown via {@link #requireProviderByUserId(long)}.
-   */
   public boolean isUserManager(final long userId, final String datasetId) {
-    log.trace("ProviderService#userIsManager(userId, datasetId)");
+    log.trace("ProviderService#isUserManager(long, String)");
 
     final var ds = datasetId.toUpperCase();
     return lookupProviderByUserId(userId)
@@ -145,8 +183,17 @@ public class ProviderService
       .anyMatch(PartialProviderRow::isManager);
   }
 
+  public boolean isUserProvider(final long userId, final String datasetId) {
+    log.trace("ProviderService#isUserProvider");
+
+    final var ds = datasetId.toUpperCase();
+    return lookupProviderByUserId(userId)
+      .stream()
+      .anyMatch(row -> ds.equals(row.getDatasetId().toUpperCase()));
+  }
+
   public void deleteProviderRecord(final int providerId) {
-    log.trace("ProviderService#deleteProvider(providerId)");
+    log.trace("ProviderService#deleteProvider(int)");
 
     try {
       ProviderRepo.Delete.byId(providerId);
@@ -165,61 +212,8 @@ public class ProviderService
     }
   }
 
-  /**
-   * Validate Create Request Body
-   * <p>
-   * Verifies the following:
-   * <ul>
-   *   <li>Dataset ID value is set</li>
-   *   <li>Dataset ID value is valid (points to a real dataset)</li>
-   *   <li>User ID is valid</li>
-   *   <li>No provider currently exists for this user/dataset already.</li>
-   * </ul>
-   *
-   * @param body Provider create request body.
-   *
-   * @throws ForbiddenException if a provider already exists for the given user
-   * & dataset id values.
-   * @throws UnprocessableEntityException if the dataset id value is not set or
-   * invalid, if the user id is not valid.
-   * @throws InternalServerErrorException if a database error occurs while
-   * attempting to validate this request.
-   */
-  public void validateCreateRequest(final DatasetProviderCreateRequest body) {
-    log.trace("ProviderService#validateCreate(body)");
-
-    final var out = new HashMap<String, List<String>>();
-
-    try {
-      if (body.getDatasetId() == null || body.getDatasetId().isBlank())
-        out.put(Keys.Json.KEY_DATASET_ID, new ArrayList <>(){{
-          add("Dataset ID is required");
-        }});
-      else if (!DatasetRepo.Select.datasetExists(body.getDatasetId()))
-        out.put(Keys.Json.KEY_DATASET_ID, new ArrayList <>(){{
-          add("Dataset ID is invalid");
-        }});
-
-      if (!AccountRepo.Select.userExists(body.getUserId()))
-        out.put(Keys.Json.KEY_USER_ID, new ArrayList <>(){{
-          add("Specified user does not exist.");
-        }});
-
-      if (ProviderRepo.Select.byUserAndDataset(body.getUserId(), body.getDatasetId()).isPresent())
-        throw new ForbiddenException("A provider record already exists for this user and dataset.");
-    } catch(WebApplicationException e) {
-      throw e;
-    } catch (Throwable e) {
-      throw new InternalServerErrorException(e);
-    }
-
-    if (!out.isEmpty())
-      throw new UnprocessableEntityException(out);
-  }
-
-  @SuppressWarnings("unchecked")
-  public void validatePatchRequest(final List < DatasetProviderPatch > items) {
-    log.trace("ProviderService#validatePatch(items)");
+  public void validatePatchRequest(final List<DatasetProviderPatch> items) {
+    log.trace("ProviderService#validatePatch(List)");
 
     // If there is nothing in the patch, it's a bad request.
     if (items == null || items.isEmpty())
@@ -232,23 +226,23 @@ public class ProviderService
     // WARNING: This cast mess is due to a bug in the JaxRS generator, the type
     // it actually passes up is not the declared type, but a list of linked hash
     // maps instead.
-    final var item = ((List<LinkedHashMap<String, Object>>)((Object) items)).get(0);
+    final var item = items.get(0);
 
     // only allow replace ops
-    if (!"replace".equals(item.get(Keys.Json.KEY_OP)))
+    if (!"replace".equals(item.getOp()))
       throw new ForbiddenException();
 
     // only allow modifying the isManager property
-    if (!("/" + Keys.Json.KEY_IS_MANAGER).equals(item.get(Keys.Json.KEY_PATH)))
+    if (!("/" + Keys.Json.KEY_IS_MANAGER).equals(item.getPath()))
       throw new ForbiddenException();
   }
 
   private DatasetProviderList listToProviders(
-    final List < ProviderRow > rows,
+    final List<ProviderRow> rows,
     final int offset,
     final int total
   ) {
-    log.trace("ProviderService#list2Providers(rows, offset, total)");
+    log.trace("ProviderService#list2Providers(List, int, int)");
 
     var out = new DatasetProviderListImpl();
 
@@ -256,59 +250,31 @@ public class ProviderService
     out.setOffset(offset);
     out.setTotal(total);
     out.setData(rows.stream()
-      .map(this::rowToProvider)
+      .map(ProviderUtil.getInstance()::internalToExternal)
       .collect(Collectors.toList()));
 
     return out;
   }
 
-  private DatasetProvider rowToProvider(final ProviderRow row) {
-    log.trace("ProviderService#rowToProvider(ProviderRow)");
-
-    var user = new UserDetailsImpl();
-    user.setUserId(row.getUserId());
-    user.setFirstName(row.getFirstName());
-    user.setLastName(row.getLastName());
-    user.setOrganization(row.getOrganization());
-
-    var out = new DatasetProviderImpl();
-    out.setDatasetId(row.getDatasetId());
-    out.setIsManager(row.isManager());
-    out.setProviderId(row.getProviderId());
-    out.setUser(user);
-
-    return out;
-  }
-
-
-
-
   public static ProviderService getInstance() {
     return instance;
-  }
-
-  public static int createProvider(final DatasetProviderCreateRequest body) {
-    return getInstance().createNewProvider(body);
   }
 
   public static DatasetProviderList getProviderList(
     final String datasetId,
     final int limit,
-    final int offset
+    final int offset,
+    final UserProfile user
   ) {
-    return getInstance().getDatasetProviderList(datasetId, limit, offset);
+    return getInstance().getDatasetProviderList(datasetId, limit, offset, user);
   }
 
   public static ProviderRow requireProviderById(final int providerId) {
     return getInstance().mustGetProviderById(providerId);
   }
 
-  public static List < ProviderRow > lookupProviderByUserId(final long userId) {
+  public static List<ProviderRow> lookupProviderByUserId(final long userId) {
     return getInstance().getProviderByUserId(userId);
-  }
-
-  public static List < ProviderRow > requireProviderByUserId(final long userId) {
-    return getInstance().mustGetProviderByUserId(userId);
   }
 
   public static boolean userIsManager(final Request req, final String datasetId) {
@@ -327,16 +293,8 @@ public class ProviderService
     getInstance().updateProviderRecord(row);
   }
 
-  public static void validateCreate(final DatasetProviderCreateRequest body) {
-    getInstance().validateCreateRequest(body);
-  }
-
-  public static void validatePatch(final List < DatasetProviderPatch > items) {
-    getInstance().validatePatchRequest(items);
-  }
-
   private static DatasetProviderList list2Providers(
-    final List < ProviderRow > rows,
+    final List<ProviderRow> rows,
     final int offset,
     final int total
   ) {

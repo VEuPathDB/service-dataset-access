@@ -14,10 +14,16 @@ public interface DatasetProviderCreateRequest {
   void setDatasetId(String datasetId);
 
   @JsonProperty("userId")
-  long getUserId();
+  Long getUserId();
 
   @JsonProperty("userId")
-  void setUserId(long userId);
+  void setUserId(Long userId);
+
+  @JsonProperty("email")
+  String getEmail();
+
+  @JsonProperty("email")
+  void setEmail(String email);
 
   @JsonProperty("isManager")
   boolean getIsManager();

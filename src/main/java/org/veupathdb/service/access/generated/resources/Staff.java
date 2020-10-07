@@ -28,7 +28,7 @@ import org.veupathdb.service.access.generated.support.ResponseDelegate;
 public interface Staff {
   @GET
   @Produces("application/json")
-  GetStaffResponse getStaff(@QueryParam("limit") @DefaultValue("100") int limit,
+  GetStaffResponse getStaff(@QueryParam("limit") @DefaultValue("1000") int limit,
       @QueryParam("offset") @DefaultValue("0") int offset);
 
   @POST

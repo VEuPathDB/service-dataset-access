@@ -2,6 +2,7 @@ SELECT
   s.staff_id,
   s.is_owner,
   a.email,
+  a.user_id,
   (
     SELECT value
     FROM useraccounts.account_properties

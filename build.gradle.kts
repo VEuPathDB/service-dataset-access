@@ -14,6 +14,11 @@ repositories {
   }
 }
 
+java {
+  targetCompatibility = JavaVersion.VERSION_14
+  sourceCompatibility = JavaVersion.VERSION_14
+}
+
 apply(from = "dependencies.gradle.kts")
 
 // Load Props

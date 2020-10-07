@@ -1,5 +1,5 @@
 INSERT INTO
-  studyaccess.validdatasetuser (
+  studyaccess.end_users (
     user_id               -- 1, int64
   , dataset_presenter_id  -- 2, string
   , restriction_level_id  -- 3, int32
