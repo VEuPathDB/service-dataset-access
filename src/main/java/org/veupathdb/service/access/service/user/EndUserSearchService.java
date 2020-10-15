@@ -13,6 +13,7 @@ import org.veupathdb.service.access.generated.model.ApprovalStatus;
 import org.veupathdb.service.access.generated.model.EndUserList;
 import org.veupathdb.service.access.model.SearchQuery;
 import org.veupathdb.service.access.service.provider.ProviderRepo;
+import org.veupathdb.service.access.service.staff.StaffRepo;
 import org.veupathdb.service.access.service.staff.StaffService;
 
 public class EndUserSearchService
@@ -69,7 +70,10 @@ public class EndUserSearchService
         if (!isOwner)
           throw new ForbiddenException();
       } else {
-        if (ProviderRepo.Select.byUserAndDataset(user.getUserId(), datasetId).isEmpty())
+        if (!isOwner
+          && ProviderRepo.Select.byUserAndDataset(user.getUserId(), datasetId).isEmpty()
+          && StaffRepo.Select.byUserId(user.getUserId()).isEmpty()
+        )
           throw new ForbiddenException();
       }
 
