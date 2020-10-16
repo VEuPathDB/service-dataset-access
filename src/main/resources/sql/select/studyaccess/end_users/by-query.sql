@@ -8,8 +8,9 @@ SELECT
 FROM
   (
     SELECT
-      row_number() OVER (ORDER BY user_id, dataset_presenter_id) AS rn,
-      u.*
+      row_number() OVER (ORDER BY u.user_id, dataset_presenter_id) AS rn
+    , u.*
+    , a.email
     FROM
       studyaccess.end_users u
       INNER JOIN dataset d
@@ -18,6 +19,8 @@ FROM
       INNER JOIN status s
         ON s.val IS NULL
         OR s.val = u.approval_status_id
+      INNER JOIN useraccounts.accounts a
+        ON u.user_id = a.user_id
   ) t
 , limit
 , offset
