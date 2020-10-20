@@ -10,6 +10,33 @@ FROM
     SELECT
       row_number() OVER (ORDER BY u.user_id, dataset_presenter_id) AS rn
     , u.*
+    , (
+        SELECT
+          value
+        FROM
+          useraccounts.account_properties
+        WHERE
+            user_id = u.user_id
+        AND key = 'first_name'
+      ) AS first_name
+    , (
+        SELECT
+          value
+        FROM
+          useraccounts.account_properties
+        WHERE
+            user_id = u.user_id
+        AND key = 'last_name'
+      ) AS last_name
+    , (
+        SELECT
+          value
+        FROM
+          useraccounts.account_properties
+        WHERE
+            user_id = u.user_id
+        AND key = 'organization'
+      ) AS organization
     , a.email
     FROM
       studyaccess.end_users u
