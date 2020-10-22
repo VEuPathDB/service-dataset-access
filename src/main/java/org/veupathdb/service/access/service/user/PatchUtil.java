@@ -73,7 +73,7 @@ class PatchUtil
     log.trace("PatchUtil#enumVal(EndUserPatch, Function, Consumer)");
 
     enforceNotNull(patch);
-    func.accept(map.apply(enforceType(patch, String.class).toUpperCase()));
+    func.accept(map.apply(enforceType(patch.getValue(), String.class).toUpperCase()));
   }
 
 
