@@ -34,12 +34,6 @@ public interface UnprocessableEntity extends Error {
       as = UnprocessableEntityImpl.ErrorsTypeImpl.class
   )
   interface ErrorsType {
-    @JsonAnyGetter
-    Map<String, Object> getAdditionalProperties();
-
-    @JsonAnySetter
-    void setAdditionalProperties(String key, Object value);
-
     @JsonProperty("general")
     List<String> getGeneral();
 
@@ -51,6 +45,12 @@ public interface UnprocessableEntity extends Error {
 
     @JsonProperty("byKey")
     void setByKey(ByKeyType byKey);
+
+    @JsonAnyGetter
+    Map<String, Object> getAdditionalProperties();
+
+    @JsonAnySetter
+    void setAdditionalProperties(String key, Object value);
 
     @JsonDeserialize(
         as = UnprocessableEntityImpl.ErrorsTypeImpl.ByKeyTypeImpl.class

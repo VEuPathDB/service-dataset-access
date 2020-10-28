@@ -85,6 +85,12 @@ gen-jaxrs: api.raml merge-raml
 	#   Fixing primitive types in ProviderCreateRequest
 	@ sed -i 's/long/Long/g' $(GEN_DIR)/model/DatasetProviderCreateRequest.java
 	@ sed -i 's/long/Long/g' $(GEN_DIR)/model/DatasetProviderCreateRequestImpl.java
+	#   Fixing primitive types in PermissionsGetResponse
+	@ sed -i 's/boolean/Boolean/g' $(GEN_DIR)/model/PermissionsGetResponse.java
+	@ sed -i 's/boolean/Boolean/g' $(GEN_DIR)/model/PermissionsGetResponseImpl.java
+	#   Fixing primitive types in DatasetPermissionEntry
+	@ sed -i 's/boolean/Boolean/g' $(GEN_DIR)/model/DatasetPermissionEntry.java
+	@ sed -i 's/boolean/Boolean/g' $(GEN_DIR)/model/DatasetPermissionEntryImpl.java
 
 gen-docs: api.raml merge-raml
 	@$(BIN_DIR)/generate-docs.sh

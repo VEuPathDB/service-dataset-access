@@ -1,6 +1,5 @@
 package org.veupathdb.service.access.controller;
 
-import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.core.Request;
 
@@ -14,20 +13,8 @@ public class Util
 
   Util() {}
 
-  private static final String
-    errNoDatasetId = "Cannot use this endpoint without a datasetId query param value";
-
   public static Util getInstance() {
     return instance;
-  }
-
-  public void validateDatasetId(final String datasetId) {
-    if (datasetId == null || datasetId.isBlank())
-      throw new ForbiddenException(errNoDatasetId);
-  }
-
-  public static void requireDatasetId(final String datasetId) {
-    getInstance().validateDatasetId(datasetId);
   }
 
   public UserProfile mustGetUser(final Request req) {

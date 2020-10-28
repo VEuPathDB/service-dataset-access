@@ -1,13 +1,16 @@
 package org.veupathdb.service.access.service.provider;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import io.vulpine.lib.query.util.basic.BasicPreparedListReadQuery;
+import io.vulpine.lib.query.util.basic.BasicPreparedMapReadQuery;
 import io.vulpine.lib.query.util.basic.BasicPreparedReadQuery;
 import io.vulpine.lib.query.util.basic.BasicPreparedWriteQuery;
 import org.veupathdb.service.access.model.PartialProviderRow;
 import org.veupathdb.service.access.model.ProviderRow;
+import org.veupathdb.service.access.repo.DB;
 import org.veupathdb.service.access.repo.SQL;
 import org.veupathdb.service.access.service.QueryUtil;
 import org.veupathdb.service.access.util.PsBuilder;
@@ -92,6 +95,28 @@ public class ProviderRepo
         QueryUtil::acctDbConnection,
         SqlUtil.reqParser(rs -> rs.getInt(1)),
         SqlUtil.prepareSingleString(datasetId)
+      ).execute().getValue();
+    }
+
+    /**
+     * Returns a map containing a set of dataset IDs the user is a provider for;
+     * each mapped to a boolean flag indicating whether or not the given user is
+     * marked as a manager for that dataset.
+     *
+     * If the given user id is not a provider for any datasets, the returned map
+     * will be empty.
+     *
+     * @param userId ID of the user to lookup.
+     *
+     * @return the map described above.
+     */
+    public static Map<String, Boolean> datasets(final long userId) throws Exception {
+      return new BasicPreparedMapReadQuery<>(
+        SQL.Select.Providers.Datasets,
+        QueryUtil::acctDbConnection,
+        rs -> rs.getString(DB.Column.Provider.DatasetId),
+        rs -> rs.getBoolean(DB.Column.Provider.IsManager),
+        SqlUtil.prepareSingleLong(userId)
       ).execute().getValue();
     }
   } // End::Select

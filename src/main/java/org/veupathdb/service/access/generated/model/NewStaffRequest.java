@@ -10,12 +10,6 @@ import java.util.Map;
     as = NewStaffRequestImpl.class
 )
 public interface NewStaffRequest {
-  @JsonAnyGetter
-  Map<String, Object> getAdditionalProperties();
-
-  @JsonAnySetter
-  void setAdditionalProperties(String key, Object value);
-
   @JsonProperty("userId")
   long getUserId();
 
@@ -27,4 +21,10 @@ public interface NewStaffRequest {
 
   @JsonProperty("isOwner")
   void setIsOwner(boolean isOwner);
+
+  @JsonAnyGetter
+  Map<String, Object> getAdditionalProperties();
+
+  @JsonAnySetter
+  void setAdditionalProperties(String key, Object value);
 }

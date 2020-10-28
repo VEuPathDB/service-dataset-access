@@ -180,6 +180,23 @@ public class EndUserRepo
         new PsBuilder().setLong(userId).setString(datasetId)::build
       ).execute().getValue();
     }
+
+    /**
+     * Returns a list of dataset IDs that the given user has been approved to
+     * access.
+     *
+     * @param userId ID of the user to check
+     *
+     * @return a list of datasets the given user can access.
+     */
+    static List<String> datasets(final long userId) throws Exception {
+      return new BasicPreparedListReadQuery<>(
+        SQL.Select.EndUsers.Datasets,
+        QueryUtil::acctDbConnection,
+        SqlUtil::parseSingleString,
+        SqlUtil.prepareSingleLong(userId)
+      ).execute().getValue();
+    }
   }
 
   public interface Update

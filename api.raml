@@ -38,17 +38,13 @@ securitySchemes:
         description: Number of rows to skip from the result
     responses:
       200:
-        displayName: Success Response
         body:
           type: lib.StaffList
       401:
-        displayName: Unauthorized
         body: error.Unauthorized
       403:
-        displayName: Forbidden
         body: error.Forbidden
       500:
-        displayName: Internal Server Error
         body: error.Server
   post:
     displayName: New Staff Entry
@@ -56,22 +52,16 @@ securitySchemes:
     body: lib.NewStaffRequest
     responses:
       200:
-        displayName: Success Response
         body: lib.NewStaffResponse
       400:
-        displayName: Bad Request
         body: error.BadRequest
       401:
-        displayName: Unauthorized
         body: error.Unauthorized
       403:
-        displayName: Forbidden
         body: error.Forbidden
       422:
-        displayName: Unprocessable Entity
         body: error.UnprocessableEntity
       500:
-        displayName: Internal Server Error
         body: error.Server
 
   /{staff-id}:
@@ -84,42 +74,30 @@ securitySchemes:
       body: lib.StaffPatch[]
       responses:
         204:
-          displayName: Success Response
         400:
-          displayName: BadRequest
           body: error.BadRequest
         401:
-          displayName: Unauthorized
           body: error.Unauthorized
         403:
-          displayName: Forbidden
           body: error.Forbidden
         404:
-          displayName: Not Found
           body: error.NotFound
         422:
-          displayName: Unprocessable Entity
           body: error.UnprocessableEntity
         500:
-          displayName: Internal Server Error
           body: error.Server
     delete:
       displayName: Delete Staff Entry
       description: Delete dataset staff.
       responses:
         204:
-          displayName: Success Response
         401:
-          displayName: Unauthorized
           body: error.Unauthorized
         403:
-          displayName: Forbidden
           body: error.Forbidden
         404:
-          displayName: Not Found
           body: error.NotFound
         500:
-          displayName: Internal Server Error
           body: error.Server
 
 /dataset-providers:
@@ -142,16 +120,12 @@ securitySchemes:
         description: Number of rows to skip from the result
     responses:
       200:
-        displayName: Success Response
         body: lib.DatasetProviderList
       401:
-        displayName: Unauthorized
         body: error.Unauthorized
       403:
-        displayName: Forbidden
         body: error.Forbidden
       500:
-        displayName: Internal Server Error
         body: error.Server
 
   post:
@@ -160,22 +134,16 @@ securitySchemes:
     body: lib.DatasetProviderCreateRequest
     responses:
       200:
-        displayName: Success Response
         body: lib.DatasetProviderCreateResponse
       400:
-        displayName: Bad Request
         body: error.BadRequest
       401:
-        displayName: Unauthorized
         body: error.Unauthorized
       403:
-        displayName: Forbidden
         body: error.Forbidden
       422:
-        displayName: Unprocessable Entity
         body: error.UnprocessableEntity
       500:
-        displayName: Internal Server Error
         body: error.Server
 
 
@@ -190,42 +158,30 @@ securitySchemes:
       body: lib.DatasetProviderPatch[]
       responses:
         204:
-          displayName: Success Response
         400:
-          displayName: BadRequest
           body: error.BadRequest
         401:
-          displayName: Unauthorized
           body: error.Unauthorized
         403:
-          displayName: Forbidden
           body: error.Forbidden
         404:
-          displayName: Not Found
           body: error.NotFound
         422:
-          displayName: Unprocessable Entity
           body: error.UnprocessableEntity
         500:
-          displayName: Internal Server Error
           body: error.Server
     delete:
       displayName: Delete Provider
       description: Delete a dataset provider record.
       responses:
         204:
-          displayName: Success Response
         401:
-          displayName: Unauthorized
           body: error.Unauthorized
         403:
-          displayName: Forbidden
           body: error.Forbidden
         404:
-          displayName: Not Found
           body: error.NotFound
         500:
-          displayName: Internal Server Error
           body: error.Server
 
 /dataset-end-users:
@@ -254,16 +210,12 @@ securitySchemes:
         type: lib.ApprovalStatus
     responses:
       200:
-        displayName: Success Response
         body: lib.EndUserList
       401:
-        displayName: Unauthorized
         body: error.Unauthorized
       403:
-        displayName: Forbidden
         body: error.Forbidden
       500:
-        displayName: Internal Server Error
         body: error.Server
   post:
     displayName: New End User
@@ -271,22 +223,16 @@ securitySchemes:
     body: lib.EndUserCreateRequest
     responses:
       200:
-        displayName: Success Response
         body: lib.EndUserCreateResponse
       400:
-        displayName: Bad Request
         body: error.BadRequest
       401:
-        displayName: Unauthorized
         body: error.Unauthorized
       403:
-        displayName: Forbidden
         body: error.Forbidden
       422:
-        displayName: Unprocessable Entity
         body: error.UnprocessableEntity
       500:
-        displayName: Internal Server Error
         body: error.Server
 
   /{end-user-id}:
@@ -303,19 +249,14 @@ securitySchemes:
       description: Get the details of an end-user record.
       responses:
         200:
-          displayName: Success Response
           body: lib.EndUser
         401:
-          displayName: Unauthorized
           body: error.Unauthorized
         403:
-          displayName: Forbidden
           body: error.Forbidden
         404:
-          displayName: Not Found
           body: error.NotFound
         500:
-          displayName: Internal Server Error
           body: error.Server
     patch:
       displayName: Update End User
@@ -434,22 +375,24 @@ securitySchemes:
       body: lib.EndUserPatch[]
       responses:
         204:
-          displayName: Success Response
         400:
-          displayName: BadRequest
           body: error.BadRequest
         401:
-          displayName: Unauthorized
           body: error.Unauthorized
         403:
-          displayName: Forbidden
           body: error.Forbidden
         404:
-          displayName: Not Found
           body: error.NotFound
         422:
-          displayName: Unprocessable Entity
           body: error.UnprocessableEntity
         500:
-          displayName: Internal Server Error
           body: error.Server
+/permissions:
+  get:
+    responses:
+      200:
+        body: lib.PermissionsGetResponse
+      401:
+        body: error.Unauthorized
+      500:
+        body: error.Server
