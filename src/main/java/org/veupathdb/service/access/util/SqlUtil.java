@@ -39,6 +39,14 @@ public class SqlUtil
     };
   }
 
+  public static String parseSingleString(final ResultSet rs) throws Exception {
+    try {
+      return rs.getString(1);
+    } catch (SQLException e) {
+      throw new Exception("Failed to look up string value at position 1", e);
+    }
+  }
+
   public static int parseSingleInt(final ResultSet rs) throws Exception {
     try {
       return rs.getInt(1);

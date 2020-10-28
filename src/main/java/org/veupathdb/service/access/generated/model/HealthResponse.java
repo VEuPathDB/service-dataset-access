@@ -47,12 +47,6 @@ public interface HealthResponse {
       as = HealthResponseImpl.InfoTypeImpl.class
   )
   interface InfoType {
-    @JsonAnyGetter
-    Map<String, Object> getAdditionalProperties();
-
-    @JsonAnySetter
-    void setAdditionalProperties(String key, Object value);
-
     @JsonProperty("threads")
     int getThreads();
 
@@ -70,5 +64,11 @@ public interface HealthResponse {
 
     @JsonProperty("uptimeMillis")
     void setUptimeMillis(long uptimeMillis);
+
+    @JsonAnyGetter
+    Map<String, Object> getAdditionalProperties();
+
+    @JsonAnySetter
+    void setAdditionalProperties(String key, Object value);
   }
 }

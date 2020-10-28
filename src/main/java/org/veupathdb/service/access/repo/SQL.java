@@ -43,7 +43,7 @@ public interface SQL
     interface Accounts
     {
       String
-        Exists = select(Table.Accounts, "exists-by-id"),
+        Exists    = select(Table.Accounts, "exists-by-id"),
         IdByEmail = select(Table.Accounts, "id-by-email");
     }
 
@@ -52,14 +52,12 @@ public interface SQL
       String
         ById                   = select(Table.EndUsers, "by-id"),
         CountByDataset         = select(Table.EndUsers, "count-by-dataset"),
-        CountByDatasetFiltered = select(
-          Table.EndUsers,
-          "count-by-dataset-filtered"
-        ),
+        CountByDatasetFiltered = select(Table.EndUsers, "count-by-dataset-filtered"),
         CountByQuery           = select(Table.EndUsers, "count-by-query"),
         ByDataset              = select(Table.EndUsers, "by-dataset"),
         ByDatasetFiltered      = select(Table.EndUsers, "by-dataset-filtered"),
-        ByQuery                = select(Table.EndUsers, "by-query");
+        ByQuery                = select(Table.EndUsers, "by-query"),
+        Datasets               = select(Table.EndUsers, "datasets");
     }
 
     interface Providers
@@ -69,7 +67,8 @@ public interface SQL
         ById           = select(Table.Providers, "by-id"),
         CountByDataset = select(Table.Providers, "count-by-dataset"),
         ByUserId       = select(Table.Providers, "by-user-id"),
-        ByUserDataset  = select(Table.Providers, "by-user-id-and-dataset");
+        ByUserDataset  = select(Table.Providers, "by-user-id-and-dataset"),
+        Datasets       = select(Table.Providers, "datasets");
     }
 
     interface Staff
@@ -137,7 +136,7 @@ public interface SQL
       .orElseThrow(makeErr(Method.UPDATE, path, query));
   }
 
-  private static Supplier < RuntimeException > makeErr(
+  private static Supplier<RuntimeException> makeErr(
     final Method method,
     final String path,
     final String query

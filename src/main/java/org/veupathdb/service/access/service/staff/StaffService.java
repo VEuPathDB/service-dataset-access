@@ -43,6 +43,18 @@ public class StaffService
     return getInstance().isUserOwner(req);
   }
 
+  public boolean isUserStaff(final long userId) {
+    log.trace("StaffService#isUserStaff(long)");
+
+    try {
+      return StaffRepo.Select.byUserId(userId).isPresent();
+    } catch (WebApplicationException e) {
+      throw e;
+    } catch (Throwable e) {
+      throw new InternalServerErrorException(e);
+    }
+  }
+
   /**
    * Looks up whether the given userId belongs to a site owner.
    *
