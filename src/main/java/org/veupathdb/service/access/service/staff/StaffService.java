@@ -204,6 +204,7 @@ public class StaffService
     user.setFirstName(row.getFirstName());
     user.setLastName(row.getLastName());
     user.setUserId(row.getUserId());
+    user.setEmail(row.getEmail());
 
     final var out = new StaffImpl();
     out.setIsOwner(row.isOwner());
