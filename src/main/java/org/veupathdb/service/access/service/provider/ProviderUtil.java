@@ -42,6 +42,7 @@ public class ProviderUtil
     user.setFirstName(row.getFirstName());
     user.setLastName(row.getLastName());
     user.setOrganization(row.getOrganization());
+    user.setEmail(row.getEmail());
 
     var out = new DatasetProviderImpl();
     out.setDatasetId(row.getDatasetId());

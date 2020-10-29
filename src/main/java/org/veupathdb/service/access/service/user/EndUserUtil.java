@@ -192,6 +192,7 @@ public class EndUserUtil
     user.setLastName(row.getLastName());
     user.setFirstName(row.getFirstName());
     user.setOrganization(row.getOrganization());
+    user.setEmail(row.getEmail());
 
     final var out = new EndUserImpl();
     out.setUser(user);

@@ -30,4 +30,10 @@ public interface UserDetails {
 
   @JsonProperty("organization")
   void setOrganization(String organization);
+
+  @JsonProperty("email")
+  String getEmail();
+
+  @JsonProperty("email")
+  void setEmail(String email);
 }

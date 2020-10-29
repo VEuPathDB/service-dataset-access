@@ -9,7 +9,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "userId",
     "firstName",
     "lastName",
-    "organization"
+    "organization",
+    "email"
 })
 public class UserDetailsImpl implements UserDetails {
   @JsonProperty("userId")
@@ -23,6 +24,9 @@ public class UserDetailsImpl implements UserDetails {
 
   @JsonProperty("organization")
   private String organization;
+
+  @JsonProperty("email")
+  private String email;
 
   @JsonProperty("userId")
   public long getUserId() {
@@ -62,5 +66,15 @@ public class UserDetailsImpl implements UserDetails {
   @JsonProperty("organization")
   public void setOrganization(String organization) {
     this.organization = organization;
+  }
+
+  @JsonProperty("email")
+  public String getEmail() {
+    return this.email;
+  }
+
+  @JsonProperty("email")
+  public void setEmail(String email) {
+    this.email = email;
   }
 }
