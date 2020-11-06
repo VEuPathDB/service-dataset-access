@@ -25,7 +25,7 @@ public class StaffController implements Staff
 
   @Override
   public GetStaffResponse getStaff(final int limit, final int offset) {
-    if (!StaffService.userIsOwner(request))
+    if (!StaffService.userIsStaff(request))
       throw new ForbiddenException();
 
     return GetStaffResponse.respond200WithApplicationJson(
