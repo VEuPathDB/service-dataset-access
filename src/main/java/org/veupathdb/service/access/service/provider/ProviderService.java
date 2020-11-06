@@ -100,13 +100,13 @@ public class ProviderService
 
       // Determine if the user is a manager for the dataset.
       for (var pro : rows) {
-        if (pro.getUserId() == currentUser.getUserId() && pro.isManager()) {
+        if (pro.getUserId() == currentUser.getUserId()) {
           allowed = true;
           break;
         }
       }
 
-      if (StaffService.userIsOwner(currentUser.getUserId()))
+      if (StaffService.userIsStaff(currentUser.getUserId()))
         allowed = true;
 
       if (!allowed)
