@@ -8,7 +8,7 @@
 # Email sent when a new provider creation was attempted, but the given provider
 # email address was not in our user db.
 provider-register:
-  subject: $dataset.display_name$ Provider Account
+  subject: $dataset.displayName$ Provider Account
   body: |
     Hi,
 
@@ -20,7 +20,7 @@ provider-register:
 # Email sent when a new end user creation was attempted but the given end user
 # email address was not in our user db.
 end-user-register:
-  subject: $dataset.display_name$ End User Account
+  subject: $dataset.displayName$ End User Account
   body: |
     Hi,
 
@@ -30,7 +30,7 @@ end-user-register:
 
 # Email sent to providers when an end user updates their access request fields.
 edit-notification:
-  subject: $dataset.display_name$ Access Request Update
+  subject: $dataset.displayName$ Access Request Update
   body: |
     Dear provider,
 
