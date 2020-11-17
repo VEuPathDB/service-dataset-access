@@ -43,6 +43,22 @@ public class StaffService
     return getInstance().isUserOwner(req);
   }
 
+  public static boolean userIsStaff(final Request req) {
+    return getInstance().isUserStaff(req);
+  }
+
+  public boolean isUserStaff(final Request req) {
+    log.trace("StaffService#isUserStaff(Request)");
+
+    return isUserStaff(UserProvider.lookupUser(req)
+      .orElseThrow(InternalServerErrorException::new)
+      .getUserId());
+  }
+
+  public static boolean userIsStaff(final long id) {
+    return getInstance().isUserStaff(id);
+  }
+
   public boolean isUserStaff(final long userId) {
     log.trace("StaffService#isUserStaff(long)");
 
