@@ -227,7 +227,7 @@ public class EndUserRepo
         SQL.Update.EndUser.ModUpdate,
         QueryUtil.getInstance()::getAcctDbConnection,
         new PsBuilder()
-          .setObject(row.getStartDate(), Types.DATE)
+          .setObject(row.getStartDate(), Types.TIME_WITH_TIMEZONE)
           .setLong(row.getDuration())
           .setString(row.getPurpose())
           .setString(row.getResearchQuestion())
