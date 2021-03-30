@@ -149,17 +149,17 @@ SELECT
   user_id
 , dataset_presenter_id
 , (
-    SELECT
-      restriction_level_id
-    FROM
-      studyaccess.restriction_level
-    WHERE
-        name = (
-        CASE vdu.restriction_level
-          WHEN 'admin' THEN 'public'
-          ELSE vdu.restriction_level
-          END
-        )
+  SELECT
+    restriction_level_id
+  FROM
+    studyaccess.restriction_level
+  WHERE
+    name = (
+      CASE vdu.restriction_level
+        WHEN 'admin' THEN 'public'
+        ELSE vdu.restriction_level
+      END
+    )
   )
 , COALESCE(approval_status, 0)
 , TO_TIMESTAMP_TZ(TO_CHAR(start_date, 'YYYY-MM-DD HH24:MI:SS ') || '00:00',
