@@ -63,7 +63,6 @@ CREATE TABLE studyaccess.end_users
 );
 
 -- studyaccess.end_user_history
-
 CREATE TABLE studyaccess.end_user_history
 (
   end_user_id          NUMBER(12)                                         NOT NULL
@@ -84,6 +83,9 @@ CREATE TABLE studyaccess.end_user_history
   denial_reason        VARCHAR2(4000),
   date_denied          TIMESTAMP WITH TIME ZONE,
   allow_self_edits     NUMBER(1)                                          NOT NULL,
+
+  -- Action taken on the record, should be one of: CREATE, UPDATE, or DELETE
+  history_action       VARCHAR2(6)                                        NOT NULL,
 
   -- Timestamp of the change to the studyaccess.end_users table
   history_timestamp    TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,

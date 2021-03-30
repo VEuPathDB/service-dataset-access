@@ -256,29 +256,36 @@ public class EndUserUtil
    * @param causeUserID User ID of the user who requested the end user
    *                    modification.
    */
-  static void insertHistoryEvent(final Connection con, final EndUserRow row, final long causeUserID)
-  throws Exception {
+  static void insertHistoryEvent(
+    final Connection con,
+    final HistoryAction action,
+    final EndUserRow row,
+    final long causeUserID
+  ) throws Exception {
     new BasicPreparedVoidQuery(
       SQL.Insert.EndUserHistory,
       con,
       new PsBuilder()
+        // 1
         .setLong(row.getEndUserID())
         .setLong(row.getUserId())
         .setString(row.getDatasetId())
-        .setShort(RestrictionLevelCache.getInstance()
-          .get(row.getRestrictionLevel())
-          .orElseThrow())
+        .setShort(RestrictionLevelCache.getInstance().get(row.getRestrictionLevel()).orElseThrow())
+        // 5
         .setShort(ApprovalStatusCache.getInstance().get(row.getApprovalStatus()).orElseThrow())
         .setObject(row.getStartDate(), Types.DATE)
         .setLong(row.getDuration())
         .setString(row.getPurpose())
         .setString(row.getResearchQuestion())
+        // 10
         .setString(row.getAnalysisPlan())
         .setString(row.getDisseminationPlan())
         .setString(row.getPriorAuth())
         .setString(row.getDenialReason())
         .setObject(row.getDateDenied(), Types.TIMESTAMP_WITH_TIMEZONE)
+        // 15
         .setBoolean(row.isAllowSelfEdits())
+        .setString(action.name())
         .setLong(causeUserID)
         ::build
     ).execute();

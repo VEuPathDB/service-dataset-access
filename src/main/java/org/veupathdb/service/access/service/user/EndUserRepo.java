@@ -23,11 +23,13 @@ public class EndUserRepo
 
   public interface Delete
   {
-    static void endUser(final EndUserRow user) throws Exception {
+    static void endUser(final EndUserRow user, final long causeUserId) throws Exception {
       log.trace("EndUserRepo$Delete#endUser(EndUserRow)");
 
       try (var con = QueryUtil.acctDbConnection()) {
         new BasicPreparedVoidQuery(SQL.Delete.EndUsers.ById, con, ps -> ps.setLong(1, user.getEndUserID())).execute();
+
+        EndUserUtil.insertHistoryEvent(con, HistoryAction.DELETE, user, causeUserId);
       }
     }
   }
@@ -66,7 +68,7 @@ public class EndUserRepo
         }
 
         // Insert history entry
-        EndUserUtil.insertHistoryEvent(con, row, creatorID);
+        EndUserUtil.insertHistoryEvent(con, HistoryAction.CREATE, row, creatorID);
       }
     }
   }
@@ -243,7 +245,7 @@ public class EndUserRepo
         ).execute();
 
         // Insert history entry
-        EndUserUtil.insertHistoryEvent(con, row, updaterID);
+        EndUserUtil.insertHistoryEvent(con, HistoryAction.UPDATE, row, updaterID);
       }
     }
 
@@ -275,7 +277,7 @@ public class EndUserRepo
         ).execute();
 
         // Insert history entry
-        EndUserUtil.insertHistoryEvent(con, row, updaterID);
+        EndUserUtil.insertHistoryEvent(con, HistoryAction.UPDATE, row, updaterID);
       }
     }
   }

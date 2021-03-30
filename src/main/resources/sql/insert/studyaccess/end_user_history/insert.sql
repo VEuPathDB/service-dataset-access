@@ -15,8 +15,9 @@ INSERT INTO
   , denial_reason         -- 13, string
   , date_denied           -- 14, timestamp with time zone
   , allow_self_edits      -- 15, boolean
-  , history_cause_user    -- 16, int64
+  , history_action        -- 16, string
+  , history_cause_user    -- 17, int64
   )
 VALUES
-  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 
