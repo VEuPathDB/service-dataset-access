@@ -69,6 +69,12 @@ CREATE TABLE studyaccess.end_user_history
     REFERENCES studyaccess.end_users (end_user_id),
   user_id              NUMBER(12)                                         NOT NULL,
   dataset_presenter_id VARCHAR2(15)                                       NOT NULL,
+  -- Action taken on the record, should be one of: CREATE, UPDATE, or DELETE
+  history_action       VARCHAR2(6)                                        NOT NULL,
+  -- Timestamp of the change to the studyaccess.end_users table
+  history_timestamp    TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  -- User who made the change to the studyaccess.end_users table.
+  history_cause_user   NUMBER(12)                                         NOT NULL,
   restriction_level_id NUMBER(1)                                          NOT NULL
     REFERENCES studyaccess.restriction_level (restriction_level_id),
   approval_status_id   NUMBER(1)                                          NOT NULL
@@ -82,16 +88,7 @@ CREATE TABLE studyaccess.end_user_history
   prior_auth           VARCHAR2(4000),
   denial_reason        VARCHAR2(4000),
   date_denied          TIMESTAMP WITH TIME ZONE,
-  allow_self_edits     NUMBER(1)                                          NOT NULL,
-
-  -- Action taken on the record, should be one of: CREATE, UPDATE, or DELETE
-  history_action       VARCHAR2(6)                                        NOT NULL,
-
-  -- Timestamp of the change to the studyaccess.end_users table
-  history_timestamp    TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
-
-  -- User who made the change to the studyaccess.end_users table.
-  history_cause_user   NUMBER(12)                                         NOT NULL
+  allow_self_edits     NUMBER(1)                                          NOT NULL
 );
 
 -----------------
@@ -113,66 +110,25 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON studyaccess.end_user_history TO useracct
 -- Data --
 ----------
 
-INSERT INTO
-  studyaccess.approval_status (approval_status_id, name)
-VALUES
-  (0, 'approved');
-INSERT INTO
-  studyaccess.approval_status (approval_status_id, name)
-VALUES
-  (1, 'requested');
-INSERT INTO
-  studyaccess.approval_status (approval_status_id, name)
-VALUES
-  (2, 'denied');
+INSERT INTO studyaccess.approval_status (approval_status_id, name) VALUES (0, 'approved');
+INSERT INTO studyaccess.approval_status (approval_status_id, name) VALUES (1, 'requested');
+INSERT INTO studyaccess.approval_status (approval_status_id, name) VALUES (2, 'denied');
 
-INSERT INTO
-  studyaccess.restriction_level (name)
-VALUES
-  ('public');
-INSERT INTO
-  studyaccess.restriction_level (name)
-VALUES
-  ('controlled');
-INSERT INTO
-  studyaccess.restriction_level (name)
-VALUES
-  ('protected');
-INSERT INTO
-  studyaccess.restriction_level (name)
-VALUES
-  ('prerelease');
-INSERT INTO
-  studyaccess.restriction_level (name)
-VALUES
-  ('private');
+INSERT INTO studyaccess.restriction_level (name) VALUES ('public');
+INSERT INTO studyaccess.restriction_level (name) VALUES ('controlled');
+INSERT INTO studyaccess.restriction_level (name) VALUES ('protected');
+INSERT INTO studyaccess.restriction_level (name) VALUES ('prerelease');
+INSERT INTO studyaccess.restriction_level (name) VALUES ('private');
 
+-- Initial owner user ids
+INSERT INTO studyaccess.staff (user_id, is_owner) VALUES (48, 1);
+INSERT INTO studyaccess.staff (user_id, is_owner) VALUES (376, 1);
+INSERT INTO studyaccess.staff (user_id, is_owner) VALUES (219825440, 1);
+INSERT INTO studyaccess.staff (user_id, is_owner) VALUES (220902410, 1);
+INSERT INTO studyaccess.staff (user_id, is_owner) VALUES (295652793, 1);
+INSERT INTO studyaccess.staff (user_id, is_owner) VALUES (276765373, 1);
 
-INSERT INTO
-  studyaccess.staff (user_id, is_owner)
-VALUES
-  (48, 1);
-INSERT INTO
-  studyaccess.staff (user_id, is_owner)
-VALUES
-  (376, 1);
-INSERT INTO
-  studyaccess.staff (user_id, is_owner)
-VALUES
-  (219825440, 1);
-INSERT INTO
-  studyaccess.staff (user_id, is_owner)
-VALUES
-  (220902410, 1);
-INSERT INTO
-  studyaccess.staff (user_id, is_owner)
-VALUES
-  (295652793, 1);
-INSERT INTO
-  studyaccess.staff (user_id, is_owner)
-VALUES
-  (276765373, 1);
-
+-- Migration from ClinEpi data to new service data
 INSERT INTO
   studyaccess.end_users (
   user_id
