@@ -1,12 +1,15 @@
 package org.veupathdb.service.access.service.user;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.Types;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import io.vulpine.lib.query.util.basic.BasicPreparedVoidQuery;
 import org.apache.logging.log4j.Logger;
 import org.veupathdb.lib.container.jaxrs.providers.LogProvider;
 import org.veupathdb.service.access.generated.model.*;
@@ -14,6 +17,8 @@ import org.veupathdb.service.access.model.ApprovalStatus;
 import org.veupathdb.service.access.model.RestrictionLevel;
 import org.veupathdb.service.access.model.*;
 import org.veupathdb.service.access.repo.DB;
+import org.veupathdb.service.access.repo.SQL;
+import org.veupathdb.service.access.util.PsBuilder;
 
 public class EndUserUtil
 {
@@ -22,11 +27,19 @@ public class EndUserUtil
   /**
    * Parses a single {@link ResultSet} row into an instance of
    * {@link EndUserRow}.
+   * <p>
+   * Note, this method does not index the result set, {@link ResultSet#next()}
+   * must be called before calling this method.
+   *
+   * @param rs Cursor to a query result row to parse into an {@code EndUserRow}.
+   *
+   * @return New {@code EndUserRow} parsed from the given result set.
    */
   static EndUserRow parseEndUserRow(final ResultSet rs) throws Exception {
     log.trace("EndUserRepo$Select#parseEndUserRow(ResultSet)");
 
     return (EndUserRow) new EndUserRow()
+      .setEndUserID(rs.getLong(DB.Column.EndUser.EndUserID))
       .setAnalysisPlan(rs.getString(DB.Column.EndUser.AnalysisPlan))
       .setApprovalStatus(ApprovalStatusCache.getInstance()
         .get(rs.getShort(DB.Column.EndUser.ApprovalStatus))
@@ -53,6 +66,10 @@ public class EndUserUtil
 
   /**
    * Converts from generated to internal approval status enum type.
+   *
+   * @param status External approval status value to convert.
+   *
+   * @return Translated internal approval status value.
    */
   static ApprovalStatus convertApproval(
     final org.veupathdb.service.access.generated.model.ApprovalStatus status
@@ -70,6 +87,10 @@ public class EndUserUtil
 
   /**
    * Converts from internal to generated approval status enum type.
+   *
+   * @param status Internal approval status value to convert.
+   *
+   * @return Translated external approval status value.
    */
   static org.veupathdb.service.access.generated.model.ApprovalStatus convertApproval(
     final ApprovalStatus status
@@ -84,6 +105,13 @@ public class EndUserUtil
       };
   }
 
+  /**
+   * Converts from generated to internal restriction level enum type.
+   *
+   * @param level External restriction level value to convert.
+   *
+   * @return Translated internal restriction level value.
+   */
   static RestrictionLevel convertRestriction(
     final org.veupathdb.service.access.generated.model.RestrictionLevel level
   ) {
@@ -101,6 +129,10 @@ public class EndUserUtil
 
   /**
    * Converts from internal to generated restriction level enum type.
+   *
+   * @param level Internal restriction level value to convert.
+   *
+   * @return Translated external restriction level value.
    */
   static org.veupathdb.service.access.generated.model.RestrictionLevel convertRestriction(
     final RestrictionLevel level
@@ -214,5 +246,41 @@ public class EndUserUtil
     log.trace("EndUserService#formatEndUserId(long, String)");
 
     return userId + "-" + datasetId;
+  }
+
+  /**
+   * Inserts a new end user row modification record into the history table.
+   *
+   * @param con         Database connection to use for the record insertion.
+   * @param row         Updated end user row to insert.
+   * @param causeUserID User ID of the user who requested the end user
+   *                    modification.
+   */
+  static void insertHistoryEvent(final Connection con, final EndUserRow row, final long causeUserID)
+  throws Exception {
+    new BasicPreparedVoidQuery(
+      SQL.Insert.EndUserHistory,
+      con,
+      new PsBuilder()
+        .setLong(row.getEndUserID())
+        .setLong(row.getUserId())
+        .setString(row.getDatasetId())
+        .setShort(RestrictionLevelCache.getInstance()
+          .get(row.getRestrictionLevel())
+          .orElseThrow())
+        .setShort(ApprovalStatusCache.getInstance().get(row.getApprovalStatus()).orElseThrow())
+        .setObject(row.getStartDate(), Types.DATE)
+        .setLong(row.getDuration())
+        .setString(row.getPurpose())
+        .setString(row.getResearchQuestion())
+        .setString(row.getAnalysisPlan())
+        .setString(row.getDisseminationPlan())
+        .setString(row.getPriorAuth())
+        .setString(row.getDenialReason())
+        .setObject(row.getDateDenied(), Types.TIMESTAMP_WITH_TIMEZONE)
+        .setBoolean(row.isAllowSelfEdits())
+        .setLong(causeUserID)
+        ::build
+    ).execute();
   }
 }

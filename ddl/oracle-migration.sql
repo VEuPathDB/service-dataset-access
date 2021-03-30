@@ -49,7 +49,7 @@ CREATE TABLE studyaccess.end_users
     REFERENCES studyaccess.restriction_level (restriction_level_id),
   approval_status_id   NUMBER(1)                DEFAULT 1                 NOT NULL
     REFERENCES studyaccess.approval_status (approval_status_id),
-  start_date           TIMESTAMP WITH TIME ZONE DEFAULT current_timestamp NOT NULL,
+  start_date           TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
   duration             NUMBER(12)               DEFAULT -1                NOT NULL,
   purpose              VARCHAR2(4000),
   research_question    VARCHAR2(4000),
@@ -58,8 +58,38 @@ CREATE TABLE studyaccess.end_users
   prior_auth           VARCHAR2(4000),
   denial_reason        VARCHAR2(4000),
   date_denied          TIMESTAMP WITH TIME ZONE,
-  allow_self_edits     NUMBER(1) DEFAULT 0 NOT NULL,
+  allow_self_edits     NUMBER(1)                DEFAULT 0                 NOT NULL,
   CONSTRAINT end_user_ds_user_uq UNIQUE (user_id, dataset_presenter_id)
+);
+
+-- studyaccess.end_user_history
+
+CREATE TABLE studyaccess.end_user_history
+(
+  end_user_id          NUMBER(12)                                         NOT NULL
+    REFERENCES studyaccess.end_users (end_user_id),
+  user_id              NUMBER(12)                                         NOT NULL,
+  dataset_presenter_id VARCHAR2(15)                                       NOT NULL,
+  restriction_level_id NUMBER(1)                                          NOT NULL
+    REFERENCES studyaccess.restriction_level (restriction_level_id),
+  approval_status_id   NUMBER(1)                                          NOT NULL
+    REFERENCES studyaccess.approval_status (approval_status_id),
+  start_date           TIMESTAMP WITH TIME ZONE                           NOT NULL,
+  duration             NUMBER(12)                                         NOT NULL,
+  purpose              VARCHAR2(4000),
+  research_question    VARCHAR2(4000),
+  analysis_plan        VARCHAR2(4000),
+  dissemination_plan   VARCHAR2(4000),
+  prior_auth           VARCHAR2(4000),
+  denial_reason        VARCHAR2(4000),
+  date_denied          TIMESTAMP WITH TIME ZONE,
+  allow_self_edits     NUMBER(1)                                          NOT NULL,
+
+  -- Timestamp of the change to the studyaccess.end_users table
+  history_timestamp    TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+
+  -- User who made the change to the studyaccess.end_users table.
+  history_cause_user   NUMBER(12)                                         NOT NULL
 );
 
 -----------------
@@ -74,64 +104,108 @@ GRANT SELECT ON studyaccess.providers TO useraccts_r;
 GRANT SELECT, INSERT, UPDATE, DELETE ON studyaccess.providers TO useraccts_w;
 GRANT SELECT ON studyaccess.end_users TO useraccts_r;
 GRANT SELECT, INSERT, UPDATE, DELETE ON studyaccess.end_users TO useraccts_w;
+GRANT SELECT ON studyaccess.end_user_history TO useraccts_r;
+GRANT SELECT, INSERT, UPDATE, DELETE ON studyaccess.end_user_history TO useraccts_w;
 
 ----------
 -- Data --
 ----------
 
-INSERT INTO studyaccess.approval_status (approval_status_id, name) VALUES (0, 'approved');
-INSERT INTO studyaccess.approval_status (approval_status_id, name) VALUES (1, 'requested');
-INSERT INTO studyaccess.approval_status (approval_status_id, name) VALUES (2, 'denied');
+INSERT INTO
+  studyaccess.approval_status (approval_status_id, name)
+VALUES
+  (0, 'approved');
+INSERT INTO
+  studyaccess.approval_status (approval_status_id, name)
+VALUES
+  (1, 'requested');
+INSERT INTO
+  studyaccess.approval_status (approval_status_id, name)
+VALUES
+  (2, 'denied');
 
-INSERT INTO studyaccess.restriction_level (name) VALUES ('public');
-INSERT INTO studyaccess.restriction_level (name) VALUES ('controlled');
-INSERT INTO studyaccess.restriction_level (name) VALUES ('protected');
-INSERT INTO studyaccess.restriction_level (name) VALUES ('prerelease');
-INSERT INTO studyaccess.restriction_level (name) VALUES ('private');
+INSERT INTO
+  studyaccess.restriction_level (name)
+VALUES
+  ('public');
+INSERT INTO
+  studyaccess.restriction_level (name)
+VALUES
+  ('controlled');
+INSERT INTO
+  studyaccess.restriction_level (name)
+VALUES
+  ('protected');
+INSERT INTO
+  studyaccess.restriction_level (name)
+VALUES
+  ('prerelease');
+INSERT INTO
+  studyaccess.restriction_level (name)
+VALUES
+  ('private');
 
 
-INSERT INTO studyaccess.staff (user_id, is_owner) VALUES (48, 1);
-INSERT INTO studyaccess.staff (user_id, is_owner) VALUES (376, 1);
-INSERT INTO studyaccess.staff (user_id, is_owner) VALUES (219825440, 1);
-INSERT INTO studyaccess.staff (user_id, is_owner) VALUES (220902410, 1);
-INSERT INTO studyaccess.staff (user_id, is_owner) VALUES (295652793, 1);
-INSERT INTO studyaccess.staff (user_id, is_owner) VALUES (276765373, 1);
+INSERT INTO
+  studyaccess.staff (user_id, is_owner)
+VALUES
+  (48, 1);
+INSERT INTO
+  studyaccess.staff (user_id, is_owner)
+VALUES
+  (376, 1);
+INSERT INTO
+  studyaccess.staff (user_id, is_owner)
+VALUES
+  (219825440, 1);
+INSERT INTO
+  studyaccess.staff (user_id, is_owner)
+VALUES
+  (220902410, 1);
+INSERT INTO
+  studyaccess.staff (user_id, is_owner)
+VALUES
+  (295652793, 1);
+INSERT INTO
+  studyaccess.staff (user_id, is_owner)
+VALUES
+  (276765373, 1);
 
 INSERT INTO
   studyaccess.end_users (
-    user_id
-  , dataset_presenter_id
-  , restriction_level_id
-  , approval_status_id
-  , start_date
-  , duration
-  , purpose
-  , research_question
-  , analysis_plan
-  , dissemination_plan
-  , prior_auth
-  , denial_reason
-  , date_denied
-  , allow_self_edits
-  )
+  user_id
+, dataset_presenter_id
+, restriction_level_id
+, approval_status_id
+, start_date
+, duration
+, purpose
+, research_question
+, analysis_plan
+, dissemination_plan
+, prior_auth
+, denial_reason
+, date_denied
+, allow_self_edits)
 SELECT
   user_id
 , dataset_presenter_id
 , (
-  SELECT
-    restriction_level_id
-  FROM
-    studyaccess.restriction_level
-  WHERE
-    name = (
-      CASE vdu.restriction_level
-        WHEN 'admin' THEN 'public'
-        ELSE vdu.restriction_level
-      END
-    )
+    SELECT
+      restriction_level_id
+    FROM
+      studyaccess.restriction_level
+    WHERE
+        name = (
+        CASE vdu.restriction_level
+          WHEN 'admin' THEN 'public'
+          ELSE vdu.restriction_level
+          END
+        )
   )
 , COALESCE(approval_status, 0)
-, to_timestamp_tz(to_char(start_date, 'YYYY-MM-DD HH24:MI:SS ') || '00:00', 'YYYY-MM-DD HH24:MI:SS TZH:TZM')
+, TO_TIMESTAMP_TZ(TO_CHAR(start_date, 'YYYY-MM-DD HH24:MI:SS ') || '00:00',
+                  'YYYY-MM-DD HH24:MI:SS TZH:TZM')
 , duration
 , purpose
 , research_question

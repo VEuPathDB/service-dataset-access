@@ -19,6 +19,11 @@ public interface SQL
 
   interface Delete
   {
+    interface EndUsers
+    {
+      String ById = delete(Table.EndUsers, "by-id");
+    }
+
     interface Providers
     {
       String ById = delete(Table.Providers, "by-id");
@@ -33,9 +38,10 @@ public interface SQL
   interface Insert
   {
     String
-      EndUser   = insert(Table.EndUsers, "insert"),
-      Providers = insert(Table.Providers, "insert"),
-      Staff     = insert(Table.Staff, "insert");
+      EndUser        = insert(Table.EndUsers, "insert"),
+      EndUserHistory = insert(Table.EndUserHistory, "insert"),
+      Providers      = insert(Table.Providers, "insert"),
+      Staff          = insert(Table.Staff, "insert");
   }
 
   interface Select

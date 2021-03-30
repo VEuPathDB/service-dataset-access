@@ -41,7 +41,8 @@ public class EndUserPatchService
 
   public void applySelfPatch(
     final EndUserRow row,
-    final List<EndUserPatch> patches
+    final List<EndUserPatch> patches,
+    final long userID
   ) {
     log.trace("EndUserService#selfPatch(EndUserRow, List)");
     var pVal = new PatchUtil();
@@ -89,7 +90,7 @@ public class EndUserPatchService
         .stream()
         .map(UserRow::getEmail)
         .toArray(String[]::new);
-      EndUserRepo.Update.self(row);
+      EndUserRepo.Update.self(row, userID);
       EmailService.getInstance()
         .sendEndUserUpdateNotificationEmail(ccs, ds, row);
     } catch (WebApplicationException e) {
@@ -99,11 +100,19 @@ public class EndUserPatchService
     }
   }
 
-  public static void selfPatch(final EndUserRow row, final List<EndUserPatch> patches) {
-    getInstance().applySelfPatch(row, patches);
+  public static void selfPatch(
+    final EndUserRow row,
+    final List<EndUserPatch> patches,
+    final long userID
+  ) {
+    getInstance().applySelfPatch(row, patches, userID);
   }
 
-  public void applyModPatch(final EndUserRow row, final List<EndUserPatch> patches) {
+  public void applyModPatch(
+    final EndUserRow row,
+    final List<EndUserPatch> patches,
+    final long userID
+  ) {
     log.trace("EndUserService#modPatch(row, patches)");
     var pVal = new PatchUtil();
 
@@ -149,14 +158,18 @@ public class EndUserPatchService
     }
 
     try {
-      EndUserRepo.Update.mod(row);
+      EndUserRepo.Update.mod(row, userID);
     } catch (Exception e) {
       throw new InternalServerErrorException(e);
     }
   }
 
-  public static void modPatch(final EndUserRow row, final List<EndUserPatch> patches) {
-    getInstance().applyModPatch(row, patches);
+  public static void modPatch(
+    final EndUserRow row,
+    final List<EndUserPatch> patches,
+    final long userID
+  ) {
+    getInstance().applyModPatch(row, patches, userID);
   }
 
   public static EndUserPatchService getInstance() {

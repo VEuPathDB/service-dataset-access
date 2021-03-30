@@ -6,7 +6,9 @@ import java.util.Optional;
 
 import io.vulpine.lib.query.util.basic.BasicPreparedListReadQuery;
 import io.vulpine.lib.query.util.basic.BasicPreparedReadQuery;
+import io.vulpine.lib.query.util.basic.BasicPreparedVoidQuery;
 import io.vulpine.lib.query.util.basic.BasicPreparedWriteQuery;
+import oracle.jdbc.OraclePreparedStatement;
 import org.apache.logging.log4j.Logger;
 import org.veupathdb.lib.container.jaxrs.providers.LogProvider;
 import org.veupathdb.service.access.model.*;
@@ -19,33 +21,53 @@ public class EndUserRepo
 {
   private static final Logger log = LogProvider.logger(EndUserRepo.class);
 
+  public interface Delete
+  {
+    static void endUser(final EndUserRow user) throws Exception {
+      log.trace("EndUserRepo$Delete#endUser(EndUserRow)");
+
+      try (var con = QueryUtil.acctDbConnection()) {
+        new BasicPreparedVoidQuery(SQL.Delete.EndUsers.ById, con, ps -> ps.setLong(1, user.getEndUserID())).execute();
+      }
+    }
+  }
+
   public interface Insert
   {
-    static void newEndUser(final EndUserRow row) throws Exception {
+    static void newEndUser(final EndUserRow row, final long creatorID) throws Exception {
       log.trace("EndUserRepo$Insert#newEndUser(EndUserRow)");
 
-      new BasicPreparedWriteQuery(
-        SQL.Insert.EndUser,
-        QueryUtil.getInstance()::getAcctDbConnection,
-        new PsBuilder()
-          .setLong(row.getUserId())
-          .setString(row.getDatasetId())
-          .setShort(RestrictionLevelCache.getInstance()
+      try (var con = QueryUtil.acctDbConnection()) {
+        // Insert initial row
+        try (var ps = con.prepareStatement(SQL.Insert.EndUser)) {
+          ps.setLong(1, row.getUserId());
+          ps.setString(2, row.getDatasetId());
+          ps.setShort(3, RestrictionLevelCache.getInstance()
             .get(row.getRestrictionLevel())
-            .orElseThrow())
-          .setShort(ApprovalStatusCache.getInstance().get(row.getApprovalStatus()).orElseThrow())
-          .setObject(row.getStartDate(), Types.DATE)
-          .setLong(row.getDuration())
-          .setString(row.getPurpose())
-          .setString(row.getResearchQuestion())
-          .setString(row.getAnalysisPlan())
-          .setString(row.getDisseminationPlan())
-          .setString(row.getPriorAuth())
-          .setString(row.getDenialReason())
-          .setObject(row.getDateDenied(), Types.TIMESTAMP_WITH_TIMEZONE)
-          .setBoolean(row.isAllowSelfEdits())
-          ::build
-      ).execute();
+            .orElseThrow());
+          ps.setShort(4, ApprovalStatusCache
+            .getInstance()
+            .get(row.getApprovalStatus()).orElseThrow());
+          ps.setObject(5, row.getStartDate(), Types.DATE);
+          ps.setLong(6, row.getDuration());
+          ps.setString(7, row.getPurpose());
+          ps.setString(8, row.getResearchQuestion());
+          ps.setString(9, row.getAnalysisPlan());
+          ps.setString(10, row.getDisseminationPlan());
+          ps.setString(11, row.getPriorAuth());
+          ps.setString(12, row.getDenialReason());
+          ps.setObject(13, row.getDateDenied(), Types.TIMESTAMP_WITH_TIMEZONE);
+          ps.setBoolean(14, row.isAllowSelfEdits());
+          ((OraclePreparedStatement)ps).registerReturnParameter(15, Types.BIGINT);
+
+          try (var rs = ps.executeQuery()) {
+            row.setEndUserID(rs.getLong(1));
+          }
+        }
+
+        // Insert history entry
+        EndUserUtil.insertHistoryEvent(con, row, creatorID);
+      }
     }
   }
 
@@ -201,50 +223,60 @@ public class EndUserRepo
 
   public interface Update
   {
-    static void self(final EndUserRow row) throws Exception {
+    static void self(final EndUserRow row, final long updaterID) throws Exception {
       log.trace("EndUserRepo$Update#self(EndUserRow)");
 
-      new BasicPreparedWriteQuery(
-        SQL.Update.EndUser.SelfUpdate,
-        QueryUtil.getInstance()::getAcctDbConnection,
-        new PsBuilder()
-          .setString(row.getPurpose())
-          .setString(row.getResearchQuestion())
-          .setString(row.getAnalysisPlan())
-          .setString(row.getDisseminationPlan())
-          .setString(row.getPriorAuth())
-          .setBoolean(row.isAllowSelfEdits())
-          .setLong(row.getUserId())
-          .setString(row.getDatasetId())
-          ::build
-      ).execute();
+      try (var con = QueryUtil.acctDbConnection()) {
+        new BasicPreparedWriteQuery(
+          SQL.Update.EndUser.SelfUpdate,
+          con,
+          new PsBuilder()
+            .setString(row.getPurpose())
+            .setString(row.getResearchQuestion())
+            .setString(row.getAnalysisPlan())
+            .setString(row.getDisseminationPlan())
+            .setString(row.getPriorAuth())
+            .setBoolean(row.isAllowSelfEdits())
+            .setLong(row.getUserId())
+            .setString(row.getDatasetId())
+            ::build
+        ).execute();
+
+        // Insert history entry
+        EndUserUtil.insertHistoryEvent(con, row, updaterID);
+      }
     }
 
-    static void mod(final EndUserRow row) throws Exception {
+    static void mod(final EndUserRow row, final long updaterID) throws Exception {
       log.trace("EndUserRepo$Update#mod(EndUserRow)");
 
-      new BasicPreparedWriteQuery(
-        SQL.Update.EndUser.ModUpdate,
-        QueryUtil.getInstance()::getAcctDbConnection,
-        new PsBuilder()
-          .setObject(row.getStartDate(), Types.TIME_WITH_TIMEZONE)
-          .setLong(row.getDuration())
-          .setString(row.getPurpose())
-          .setString(row.getResearchQuestion())
-          .setString(row.getAnalysisPlan())
-          .setString(row.getDisseminationPlan())
-          .setString(row.getPriorAuth())
-          .setShort(RestrictionLevelCache.getInstance()
-            .get(row.getRestrictionLevel())
-            .orElseThrow())
-          .setShort(ApprovalStatusCache.getInstance().get(row.getApprovalStatus()).orElseThrow())
-          .setString(row.getDenialReason())
-          .setObject(row.getDateDenied(), Types.TIMESTAMP_WITH_TIMEZONE)
-          .setBoolean(row.isAllowSelfEdits())
-          .setLong(row.getUserId())
-          .setString(row.getDatasetId())
-          ::build
-      ).execute();
+      try (var con = QueryUtil.acctDbConnection()) {
+        new BasicPreparedWriteQuery(
+          SQL.Update.EndUser.ModUpdate,
+          con,
+          new PsBuilder()
+            .setObject(row.getStartDate(), Types.TIME_WITH_TIMEZONE)
+            .setLong(row.getDuration())
+            .setString(row.getPurpose())
+            .setString(row.getResearchQuestion())
+            .setString(row.getAnalysisPlan())
+            .setString(row.getDisseminationPlan())
+            .setString(row.getPriorAuth())
+            .setShort(RestrictionLevelCache.getInstance()
+              .get(row.getRestrictionLevel())
+              .orElseThrow())
+            .setShort(ApprovalStatusCache.getInstance().get(row.getApprovalStatus()).orElseThrow())
+            .setString(row.getDenialReason())
+            .setObject(row.getDateDenied(), Types.TIMESTAMP_WITH_TIMEZONE)
+            .setBoolean(row.isAllowSelfEdits())
+            .setLong(row.getUserId())
+            .setString(row.getDatasetId())
+            ::build
+        ).execute();
+
+        // Insert history entry
+        EndUserUtil.insertHistoryEvent(con, row, updaterID);
+      }
     }
   }
 }

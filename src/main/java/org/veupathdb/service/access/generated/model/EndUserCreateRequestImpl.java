@@ -48,6 +48,7 @@ public class EndUserCreateRequestImpl implements EndUserCreateRequest {
   @JsonProperty("datasetId")
   private String datasetId;
 
+  @JsonProperty("startDate")
   @JsonFormat(
       shape = JsonFormat.Shape.STRING,
       pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
@@ -55,7 +56,6 @@ public class EndUserCreateRequestImpl implements EndUserCreateRequest {
   @JsonDeserialize(
       using = TimestampDeserializer.class
   )
-  @JsonProperty("startDate")
   private Date startDate;
 
   @JsonProperty("duration")

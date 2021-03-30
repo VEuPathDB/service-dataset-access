@@ -258,6 +258,18 @@ securitySchemes:
           body: error.NotFound
         500:
           body: error.Server
+    delete:
+      displayName: Delete End User
+      description: Delete an end user access grant.
+      responses:
+        204:
+          description: Success
+        401:
+          body: error.Unauthorized
+        404:
+          body: error.NotFound
+        500:
+          body: error.Server
     patch:
       displayName: Update End User
       description: |

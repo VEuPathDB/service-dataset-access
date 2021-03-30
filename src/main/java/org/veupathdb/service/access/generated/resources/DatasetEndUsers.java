@@ -2,6 +2,7 @@ package org.veupathdb.service.access.generated.resources;
 
 import java.util.List;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -43,6 +44,12 @@ public interface DatasetEndUsers {
   @Path("/{end-user-id}")
   @Produces("application/json")
   GetDatasetEndUsersByEndUserIdResponse getDatasetEndUsersByEndUserId(
+      @PathParam("end-user-id") String endUserId);
+
+  @DELETE
+  @Path("/{end-user-id}")
+  @Produces("application/json")
+  DeleteDatasetEndUsersByEndUserIdResponse deleteDatasetEndUsersByEndUserId(
       @PathParam("end-user-id") String endUserId);
 
   @PATCH
@@ -233,6 +240,42 @@ public interface DatasetEndUsers {
       Response.ResponseBuilder responseBuilder = Response.status(500).header("Content-Type", "application/json");
       responseBuilder.entity(entity);
       return new PatchDatasetEndUsersByEndUserIdResponse(responseBuilder.build(), entity);
+    }
+  }
+
+  class DeleteDatasetEndUsersByEndUserIdResponse extends ResponseDelegate {
+    private DeleteDatasetEndUsersByEndUserIdResponse(Response response, Object entity) {
+      super(response, entity);
+    }
+
+    private DeleteDatasetEndUsersByEndUserIdResponse(Response response) {
+      super(response);
+    }
+
+    public static DeleteDatasetEndUsersByEndUserIdResponse respond204() {
+      Response.ResponseBuilder responseBuilder = Response.status(204);
+      return new DeleteDatasetEndUsersByEndUserIdResponse(responseBuilder.build());
+    }
+
+    public static DeleteDatasetEndUsersByEndUserIdResponse respond401WithApplicationJson(
+        Unauthorized entity) {
+      Response.ResponseBuilder responseBuilder = Response.status(401).header("Content-Type", "application/json");
+      responseBuilder.entity(entity);
+      return new DeleteDatasetEndUsersByEndUserIdResponse(responseBuilder.build(), entity);
+    }
+
+    public static DeleteDatasetEndUsersByEndUserIdResponse respond404WithApplicationJson(
+        NotFound entity) {
+      Response.ResponseBuilder responseBuilder = Response.status(404).header("Content-Type", "application/json");
+      responseBuilder.entity(entity);
+      return new DeleteDatasetEndUsersByEndUserIdResponse(responseBuilder.build(), entity);
+    }
+
+    public static DeleteDatasetEndUsersByEndUserIdResponse respond500WithApplicationJson(
+        Server entity) {
+      Response.ResponseBuilder responseBuilder = Response.status(500).header("Content-Type", "application/json");
+      responseBuilder.entity(entity);
+      return new DeleteDatasetEndUsersByEndUserIdResponse(responseBuilder.build(), entity);
     }
   }
 }

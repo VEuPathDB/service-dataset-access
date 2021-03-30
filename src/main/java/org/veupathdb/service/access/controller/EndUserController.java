@@ -1,7 +1,9 @@
 package org.veupathdb.service.access.controller;
 
 import java.util.List;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.ForbiddenException;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Request;
 
@@ -11,10 +13,7 @@ import org.veupathdb.service.access.generated.model.EndUserCreateRequest;
 import org.veupathdb.service.access.generated.model.EndUserPatch;
 import org.veupathdb.service.access.generated.resources.DatasetEndUsers;
 import org.veupathdb.service.access.service.provider.ProviderService;
-import org.veupathdb.service.access.service.user.EndUserCreationService;
-import org.veupathdb.service.access.service.user.EndUserLookupService;
-import org.veupathdb.service.access.service.user.EndUserPatchService;
-import org.veupathdb.service.access.service.user.EndUserSearchService;
+import org.veupathdb.service.access.service.user.*;
 
 import static org.veupathdb.service.access.service.provider.ProviderService.userIsManager;
 import static org.veupathdb.service.access.service.staff.StaffService.userIsOwner;
@@ -72,13 +71,30 @@ public class EndUserController implements DatasetEndUsers
     final var endUser = EndUserLookupService.getRawEndUser(endUserId);
 
     if (endUser.getUserId() == curUser.getUserId()) {
-      EndUserPatchService.selfPatch(endUser, entity);
+      EndUserPatchService.selfPatch(endUser, entity, curUser.getUserId());
     } else if (userIsManager(curUser.getUserId(), endUser.getDatasetId()) || userIsOwner(curUser.getUserId())) {
-      EndUserPatchService.modPatch(endUser, entity);
+      EndUserPatchService.modPatch(endUser, entity, curUser.getUserId());
     } else {
       throw new ForbiddenException();
     }
 
     return PatchDatasetEndUsersByEndUserIdResponse.respond204();
+  }
+
+  @Override
+  public DeleteDatasetEndUsersByEndUserIdResponse deleteDatasetEndUsersByEndUserId(String endUserId)
+  {
+    try {
+      final var curUser = Util.requireUser(request);
+      final var endUser = EndUserLookupService.getRawEndUser(endUserId);
+
+      if (userIsManager(curUser.getUserId(), endUser.getDatasetId()) || userIsOwner(curUser.getUserId())) {
+        EndUserDeleteService.delete(endUser);
+      }
+
+      return DeleteDatasetEndUsersByEndUserIdResponse.respond204();
+    } catch (BadRequestException ex) {
+      throw new NotFoundException();
+    }
   }
 }

@@ -94,7 +94,7 @@ public class EndUserCreationService
       // If the user sent this request in themself then pass to the self-create
       // specific logic.
       if (body.getUserId().equals(requester.getUserId()))
-        return endUserSelfCreate(body);
+        return endUserSelfCreate(body, requester.getUserId());
 
       final var rUserId = requester.getUserId();
       final var optProv = ProviderRepo.Select.byUserAndDataset(rUserId, body.getDatasetId());
@@ -103,7 +103,7 @@ public class EndUserCreationService
       // requesting user is a provider or an owner then pass to the manager
       // create specific logic.
       if (optProv.isPresent() || StaffService.userIsOwner(rUserId))
-        return endUserManagerCreate(body);
+        return endUserManagerCreate(body, rUserId);
 
       // If the request was sent on behalf of a user that is not the requesting
       // user, but the requesting user is not a provider or owner, throw a
@@ -184,7 +184,7 @@ public class EndUserCreationService
    * Inserts a new end user record with defaulted values in place of data that
    * cannot be self-set by end users.
    */
-  public EndUserCreateResponse endUserSelfCreate(final EndUserCreateRequest req) {
+  public EndUserCreateResponse endUserSelfCreate(EndUserCreateRequest req, long userID) {
     log.trace("EndUserService#endUserSelfCreate(EndUserCreateRequest)");
 
     validateSelfCreate(req);
@@ -196,7 +196,7 @@ public class EndUserCreationService
         .setStartDate(OffsetDateTime.now())
         .setDuration(-1);
 
-      EndUserRepo.Insert.newEndUser(row);
+      EndUserRepo.Insert.newEndUser(row, userID);
 
       final var out = new EndUserCreateResponseImpl();
       out.setCreated(true);
@@ -240,12 +240,13 @@ public class EndUserCreationService
    *   <li>duration</li>
    * </ul>
    */
-  public EndUserCreateResponse endUserManagerCreate(final EndUserCreateRequest req) throws Exception {
+  public EndUserCreateResponse endUserManagerCreate(EndUserCreateRequest req, long userID)
+  throws Exception {
     log.trace("EndUserService#endUserManagerCreate(EndUserCreateRequest)");
 
     var row = endUserToInsertable(req);
 
-    EndUserRepo.Insert.newEndUser(row);
+    EndUserRepo.Insert.newEndUser(row, userID);
 
     var out = new EndUserCreateResponseImpl();
     out.setCreated(true);

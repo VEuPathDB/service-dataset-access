@@ -4,6 +4,7 @@ import java.time.OffsetDateTime;
 
 public class EndUserRow extends UserRow
 {
+  private long             endUserID;
   private String           datasetId;
   private OffsetDateTime   startDate;
   private int              duration;
@@ -17,6 +18,15 @@ public class EndUserRow extends UserRow
   private String           denialReason;
   private OffsetDateTime   dateDenied;
   private boolean          allowSelfEdits;
+
+  public long getEndUserID() {
+    return endUserID;
+  }
+
+  public EndUserRow setEndUserID(long endUserID) {
+    this.endUserID = endUserID;
+    return this;
+  }
 
   public String getDatasetId() {
     return datasetId;
