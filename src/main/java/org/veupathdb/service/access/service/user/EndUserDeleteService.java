@@ -20,15 +20,15 @@ public class EndUserDeleteService
     return instance;
   }
 
-  public static void delete(EndUserRow user) {
-    getInstance().deleteGrant(user);
+  public static void delete(EndUserRow user, long causerId) {
+    getInstance().deleteGrant(user, causerId);
   }
 
-  public void deleteGrant(EndUserRow user) {
+  public void deleteGrant(EndUserRow user, long causerId) {
     log.trace("EndUserDeleteService#deleteGrant(EndUserRow)");
 
     try {
-      EndUserRepo.Delete.endUser(user);
+      EndUserRepo.Delete.endUser(user, causerId);
     } catch (Exception ex) {
       throw new InternalServerErrorException(ex);
     }

@@ -1,5 +1,5 @@
 INSERT INTO
-  studyaccess.end_users (
+  studyaccess.end_user_history (
     end_user_id           -- 1, int64
   , user_id               -- 2, int64
   , dataset_presenter_id  -- 3, string

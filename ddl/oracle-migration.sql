@@ -65,8 +65,7 @@ CREATE TABLE studyaccess.end_users
 -- studyaccess.end_user_history
 CREATE TABLE studyaccess.end_user_history
 (
-  end_user_id          NUMBER(12)                                         NOT NULL
-    REFERENCES studyaccess.end_users (end_user_id),
+  end_user_id          NUMBER(12)                                         NOT NULL,
   user_id              NUMBER(12)                                         NOT NULL,
   dataset_presenter_id VARCHAR2(15)                                       NOT NULL,
   -- Action taken on the record, should be one of: CREATE, UPDATE, or DELETE

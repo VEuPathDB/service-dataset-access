@@ -89,7 +89,7 @@ public class EndUserController implements DatasetEndUsers
       final var endUser = EndUserLookupService.getRawEndUser(endUserId);
 
       if (userIsManager(curUser.getUserId(), endUser.getDatasetId()) || userIsOwner(curUser.getUserId())) {
-        EndUserDeleteService.delete(endUser);
+        EndUserDeleteService.delete(endUser, curUser.getUserId());
       }
 
       return DeleteDatasetEndUsersByEndUserIdResponse.respond204();

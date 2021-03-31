@@ -9,6 +9,7 @@ import io.vulpine.lib.query.util.basic.BasicPreparedReadQuery;
 import io.vulpine.lib.query.util.basic.BasicPreparedVoidQuery;
 import io.vulpine.lib.query.util.basic.BasicPreparedWriteQuery;
 import oracle.jdbc.OraclePreparedStatement;
+import org.apache.commons.dbcp2.DelegatingPreparedStatement;
 import org.apache.logging.log4j.Logger;
 import org.veupathdb.lib.container.jaxrs.providers.LogProvider;
 import org.veupathdb.service.access.model.*;
@@ -60,9 +61,13 @@ public class EndUserRepo
           ps.setString(12, row.getDenialReason());
           ps.setObject(13, row.getDateDenied(), Types.TIMESTAMP_WITH_TIMEZONE);
           ps.setBoolean(14, row.isAllowSelfEdits());
-          ((OraclePreparedStatement)ps).registerReturnParameter(15, Types.BIGINT);
+          if (ps instanceof OraclePreparedStatement)
+            ((OraclePreparedStatement)ps).registerReturnParameter(15, Types.BIGINT);
+          else if (ps instanceof DelegatingPreparedStatement)
+            ((OraclePreparedStatement)((DelegatingPreparedStatement) ps).getInnermostDelegate()).registerReturnParameter(15, Types.BIGINT);
 
           try (var rs = ps.executeQuery()) {
+            rs.next();
             row.setEndUserID(rs.getLong(1));
           }
         }
