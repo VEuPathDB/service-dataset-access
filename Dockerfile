@@ -53,8 +53,3 @@ COPY --from=prep /jlinked /opt/jdk
 COPY --from=prep /workspace/build/libs/service.jar /service.jar
 
 CMD java -jar /service.jar
-
-
-# Hi, this is Ellie Harper.  I am calling to set up a new patient appointment.  I was recommended
-# Dr. Compendio by my therapist, Sarah Leboon.  I am specifically looking for continued med
-# management as my psych retired.  My phone number is 302-525-1151.  Thank you.
