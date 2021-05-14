@@ -13,34 +13,34 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      SERVER_PORT: 8080
+      SERVER_PORT: ${SERVER_PORT:-8080}
 
       # User authentication salt
-      AUTH_SECRET_KEY:
+      AUTH_SECRET_KEY: ${AUTH_SECRET_KEY}
 
       # LDAP
-      LDAP_SERVER:
-      ORACLE_BASE_DN:
+      LDAP_SERVER:    ${LDAP_SERVER}
+      ORACLE_BASE_DN: ${ORACLE_BASE_DN}
 
       # Application DB
-      APP_DB_TNS_NAME:
-      APP_DB_USER:
-      APP_DB_PASS:
-      APP_DB_POOL_SIZE: 20
+      APP_DB_TNS_NAME:  ${APP_DB_TNS_NAME}
+      APP_DB_USER:      ${APP_DB_USER}
+      APP_DB_PASS:      ${APP_DB_PASS}
+      APP_DB_POOL_SIZE: ${APP_DB_POOL_SIZE:-20}
 
       # Account DB
-      ACCT_DB_TNS_NAME:
-      ACCT_DB_USER:
-      ACCT_DB_PASS:
-      ACCT_DB_POOL_SIZE: 20
+      ACCT_DB_TNS_NAME:  ${ACCT_DB_TNS_NAME}
+      ACCT_DB_USER:      ${ACCT_DB_USER}
+      ACCT_DB_PASS:      ${ACCT_DB_PASS}
+      ACCT_DB_POOL_SIZE: ${ACCT_DB_POOL_SIZE:-20}
 
       # EMAIL STUFF
-      SMTP_HOST: localhost
-      SUPPORT_EMAIL:
-      EMAIL_DEBUG: !!str false
+      SMTP_HOST:     ${SMTP_HOST:-localhost}
+      SUPPORT_EMAIL: ${SUPPORT_EMAIL}
+      EMAIL_DEBUG:   ${EMAIL_DEBUG:-false}
 
       # Site stuff
-      SITE_URL: # https://clinepidb.org/ce
-      REGISTRATION_PATH: /app/user/registration
-      APPLICATION_PATH: /app/study-access
+      SITE_URL:          ${SITE_URL:-https://clinepidb.org/ce}
+      REGISTRATION_PATH: ${REGISTRATION_PATH:-/app/user/registration}
+      APPLICATION_PATH:  ${APPLICATION_PATH:-/app/study-access}
     network_mode: host

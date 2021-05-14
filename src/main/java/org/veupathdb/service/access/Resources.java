@@ -2,10 +2,7 @@ package org.veupathdb.service.access;
 
 import org.veupathdb.lib.container.jaxrs.config.Options;
 import org.veupathdb.lib.container.jaxrs.server.ContainerResources;
-import org.veupathdb.service.access.controller.EndUserController;
-import org.veupathdb.service.access.controller.PermissionController;
-import org.veupathdb.service.access.controller.ProviderController;
-import org.veupathdb.service.access.controller.StaffController;
+import org.veupathdb.service.access.controller.*;
 
 /**
  * Service Resource Registration.
@@ -30,6 +27,7 @@ public class Resources extends ContainerResources {
       StaffController.class,
       EndUserController.class,
       PermissionController.class,
+      HistoryController.class,
     };
   }
 }
