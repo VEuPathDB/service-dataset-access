@@ -10,3 +10,4 @@
 !gradle-wrapper.jar
 /run.sh
 *.env
+*.envrc
