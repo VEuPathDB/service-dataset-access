@@ -26,15 +26,10 @@ RUN jlink --compress=2 --module-path /opt/jdk/jmods \
 ENV DOCKER=build \
     JAVA_HOME=/opt/jdk
 
-COPY makefile .
-
-#RUN update-ca-certificates -f
-
-RUN make install-dev-env
-
 COPY . .
 
-RUN mkdir -p vendor \
+RUN make install-dev-env \
+    && mkdir -p vendor \
     && cp -n /jdbc/* vendor \
     && echo Installing Gradle \
     && ./gradlew dependencies --info --configuration runtimeClasspath \

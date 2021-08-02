@@ -3,6 +3,7 @@ import java.io.FileInputStream
 
 plugins {
   java
+  id("org.veupathdb.lib.gradle.container.container-utils") version "1.0.2"
 }
 
 repositories {
@@ -20,6 +21,10 @@ repositories {
 java {
   targetCompatibility = JavaVersion.VERSION_15
   sourceCompatibility = JavaVersion.VERSION_15
+}
+
+containerBuild {
+  setFgpUtilVersion("14aa44a13c28257b702a98ddbecdf1e72812e2e6");
 }
 
 apply(from = "dependencies.gradle.kts")
