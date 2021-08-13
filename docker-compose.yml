@@ -37,13 +37,18 @@ services:
 
     networks:
     - traefik
+    - monitoring-ext
     labels:
     - "traefik.http.routers.${TRAEFIK_ROUTER:-das-dev}.rule=Host(`${TRAEFIK_HOST:-das-dev.local.apidb.org}`)"
     - "traefik.http.routers.${TRAEFIK_ROUTER:-das-dev}.tls=true"
     - "traefik.http.routers.${TRAEFIK_ROUTER:-das-dev}.entrypoints=local"
     - "traefik.http.services.${TRAEFIK_ROUTER:-das-dev}.loadbalancer.server.port=80"
     - "com.centurylinklabs.watchtower.enable=${SERVICE_WATCHTOWER:-false}"
+    - "prometheus-scrape.enabled=true"
+
 
 networks:
   traefik:
+    external: true
+  monitoring-ext:
     external: true
