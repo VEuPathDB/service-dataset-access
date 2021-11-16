@@ -25,6 +25,12 @@ services:
       ACCT_DB_PASS: ${ACCT_DB_PASS?required}
       ACCT_DB_POOL_SIZE: 20
 
+      # User Database
+      USER_DB_TNS_NAME: ${USER_DB_TNS_NAME}
+      USER_DB_USER: ${USER_DB_USER}
+      USER_DB_PASS: ${USER_DB_PASS}
+      USER_DB_POOL_SIZE: 20
+
       # EMAIL STUFF
       ENABLE_EMAIL: !!str true
       SMTP_HOST: ${SMTP_HOST?required}
