@@ -16,10 +16,10 @@ RUN jlink --compress=2 --module-path /opt/jdk/jmods \
        --output /jlinked \
     && apk add --no-cache git sed findutils coreutils make npm curl gawk \
     && git config --global advice.detachedHead false
-#    && wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
-#    && wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.33-r0/glibc-2.33-r0.apk \
-#    && rm -rf lib64/ld-linux-x86-64.so.2 \
-#    && apk add -f glibc-2.33-r0.apk
+    && wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
+    && wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.33-r0/glibc-2.33-r0.apk \
+    && rm -rf lib64/ld-linux-x86-64.so.2 \
+    && apk add -f glibc-2.33-r0.apk
 
 ENV DOCKER=build
 COPY makefile .
