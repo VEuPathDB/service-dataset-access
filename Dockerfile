@@ -15,7 +15,7 @@ RUN jlink --compress=2 --module-path /opt/jdk/jmods \
        --add-modules java.base,java.logging,java.xml,java.desktop,java.management,java.sql,java.naming,java.security.jgss \
        --output /jlinked \
     && apk add --no-cache git sed findutils coreutils make npm curl gawk \
-    && git config --global advice.detachedHead false
+    && git config --global advice.detachedHead false \
     && wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
     && wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.33-r0/glibc-2.33-r0.apk \
     && rm -rf lib64/ld-linux-x86-64.so.2 \
