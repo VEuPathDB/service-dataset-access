@@ -93,10 +93,10 @@ public class EndUserCreationService
 
       // If the user sent this request in themself then pass to the self-create
       // specific logic.
-      if (body.getUserId().equals(requester.getUserId()))
-        return endUserSelfCreate(body, requester.getUserId());
+      if (body.getUserId().equals(requester.getUserID()))
+        return endUserSelfCreate(body, requester.getUserID());
 
-      final var rUserId = requester.getUserId();
+      final var rUserId = requester.getUserID();
       final var optProv = ProviderRepo.Select.byUserAndDataset(rUserId, body.getDatasetId());
 
       // If the requesting user sent this in on behalf of someone else and the

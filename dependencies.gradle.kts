@@ -1,13 +1,19 @@
-val jersey  = "2.+"
-val jackson = "2.11.2"
-val junit   = "5.+"
-val log4j   = "2.+"
+//
+// Version Numbers
+//
+val coreLib   = "5.1.7"  // Container core lib version
+
+val jersey    = "2.33"   // Jersey/JaxRS version
+val jackson   = "2.12.2" // FasterXML Jackson version
+val junit     = "5.7.1"  // JUnit version
+val log4j     = "2.14.0" // Log4J version
+val metrics   = "0.9.0"  // Prometheus lib version
 
 val implementation      by configurations
 val runtimeOnly         by configurations
-val annotationProcessor by configurations
 val testImplementation  by configurations
 val testRuntimeOnly     by configurations
+val annotationProcessor by configurations
 
 dependencies {
 
@@ -45,10 +51,8 @@ dependencies {
     "vendor/xstreams.jar"
   ))
 
-
-  // Core lib, prefers local checkout if available
-  implementation(/*findProject(":core") ?: */"org.veupathdb.lib:jaxrs-container-core:2.7.4")
-
+  // VEuPathDB libs, prefer local checkouts if available
+  implementation(findProject(":core") ?: "org.veupathdb.lib:jaxrs-container-core:${coreLib}")
 
   // Jersey
   implementation("org.glassfish.jersey.containers:jersey-container-grizzly2-http:${jersey}")
@@ -78,7 +82,6 @@ dependencies {
   implementation("org.antlr", "ST4", "4.3.1")
   implementation("info.picocli:picocli:4.5.1")
   annotationProcessor("info.picocli:picocli-codegen:4.5.1")
-
 
   // Unit Testing
   testImplementation("org.junit.jupiter:junit-jupiter-api:${junit}")

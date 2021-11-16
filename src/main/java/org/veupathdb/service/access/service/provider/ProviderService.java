@@ -7,6 +7,7 @@ import javax.ws.rs.core.Request;
 
 import org.apache.logging.log4j.Logger;
 import org.gusdb.fgputil.accountdb.UserProfile;
+import org.veupathdb.lib.container.jaxrs.model.User;
 import org.veupathdb.lib.container.jaxrs.providers.LogProvider;
 import org.veupathdb.lib.container.jaxrs.providers.UserProvider;
 import org.veupathdb.service.access.generated.model.*;
@@ -35,13 +36,13 @@ public class ProviderService
    */
   public DatasetProviderCreateResponse createNewProvider(
     final DatasetProviderCreateRequest body,
-    final UserProfile user
+    final User user
   ) {
     log.trace("ProviderService#createNewProvider(DatasetProviderCreateRequest)");
 
     // To add a new provider, a user must be a site owner or a manager for the
     // dataset.
-    if (!userIsOwner(user.getUserId()) && !userIsManager(user.getUserId(), body.getDatasetId()))
+    if (!userIsOwner(user.getUserID()) && !userIsManager(user.getUserID(), body.getDatasetId()))
       throw new ForbiddenException();
 
     try {
@@ -90,7 +91,7 @@ public class ProviderService
     final String datasetId,
     final int limit,
     final int offset,
-    final UserProfile currentUser
+    final User currentUser
   ) {
     log.trace("ProviderService#getDatasetProviderList(String, int, int, UserProfile)");
 
@@ -100,13 +101,13 @@ public class ProviderService
 
       // Determine if the user is a manager for the dataset.
       for (var pro : rows) {
-        if (pro.getUserId() == currentUser.getUserId()) {
+        if (pro.getUserId() == currentUser.getUserID()) {
           allowed = true;
           break;
         }
       }
 
-      if (StaffService.userIsStaff(currentUser.getUserId()))
+      if (StaffService.userIsStaff(currentUser.getUserID()))
         allowed = true;
 
       if (!allowed)
@@ -169,7 +170,7 @@ public class ProviderService
     log.trace("ProviderService#userIsManager(Request, String)");
 
     return isUserManager(UserProvider.lookupUser(req)
-      .map(UserProfile::getUserId)
+      .map(User::getUserID)
       .orElseThrow(InternalServerErrorException::new), datasetId);
   }
 
@@ -264,7 +265,7 @@ public class ProviderService
     final String datasetId,
     final int limit,
     final int offset,
-    final UserProfile user
+    final User user
   ) {
     return getInstance().getDatasetProviderList(datasetId, limit, offset, user);
   }

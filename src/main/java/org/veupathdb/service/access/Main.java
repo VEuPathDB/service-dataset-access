@@ -1,30 +1,22 @@
 package org.veupathdb.service.access;
 
+import org.gusdb.fgputil.db.slowquery.QueryLogConfig;
+import org.gusdb.fgputil.db.slowquery.QueryLogger;
 import org.veupathdb.lib.container.jaxrs.config.Options;
 import org.veupathdb.lib.container.jaxrs.server.ContainerResources;
 import org.veupathdb.lib.container.jaxrs.server.Server;
 import org.veupathdb.service.access.model.Config;
-import org.veupathdb.service.access.repo.ApprovalStatusRepo;
-import org.veupathdb.service.access.repo.RestrictionLevelRepo;
 
 public class Main extends Server {
-  public static final Config config = new Config();
 
-  public static void main(final String[] args) {
-    var server = new Main();
-    server.enableAccountDB();
-    server.enableApplicationDB();
-    server.start(args);
+  public static void main(String[] args) {
+    new Main().start(args);
   }
 
-  @Override
-  protected ContainerResources newResourceConfig(final Options options) {
-    final var out =  new Resources(options);
-    out.enableAuth();
-    out.enableJerseyTrace();
-    out.enableCors();
+  public static final Config config = new Config();
 
-    return out;
+  public Main() {
+    QueryLogger.initialize(new QLF(){});
   }
 
   @Override
@@ -33,12 +25,25 @@ public class Main extends Server {
   }
 
   @Override
-  protected void postAcctDb() {
-    try {
-      ApprovalStatusRepo.Select.populateApprovalStatusCache();
-      RestrictionLevelRepo.Select.populateRestrictionLevelCache();
-    } catch (Throwable t) {
-      throw new RuntimeException(t);
+  protected ContainerResources newResourceConfig(final Options options) {
+    return new Resources(options);
+  }
+
+  public static class QLF implements QueryLogConfig {
+    public double getBaseline() {
+      return 0.05D;
+    }
+
+    public double getSlow() {
+      return 1.0D;
+    }
+
+    public boolean isIgnoredSlow(String sql) {
+      return false;
+    }
+
+    public boolean isIgnoredBaseline(String sql) {
+      return false;
     }
   }
 }

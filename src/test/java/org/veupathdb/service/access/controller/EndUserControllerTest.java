@@ -4,6 +4,7 @@ import javax.ws.rs.core.Request;
 
 import org.gusdb.fgputil.accountdb.UserProfile;
 import org.junit.jupiter.api.*;
+import org.veupathdb.lib.container.jaxrs.model.User;
 import org.veupathdb.lib.test.MockUtil;
 import org.veupathdb.lib.test.RandUtil;
 import org.veupathdb.service.access.generated.model.*;
@@ -24,7 +25,8 @@ class EndUserControllerTest
   @BeforeEach
   void setUp() throws Exception {
     mockRequest = mock(Request.class);
-    target      = new EndUserController(mockRequest);
+    target      = new EndUserController();
+    target._request = mockRequest;
   }
 
   @Nested
@@ -95,7 +97,7 @@ class EndUserControllerTest
   class GetDatasetEndUsersByEndUserId
   {
     private Util                 mockUtil;
-    private UserProfile          mockUser;
+    private User                 mockUser;
     private EndUserLookupService mockLookup;
     private EndUser              mockReqUser;
 
@@ -104,7 +106,7 @@ class EndUserControllerTest
       mockUtil    = MockUtil.mockSingleton(Util.class);
       mockLookup  = MockUtil.mockSingleton(EndUserLookupService.class);
       mockReqUser = mock(EndUser.class);
-      mockUser    = mock(UserProfile.class);
+      mockUser    = mock(User.class);
 
       doReturn(mockUser).when(mockUtil).mustGetUser(mockRequest);
     }

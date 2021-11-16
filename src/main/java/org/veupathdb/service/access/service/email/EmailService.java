@@ -78,6 +78,10 @@ public class EmailService
 
   public void sendEmail(final Email mail) throws Exception {
     log.trace("EmailService#sendEmail(Email)");
+    if (!Main.config.isEmailEnabled()) {
+      log.debug("Per configuration, email is disabled.");
+      return;
+    }
     final var util = EmailUtil.getInstance();
 
     final var props = new Properties();

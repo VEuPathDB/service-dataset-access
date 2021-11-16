@@ -10,18 +10,15 @@ import org.veupathdb.service.access.service.history.HistoryService;
 @Authenticated
 public class HistoryController implements History
 {
-  private final Request req;
-
-  public HistoryController(@Context Request req) {
-    this.req = req;
-  }
+  @Context
+  private Request _request;
 
   @Override
   public GetHistoryResponse getHistory(int limit, int offset) {
-    var user = Util.requireUser(req);
+    var user = Util.requireUser(_request);
 
     return GetHistoryResponse.respond200WithApplicationJson(
-      HistoryService.getHistory(user.getUserId(), limit, offset)
+      HistoryService.getHistory(user.getUserID(), limit, offset)
     );
   }
 }

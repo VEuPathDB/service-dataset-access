@@ -36,7 +36,7 @@ public class StaffService
 
     return isUserOwner(UserProvider.lookupUser(req)
       .orElseThrow(InternalServerErrorException::new)
-      .getUserId());
+      .getUserID());
   }
 
   public static boolean userIsOwner(final Request req) {
@@ -52,7 +52,7 @@ public class StaffService
 
     return isUserStaff(UserProvider.lookupUser(req)
       .orElseThrow(InternalServerErrorException::new)
-      .getUserId());
+      .getUserID());
   }
 
   public static boolean userIsStaff(final long id) {

@@ -10,6 +10,14 @@ public class Config extends Options
     DEFAULT_APPLICATION_PATH  = "/app/study-access";
 
   @CommandLine.Option(
+    names = "--enable-email",
+    defaultValue = "${env:ENABLE_EMAIL}",
+    arity = "1"
+  )
+  @SuppressWarnings("FieldMayBeFinal")
+  private boolean enableEmail = true;
+
+  @CommandLine.Option(
     names = "--smtp-host",
     defaultValue = "${env:SMTP_HOST}",
     required = true,
@@ -58,6 +66,10 @@ public class Config extends Options
   )
   @SuppressWarnings("FieldMayBeFinal")
   private String applicationPath = DEFAULT_APPLICATION_PATH;
+
+  public boolean isEmailEnabled() {
+    return enableEmail;
+  }
 
   public String getSmtpHost() {
     return smtpHost;

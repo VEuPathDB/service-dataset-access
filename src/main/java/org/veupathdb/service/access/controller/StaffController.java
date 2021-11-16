@@ -17,15 +17,12 @@ import org.veupathdb.service.access.util.Keys;
 @Authenticated
 public class StaffController implements Staff
 {
-  private final Request request;
-
-  public StaffController(@Context Request request) {
-    this.request = request;
-  }
+  @Context
+  private Request _request;
 
   @Override
   public GetStaffResponse getStaff(final int limit, final int offset) {
-    if (!StaffService.userIsStaff(request))
+    if (!StaffService.userIsStaff(_request))
       throw new ForbiddenException();
 
     return GetStaffResponse.respond200WithApplicationJson(
@@ -34,7 +31,7 @@ public class StaffController implements Staff
 
   @Override
   public PostStaffResponse postStaff(final NewStaffRequest entity) {
-    if (!StaffService.userIsOwner(request))
+    if (!StaffService.userIsOwner(_request))
       throw new ForbiddenException();
 
     final var out = new NewStaffResponseImpl();
@@ -49,7 +46,7 @@ public class StaffController implements Staff
     final int staffId,
     final List < StaffPatch > entity
   ) {
-    if (!StaffService.userIsOwner(request))
+    if (!StaffService.userIsOwner(_request))
       throw new ForbiddenException();
 
     StaffService.validatePatch(entity);
@@ -70,7 +67,7 @@ public class StaffController implements Staff
 
   @Override
   public DeleteStaffByStaffIdResponse deleteStaffByStaffId(final int staffId) {
-    if (!StaffService.userIsOwner(request))
+    if (!StaffService.userIsOwner(_request))
       throw new ForbiddenException();
 
     StaffService.deleteStaff(staffId);
