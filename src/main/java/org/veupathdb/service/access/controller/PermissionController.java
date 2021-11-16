@@ -7,19 +7,16 @@ import org.veupathdb.lib.container.jaxrs.server.annotations.Authenticated;
 import org.veupathdb.service.access.generated.resources.Permissions;
 import org.veupathdb.service.access.service.permissions.PermissionService;
 
-@Authenticated
+@Authenticated(allowGuests = true)
 public class PermissionController implements Permissions
 {
-  private final Request request;
-
-  public PermissionController(@Context Request request) {
-    this.request = request;
-  }
+  @Context
+  private Request _request;
 
   @Override
   public GetPermissionsResponse getPermissions() {
     return GetPermissionsResponse.respond200WithApplicationJson(
-      PermissionService.getInstance().getUserPermissions(request)
+      PermissionService.getInstance().getUserPermissions(_request)
     );
   }
 }

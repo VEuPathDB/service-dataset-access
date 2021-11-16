@@ -62,7 +62,7 @@ public class EndUserSearchService
     final var user = UserProvider.lookupUser(request)
       .orElseThrow(() -> new NotAuthorizedException("Users must be logged in"));
 
-    final var isOwner = StaffService.userIsOwner(user.getUserId());
+    final var isOwner = StaffService.userIsOwner(user.getUserID());
 
     try {
       // Only owners may request a full listing of users
@@ -71,8 +71,8 @@ public class EndUserSearchService
           throw new ForbiddenException();
       } else {
         if (!isOwner
-          && ProviderRepo.Select.byUserAndDataset(user.getUserId(), datasetId).isEmpty()
-          && StaffRepo.Select.byUserId(user.getUserId()).isEmpty()
+          && ProviderRepo.Select.byUserAndDataset(user.getUserID(), datasetId).isEmpty()
+          && StaffRepo.Select.byUserId(user.getUserID()).isEmpty()
         )
           throw new ForbiddenException();
       }

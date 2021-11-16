@@ -18,11 +18,8 @@ import static org.veupathdb.service.access.service.staff.StaffService.userIsOwne
 @Authenticated
 public class ProviderController implements DatasetProviders
 {
-  private final Request request;
-
-  public ProviderController(@Context Request request) {
-    this.request = request;
-  }
+  @Context
+  private Request _request;
 
   @Override
   public GetDatasetProvidersResponse getDatasetProviders(
@@ -30,7 +27,7 @@ public class ProviderController implements DatasetProviders
     final int limit,
     final int offset
   ) {
-    final var currentUser = Util.requireUser(request);
+    final var currentUser = Util.requireUser(_request);
 
     if (datasetId == null || datasetId.isBlank())
       throw new BadRequestException("datasetId query param is required");
@@ -44,7 +41,7 @@ public class ProviderController implements DatasetProviders
     final DatasetProviderCreateRequest entity
   ) {
     return PostDatasetProvidersResponse.respond200WithApplicationJson(
-      ProviderService.getInstance().createNewProvider(entity, Util.requireUser(request)));
+      ProviderService.getInstance().createNewProvider(entity, Util.requireUser(_request)));
   }
 
   @Override
@@ -52,7 +49,7 @@ public class ProviderController implements DatasetProviders
     final int providerId,
     final List <DatasetProviderPatch> entity
   ) {
-    final var currentUser = Util.requireUser(request);
+    final var currentUser = Util.requireUser(_request);
 
     ProviderService.getInstance().validatePatchRequest(entity);
 
@@ -60,7 +57,7 @@ public class ProviderController implements DatasetProviders
 
     // To add a new provider, a user must be a site owner or a manager for the
     // dataset.
-    if (!userIsOwner(currentUser.getUserId()) && !userIsManager(currentUser.getUserId(), provider.getDatasetId()))
+    if (!userIsOwner(currentUser.getUserID()) && !userIsManager(currentUser.getUserID(), provider.getDatasetId()))
       throw new ForbiddenException();
 
     provider.setManager(entity.get(0).getValue());
@@ -73,7 +70,7 @@ public class ProviderController implements DatasetProviders
   public DeleteDatasetProvidersByProviderIdResponse deleteDatasetProvidersByProviderId(
     final int providerId
   ) {
-    if (!userIsOwner(request))
+    if (!userIsOwner(_request))
       throw new ForbiddenException();
 
     // Lookup will 404 if the provider id is invalid.

@@ -26,6 +26,7 @@ services:
       ACCT_DB_POOL_SIZE: 20
 
       # EMAIL STUFF
+      ENABLE_EMAIL: !!str true
       SMTP_HOST: ${SMTP_HOST?required}
       SUPPORT_EMAIL: ${SUPPORT_EMAIL?required}
       EMAIL_DEBUG: !!str false

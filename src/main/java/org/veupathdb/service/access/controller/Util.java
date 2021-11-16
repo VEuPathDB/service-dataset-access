@@ -3,7 +3,7 @@ package org.veupathdb.service.access.controller;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.core.Request;
 
-import org.gusdb.fgputil.accountdb.UserProfile;
+import org.veupathdb.lib.container.jaxrs.model.User;
 import org.veupathdb.lib.container.jaxrs.providers.UserProvider;
 
 public class Util
@@ -17,12 +17,12 @@ public class Util
     return instance;
   }
 
-  public UserProfile mustGetUser(final Request req) {
+  public User mustGetUser(final Request req) {
     return UserProvider.lookupUser(req)
       .orElseThrow(InternalServerErrorException::new);
   }
 
-  public static UserProfile requireUser(final Request req) {
+  public static User requireUser(final Request req) {
     return getInstance().mustGetUser(req);
   }
 }

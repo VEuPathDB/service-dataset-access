@@ -21,11 +21,8 @@ import static org.veupathdb.service.access.service.staff.StaffService.userIsOwne
 @Authenticated
 public class EndUserController implements DatasetEndUsers
 {
-  private final Request request;
-
-  public EndUserController(@Context Request request) {
-    this.request = request;
-  }
+  @Context
+  Request _request;
 
   @Override
   public GetDatasetEndUsersResponse getDatasetEndUsers(
@@ -35,25 +32,25 @@ public class EndUserController implements DatasetEndUsers
     final ApprovalStatus approval
   ) {
     return GetDatasetEndUsersResponse.respond200WithApplicationJson(
-      EndUserSearchService.getInstance().findEndUsers(datasetId, limit, offset, approval, request));
+      EndUserSearchService.getInstance().findEndUsers(datasetId, limit, offset, approval, _request));
   }
 
   @Override
   public PostDatasetEndUsersResponse postDatasetEndUsers(final EndUserCreateRequest entity) {
     return PostDatasetEndUsersResponse.respond200WithApplicationJson(
-      EndUserCreationService.getInstance().handleUserCreation(entity, request));
+      EndUserCreationService.getInstance().handleUserCreation(entity, _request));
   }
 
   @Override
   public GetDatasetEndUsersByEndUserIdResponse getDatasetEndUsersByEndUserId(
     final String endUserId
   ) {
-    final var curUser = Util.requireUser(request);
+    final var curUser = Util.requireUser(_request);
     final var endUser = EndUserLookupService.getEndUser(endUserId);
 
-    if (endUser.getUser().getUserId() == curUser.getUserId()
-      || ProviderService.getInstance().isUserProvider(curUser.getUserId(), endUser.getDatasetId())
-      || userIsOwner(curUser.getUserId())
+    if (endUser.getUser().getUserId() == curUser.getUserID()
+      || ProviderService.getInstance().isUserProvider(curUser.getUserID(), endUser.getDatasetId())
+      || userIsOwner(curUser.getUserID())
     ) {
       return GetDatasetEndUsersByEndUserIdResponse.respond200WithApplicationJson(
         endUser);
@@ -67,13 +64,13 @@ public class EndUserController implements DatasetEndUsers
     final String endUserId,
     final List < EndUserPatch > entity
   ) {
-    final var curUser = Util.requireUser(request);
+    final var curUser = Util.requireUser(_request);
     final var endUser = EndUserLookupService.getRawEndUser(endUserId);
 
-    if (endUser.getUserId() == curUser.getUserId()) {
-      EndUserPatchService.selfPatch(endUser, entity, curUser.getUserId());
-    } else if (userIsManager(curUser.getUserId(), endUser.getDatasetId()) || userIsOwner(curUser.getUserId())) {
-      EndUserPatchService.modPatch(endUser, entity, curUser.getUserId());
+    if (endUser.getUserId() == curUser.getUserID()) {
+      EndUserPatchService.selfPatch(endUser, entity, curUser.getUserID());
+    } else if (userIsManager(curUser.getUserID(), endUser.getDatasetId()) || userIsOwner(curUser.getUserID())) {
+      EndUserPatchService.modPatch(endUser, entity, curUser.getUserID());
     } else {
       throw new ForbiddenException();
     }
@@ -85,11 +82,11 @@ public class EndUserController implements DatasetEndUsers
   public DeleteDatasetEndUsersByEndUserIdResponse deleteDatasetEndUsersByEndUserId(String endUserId)
   {
     try {
-      final var curUser = Util.requireUser(request);
+      final var curUser = Util.requireUser(_request);
       final var endUser = EndUserLookupService.getRawEndUser(endUserId);
 
-      if (userIsManager(curUser.getUserId(), endUser.getDatasetId()) || userIsOwner(curUser.getUserId())) {
-        EndUserDeleteService.delete(endUser, curUser.getUserId());
+      if (userIsManager(curUser.getUserID(), endUser.getDatasetId()) || userIsOwner(curUser.getUserID())) {
+        EndUserDeleteService.delete(endUser, curUser.getUserID());
       }
 
       return DeleteDatasetEndUsersByEndUserIdResponse.respond204();

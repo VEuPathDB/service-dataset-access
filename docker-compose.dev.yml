@@ -35,6 +35,7 @@ services:
       ACCT_DB_POOL_SIZE: ${ACCT_DB_POOL_SIZE:-20}
 
       # EMAIL STUFF
+      ENABLE_EMAIL:  !!str true
       SMTP_HOST:     ${SMTP_HOST:-localhost}
       SUPPORT_EMAIL: ${SUPPORT_EMAIL}
       EMAIL_DEBUG:   ${EMAIL_DEBUG:-false}

@@ -1,10 +1,33 @@
 import java.util.Properties
 import java.io.FileInputStream
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
 plugins {
   java
   id("org.veupathdb.lib.gradle.container.container-utils") version "1.0.2"
 }
+
+containerBuild {
+  setFgpUtilVersion("14aa44a13c28257b702a98ddbecdf1e72812e2e6");
+}
+
+apply(from = "dependencies.gradle.kts")
+
+// Load Props
+val buildProps = Properties()
+buildProps.load(FileInputStream(File(rootDir, "service.properties")))
+val genPack = "${buildProps["app.package.root"]}"
+val fullPack = "${buildProps["app.package.root"]}.${buildProps["app.package.service"]}"
+
+java {
+  targetCompatibility = JavaVersion.VERSION_15
+  sourceCompatibility = JavaVersion.VERSION_15
+}
+
+// Project settings
+group = buildProps["project.group"] ?: error("empty 1")
+version = buildProps["project.version"] ?: error("empty 2")
 
 repositories {
   mavenCentral()
@@ -18,28 +41,9 @@ repositories {
   }
 }
 
-java {
-  targetCompatibility = JavaVersion.VERSION_15
-  sourceCompatibility = JavaVersion.VERSION_15
-}
-
-containerBuild {
-  setFgpUtilVersion("14aa44a13c28257b702a98ddbecdf1e72812e2e6");
-}
-
-apply(from = "dependencies.gradle.kts")
-
-// Load Props
-val buildProps = Properties()
-buildProps.load(FileInputStream(File(rootDir, "service.properties")))
-val fullPack = "${buildProps["app.package.root"]}.${buildProps["app.package.service"]}"
-
-// Project settings
-group = buildProps["project.group"] ?: error("empty 1")
-version = buildProps["project.version"] ?: error("empty 2")
-
-
 tasks.jar {
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
   manifest {
     attributes["Main-Class"] = "${fullPack}.${buildProps["app.main-class"]}"
     attributes["Implementation-Title"] = buildProps["project.name"]
@@ -60,8 +64,28 @@ tasks.jar {
   archiveFileName.set("service.jar")
 }
 
+tasks.register("print-gen-package") { print(genPack) }
 tasks.register("print-package") { print(fullPack) }
 tasks.register("print-container-name") { print(buildProps["container.name"]) }
+
+tasks.withType<Test> {
+    testLogging {
+      events.addAll(listOf(
+          org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED,
+        org.gradle.api.tasks.testing.logging.TestLogEvent.SKIPPED,
+        org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_OUT,
+        org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_ERROR,
+        org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED))
+
+      exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+      showExceptions = true
+      showCauses = true
+      showStackTraces = true
+      showStandardStreams = true
+      enableAssertions = true
+  }
+  ignoreFailures = true // Always try to run all tests for all modules
+}
 
 val test by tasks.getting(Test::class) {
   // Use junit platform for unit tests
