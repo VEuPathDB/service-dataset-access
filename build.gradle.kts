@@ -17,7 +17,7 @@ apply(from = "dependencies.gradle.kts")
 // Load Props
 val buildProps = Properties()
 buildProps.load(FileInputStream(File(rootDir, "service.properties")))
-val genPack = "${buildProps["app.package.root"]}"
+val genPack = "${buildProps["app.package.root"]}.${buildProps["app.package.service"]}"
 val fullPack = "${buildProps["app.package.root"]}.${buildProps["app.package.service"]}"
 
 java {
@@ -71,13 +71,13 @@ tasks.register("print-container-name") { print(buildProps["container.name"]) }
 tasks.withType<Test> {
     testLogging {
       events.addAll(listOf(
-          org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED,
-        org.gradle.api.tasks.testing.logging.TestLogEvent.SKIPPED,
-        org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_OUT,
-        org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_ERROR,
-        org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED))
+        TestLogEvent.FAILED,
+        TestLogEvent.SKIPPED,
+        TestLogEvent.STANDARD_OUT,
+        TestLogEvent.STANDARD_ERROR,
+        TestLogEvent.PASSED))
 
-      exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+      exceptionFormat = TestExceptionFormat.FULL
       showExceptions = true
       showCauses = true
       showStackTraces = true

@@ -31,7 +31,7 @@ public class ProviderRepo
 
   public static class Insert
   {
-    public static int newProvider(final PartialProviderRow row) throws Exception {
+    public static long newProvider(final PartialProviderRow row) throws Exception {
       return new BasicPreparedReadQuery<>(
         SQL.Insert.Providers,
         QueryUtil::acctDbConnection,
@@ -127,7 +127,7 @@ public class ProviderRepo
       new BasicPreparedWriteQuery(
         SQL.Update.Providers.ById,
         QueryUtil::acctDbConnection,
-        new PsBuilder().setBoolean(row.isManager()).setInt(row.getProviderId())::build
+        new PsBuilder().setBoolean(row.isManager()).setLong(row.getProviderId())::build
       ).execute();
     }
   }

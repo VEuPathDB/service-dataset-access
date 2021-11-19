@@ -4,6 +4,7 @@ import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Request;
 
+import org.gusdb.fgputil.Wrapper;
 import org.veupathdb.lib.container.jaxrs.model.User;
 import org.veupathdb.service.access.controller.Util;
 import org.veupathdb.service.access.generated.model.PermissionsGetResponse;
@@ -24,12 +25,18 @@ public class PermissionService
     var out = new PermissionsGetResponseImpl();
 
     try {
+      Wrapper<Boolean> grantAll = new Wrapper<>(false);
       StaffRepo.Select.byUserId(user.getUserID())
         .ifPresent(s -> {
-          if (s.isOwner())
+          if (s.isOwner()) {
+            grantAll.set(true);
             out.setIsOwner(true);
-          else
             out.setIsStaff(true);
+          }
+          else {
+            grantAll.set(true);
+            out.setIsStaff(true);
+          }
         });
 
       var tmp = new PermissionMap();

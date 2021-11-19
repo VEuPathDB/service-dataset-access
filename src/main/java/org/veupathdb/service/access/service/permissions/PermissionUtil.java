@@ -1,6 +1,5 @@
 package org.veupathdb.service.access.service.permissions;
 
-import org.veupathdb.lib.container.jaxrs.server.annotations.Authenticated;
 import org.veupathdb.service.access.generated.model.DatasetPermissionEntry;
 import org.veupathdb.service.access.generated.model.DatasetPermissionEntryImpl;
 import org.veupathdb.service.access.generated.model.DatasetPermissionLevel;

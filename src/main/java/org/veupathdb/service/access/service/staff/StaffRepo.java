@@ -87,7 +87,7 @@ public class StaffRepo
       new BasicPreparedWriteQuery(
         SQL.Update.Staff.ById,
         QueryUtil.getInstance()::getAcctDbConnection,
-        new PsBuilder().setBoolean(row.isOwner()).setInt(row.getStaffId())::build
+        new PsBuilder().setBoolean(row.isOwner()).setLong(row.getStaffId())::build
       ).execute();
     }
   }

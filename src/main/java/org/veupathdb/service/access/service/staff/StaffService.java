@@ -3,20 +3,29 @@ package org.veupathdb.service.access.service.staff;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.ws.rs.*;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.ForbiddenException;
+import javax.ws.rs.InternalServerErrorException;
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Request;
-
 import org.apache.logging.log4j.Logger;
 import org.veupathdb.lib.container.jaxrs.providers.LogProvider;
 import org.veupathdb.lib.container.jaxrs.providers.UserProvider;
-import org.veupathdb.service.access.generated.model.*;
+import org.veupathdb.service.access.generated.model.NewStaffRequest;
+import org.veupathdb.service.access.generated.model.Staff;
+import org.veupathdb.service.access.generated.model.StaffImpl;
+import org.veupathdb.service.access.generated.model.StaffList;
+import org.veupathdb.service.access.generated.model.StaffListImpl;
+import org.veupathdb.service.access.generated.model.StaffPatch;
+import org.veupathdb.service.access.generated.model.UserDetailsImpl;
 import org.veupathdb.service.access.model.PartialStaffRow;
 import org.veupathdb.service.access.model.StaffRow;
 import org.veupathdb.service.access.util.Keys;
 
-public class StaffService
-{
-  private static StaffService instance = new StaffService();
+public class StaffService {
+
+  private static final StaffService instance = new StaffService();
 
   private final Logger log = LogProvider.logger(StaffService.class);
 
@@ -133,7 +142,7 @@ public class StaffService
     return getInstance().mustGetStaffById(staffId);
   }
 
-  public int createNewStaff(final NewStaffRequest req) {
+  public long createNewStaff(final NewStaffRequest req) {
     log.trace("StaffService#createStaff(NewStaffRequest)");
 
     final var row = new PartialStaffRow();
@@ -148,7 +157,7 @@ public class StaffService
     }
   }
 
-  public static int createStaff(final NewStaffRequest req) {
+  public static long createStaff(final NewStaffRequest req) {
     return getInstance().createNewStaff(req);
   }
 
@@ -195,8 +204,8 @@ public class StaffService
 
   private StaffList rows2StaffList(
     final List < StaffRow > rows,
-    final int offset,
-    final int total
+    final long offset,
+    final long total
   ) {
     log.trace("StaffService#rows2StaffList(rows, offset, total)");
 
@@ -204,7 +213,7 @@ public class StaffService
 
     out.setOffset(offset);
     out.setTotal(total);
-    out.setRows(rows.size());
+    out.setRows((long)rows.size());
     out.setData(rows.stream()
       .map(this::row2Staff)
       .collect(Collectors.toList()));

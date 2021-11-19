@@ -192,15 +192,15 @@ public class EndUserUtil
    */
   static EndUserList rows2EndUserList(
     final List<EndUserRow> rows,
-    final int offset,
-    final int total
+    final long offset,
+    final long total
   ) {
     log.trace("EndUserService#rows2EndUserList(List, int, int)");
     final var out = new EndUserListImpl();
 
     out.setOffset(offset);
     out.setTotal(total);
-    out.setRows(rows.size());
+    out.setRows((long)rows.size());
     out.setData(rows.stream()
       .map(EndUserUtil::row2EndUser)
       .collect(Collectors.toList()));

@@ -7,7 +7,7 @@ public class EndUserRow extends UserRow
   private long             endUserID;
   private String           datasetId;
   private OffsetDateTime   startDate;
-  private int              duration;
+  private long             duration;
   private RestrictionLevel restrictionLevel;
   private String           purpose;
   private String           researchQuestion;
@@ -46,11 +46,11 @@ public class EndUserRow extends UserRow
     return this;
   }
 
-  public int getDuration() {
+  public long getDuration() {
     return duration;
   }
 
-  public EndUserRow setDuration(int duration) {
+  public EndUserRow setDuration(long duration) {
     this.duration = duration;
     return this;
   }

@@ -240,14 +240,14 @@ public class ProviderService
 
   private DatasetProviderList listToProviders(
     final List<ProviderRow> rows,
-    final int offset,
-    final int total
+    final long offset,
+    final long total
   ) {
     log.trace("ProviderService#list2Providers(List, int, int)");
 
     var out = new DatasetProviderListImpl();
 
-    out.setRows(rows.size());
+    out.setRows((long)rows.size());
     out.setOffset(offset);
     out.setTotal(total);
     out.setData(rows.stream()

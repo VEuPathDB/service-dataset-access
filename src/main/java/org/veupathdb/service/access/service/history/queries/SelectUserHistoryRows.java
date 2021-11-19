@@ -48,10 +48,10 @@ public class SelectUserHistoryRows
 
   private final Connection con;
   private final long userID;
-  private final int limit;
-  private final int offset;
+  private final long limit;
+  private final long offset;
 
-  public SelectUserHistoryRows(Connection con, long userID, int limit, int offset) {
+  public SelectUserHistoryRows(Connection con, long userID, long limit, long offset) {
     this.con    = Objects.requireNonNull(con);
     this.userID = userID;
     this.limit  = Math.min(Math.max(1, limit), HardLimit);
@@ -66,7 +66,7 @@ public class SelectUserHistoryRows
 
   private void prep(PreparedStatement ps) throws Exception {
     ps.setLong(1, userID);
-    ps.setInt(2, offset);
-    ps.setInt(3, limit);
+    ps.setLong(2, offset);
+    ps.setLong(3, limit);
   }
 }

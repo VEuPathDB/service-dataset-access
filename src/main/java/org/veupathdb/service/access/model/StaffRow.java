@@ -2,13 +2,13 @@ package org.veupathdb.service.access.model;
 
 public class StaffRow extends PartialStaffRow
 {
-  private int staffId;
+  private long staffId;
 
-  public int getStaffId() {
+  public long getStaffId() {
     return staffId;
   }
 
-  public void setStaffId(int staffId) {
+  public void setStaffId(long staffId) {
     this.staffId = staffId;
   }
 }

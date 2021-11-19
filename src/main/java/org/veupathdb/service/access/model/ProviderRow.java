@@ -2,13 +2,13 @@ package org.veupathdb.service.access.model;
 
 public class ProviderRow extends PartialProviderRow
 {
-  private int providerId;
+  private long providerId;
 
-  public int getProviderId() {
+  public long getProviderId() {
     return providerId;
   }
 
-  public void setProviderId(int providerId) {
+  public void setProviderId(long providerId) {
     this.providerId = providerId;
   }
 }

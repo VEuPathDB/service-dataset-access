@@ -7,134 +7,6 @@
 ################################################################################
 
 types:
-  HistoryResponse:
-    type: object
-    additionalProperties: false
-    properties:
-      meta: HistoryMeta
-      results: HistoryResult[]
-  HistoryMeta:
-    type: object
-    additionalProperties: false
-    properties:
-      rows: integer
-      offset: integer
-  HistoryResult:
-    type: object
-    additionalProperties: false
-    properties:
-      cause: HistoryCause
-      row: HistoryRow
-  HistoryCause:
-    type: object
-    additionalProperties: false
-    properties:
-      user: HistoryUser
-      action:
-        type: string
-        enum:
-          - CREATE
-          - UPDATE
-          - DELETE
-      timestamp: datetime-only
-  HistoryUser:
-    type: object
-    additionalProperties: false
-    properties:
-      userID:
-        type: integer
-        format: int64
-      firstName: string
-      lastName: string
-      email: string
-      organization: string
-  HistoryRow:
-    type: object
-    additionalProperties: false
-    properties:
-      endUserID:
-        type: integer
-        format: int64
-      user: HistoryUser
-      datasetPresenterID: string
-      restrictionLevel:
-        type: string
-        enum:
-          - PUBLIC
-          - PRERELEASE
-          - PROTECTED
-          - CONTROLLED
-          - PRIVATE
-      approvalStatus:
-        type: string
-        enum:
-          - APPROVED
-          - REQUESTED
-          - DENIED
-      startDate: datetime-only
-      duration:
-        type: integer
-        format: int64
-      purpose: string
-      researchQuestion: string
-      analysisPlan: string
-      priorAuth: string
-      denialReason: string
-      dateDenied: datetime-only
-      allowSelfEdits: boolean
-  PermissionsGetResponse:
-    type: object
-    additionalProperties: false
-    properties:
-      isStaff?:
-        description: |
-          Indicates whether the current user is listed in the service's staff
-          entries.
-        type: boolean
-        default: false
-      isOwner?:
-        description: |
-          Indicates whether the current user is listed in the service's staff
-          entries _and_ is marked as a site owner.
-        type: boolean
-      isUnknown?:
-        description: |
-          Indicates whether the current user is not known to this service.
-
-          If this field is true, all other fields will be omitted.
-        type: string
-      perDataset?:
-        description: |
-          If the current user is a provider or an end user of one or more
-          datasets, these datasets will be listed here with the user's
-          permission level for each specific dataset.
-
-          If the user is not a provider or end user for any datasets, this field
-          will be omitted.
-        type: object
-        additionalProperties: false
-        properties:
-          /^.+$/: DatasetPermissionEntry
-  DatasetPermissionEntry:
-    type: object
-    additionalProperties: false
-    properties:
-      type: DatasetPermissionLevel
-      isManager?:
-        description: |
-          For providers, this field indicates whether the current user is marked
-          as a manager for the dataset represented by the containing permission
-          entry.
-
-          This field will only be present if the containing permission entry
-          type = `provider`.
-        type: boolean
-        default: false
-  DatasetPermissionLevel:
-    type: string
-    enum:
-      - provider
-      - end-user
   Staff:
     type: object
     additionalProperties: false
@@ -379,4 +251,153 @@ types:
         type: string
         pattern: ^/isManager$
       value: boolean
+  HistoryResponse:
+    type: object
+    additionalProperties: false
+    properties:
+      meta: HistoryMeta
+      results: HistoryResult[]
+  HistoryMeta:
+    type: object
+    additionalProperties: false
+    properties:
+      rows: integer
+      offset: integer
+  HistoryResult:
+    type: object
+    additionalProperties: false
+    properties:
+      cause: HistoryCause
+      row: HistoryRow
+  HistoryCause:
+    type: object
+    additionalProperties: false
+    properties:
+      user: HistoryUser
+      action:
+        type: string
+        enum:
+          - CREATE
+          - UPDATE
+          - DELETE
+      timestamp: datetime-only
+  HistoryUser:
+    type: object
+    additionalProperties: false
+    properties:
+      userID:
+        type: integer
+        format: int64
+      firstName: string
+      lastName: string
+      email: string
+      organization: string
+  HistoryRow:
+    type: object
+    additionalProperties: false
+    properties:
+      endUserID:
+        type: integer
+        format: int64
+      user: HistoryUser
+      datasetPresenterID: string
+      restrictionLevel:
+        type: string
+        enum:
+          - PUBLIC
+          - PRERELEASE
+          - PROTECTED
+          - CONTROLLED
+          - PRIVATE
+      approvalStatus:
+        type: string
+        enum:
+          - APPROVED
+          - REQUESTED
+          - DENIED
+      startDate: datetime-only
+      duration:
+        type: integer
+        format: int64
+      purpose: string
+      researchQuestion: string
+      analysisPlan: string
+      priorAuth: string
+      denialReason: string
+      dateDenied: datetime-only
+      allowSelfEdits: boolean
+  PermissionsGetResponse:
+    type: object
+    additionalProperties: false
+    properties:
+      isStaff?:
+        description: |
+          Indicates whether the current user is listed in the service's staff
+          entries.
+        type: boolean
+        default: false
+      isOwner?:
+        description: |
+          Indicates whether the current user is listed in the service's staff
+          entries _and_ is marked as a site owner.
+        type: boolean
+        default: false
+      isUnknown?:
+        description: |
+          Indicates whether the current user is not known to this service.
+
+          If this field is true, all other fields will be omitted.
+        type: string
+      perDataset?:
+        description: |
+          If the current user is a provider or an end user of one or more
+          datasets, these datasets will be listed here with the user's
+          permission level for each specific dataset.
+
+          If the user is not a provider or end user for any datasets, this field
+          will be omitted.
+        type: object
+        additionalProperties: false
+        properties:
+          //: DatasetPermissionEntry
+  ActionList:
+    type: object
+    additionalProperties: false
+    properties:
+      studyMetadata:
+        description: study metadata
+        type: boolean
+      subsetting:
+        description: count, distribution
+        type: boolean
+      visualizations:
+        description: all viz plugins
+        type: boolean
+      resultsFirstPage:
+        description: 'offset:0, numRecords: <=20'
+        type: boolean
+      resultsAll:
+        description: any other tabular response
+        type: boolean
+  DatasetPermissionEntry:
+    type: object
+    additionalProperties: false
+    properties:
+      type: DatasetPermissionLevel
+      actionAuthorization: ActionList
+      isManager?:
+        description: |
+          For providers, this field indicates whether the current user is marked
+          as a manager for the dataset represented by the containing permission
+          entry.
+
+          This field will only be present if the containing permission entry
+          type = `provider`.
+        type: boolean
+        default: false
+  DatasetPermissionLevel:
+    type: string
+    enum:
+      - provider
+      - end-user
 
