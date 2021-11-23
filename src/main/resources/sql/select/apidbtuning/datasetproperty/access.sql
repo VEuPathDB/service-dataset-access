@@ -1,7 +1,11 @@
 SELECT
-  dataset_presenter_id
-, value
+  p.dataset_presenter_id
+, p.value
+, s.study_stable_id
 FROM
-  apidbtuning.datasetproperty
+  apidbtuning.datasetproperty p,
+  apidbtuning.studyiddatasetid s
 WHERE
-  property = 'studyAccess'
+  p.dataset_presenter_id = s.dataset_id
+AND
+  p.property = 'studyAccess'

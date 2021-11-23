@@ -26,6 +26,12 @@ public interface DB
 
   interface Column
   {
+    interface StudyIdDatasetId
+    {
+      String
+        StudyId = "study_stable_id";
+    }
+
     interface EndUser
     {
       String

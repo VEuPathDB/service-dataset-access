@@ -1,4 +1,4 @@
-package org.veupathdb.service.access.service.dataset;
+package org.veupathdb.service.access.model;
 
 public enum DatasetAccessLevel {
   PUBLIC(true, true),

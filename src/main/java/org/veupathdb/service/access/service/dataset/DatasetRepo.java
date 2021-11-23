@@ -1,11 +1,16 @@
 package org.veupathdb.service.access.service.dataset;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import io.vulpine.lib.query.util.basic.BasicPreparedReadQuery;
+import org.gusdb.fgputil.Tuples;
 import org.veupathdb.service.access.model.Dataset;
+import org.veupathdb.service.access.model.DatasetAccessLevel;
+import org.veupathdb.service.access.model.DatasetProps;
 import org.veupathdb.service.access.repo.DB;
 import org.veupathdb.service.access.repo.SQL;
 import org.veupathdb.service.access.service.QueryUtil;
@@ -17,7 +22,7 @@ public final class DatasetRepo
   {
     static Select instance;
 
-    public Map<String,DatasetAccessLevel> selectAccessLevelMap() throws Exception {
+    public List<DatasetProps> datasetProps() throws Exception {
       final var sql = SQL.Select.Datasets.Access;
 
       try (
@@ -25,16 +30,17 @@ public final class DatasetRepo
         final var stmt = cn.createStatement();
         final var rs = QueryUtil.executeQueryLogged(stmt, sql);
       ) {
-        Map<String,DatasetAccessLevel> accessLevelMap = new HashMap<>();
+        List<DatasetProps> datasetProps = new ArrayList<>();
         while (rs.next()) {
-          accessLevelMap.put(
+          datasetProps.add(new DatasetProps(
             rs.getString(DB.Column.DatasetPresenters.DatasetId),
+            rs.getString(DB.Column.StudyIdDatasetId.StudyId),
             DatasetAccessLevel.valueOf(
               rs.getString(DB.Column.DatasetProperties.Value).toUpperCase()
             )
-          );
+          ));
         }
-        return accessLevelMap;
+        return datasetProps;
       }
     }
 
@@ -86,8 +92,8 @@ public final class DatasetRepo
       return getInstance().selectDataset(datasetId);
     }
 
-    public static Map<String,DatasetAccessLevel> getAccessLevelMap() throws Exception {
-      return getInstance().selectAccessLevelMap();
+    public static List<DatasetProps> getDatasetProps() throws Exception {
+      return getInstance().datasetProps();
     }
   }
 }

@@ -16,7 +16,8 @@ import org.veupathdb.service.access.generated.model.DatasetPermissionEntryImpl;
 import org.veupathdb.service.access.generated.model.DatasetPermissionLevel;
 import org.veupathdb.service.access.generated.model.PermissionsGetResponse;
 import org.veupathdb.service.access.generated.model.PermissionsGetResponseImpl;
-import org.veupathdb.service.access.service.dataset.DatasetAccessLevel;
+import org.veupathdb.service.access.model.DatasetAccessLevel;
+import org.veupathdb.service.access.model.DatasetProps;
 import org.veupathdb.service.access.service.dataset.DatasetRepo;
 import org.veupathdb.service.access.service.provider.ProviderRepo;
 import org.veupathdb.service.access.service.staff.StaffRepo;
@@ -49,7 +50,7 @@ public class PermissionService
         });
 
       // level of access assigned to each dataset
-      var accessLevelMap = DatasetRepo.Select.getAccessLevelMap();
+      var datasetProps = DatasetRepo.Select.getDatasetProps();
 
       // if datasetId is present, then user is provider; boolean indicates isManager
       Map<String,Boolean> providerInfoMap = ProviderRepo.Select.datasets(user.getUserID());
@@ -58,27 +59,30 @@ public class PermissionService
       List<String> approvedStudiesList = EndUserRepo.Select.datasets(user.getUserID());
 
       // set permission map on permissions object
-      out.setPerDataset(getPermissionMap(grantAll.get(), accessLevelMap, providerInfoMap, approvedStudiesList));
+      out.setPerDataset(getPermissionMap(grantAll.get(), datasetProps, providerInfoMap, approvedStudiesList));
 
       return out;
-    } catch (WebApplicationException e) {
+    }
+    catch (WebApplicationException e) {
       throw e;
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       throw new InternalServerErrorException(e);
     }
   }
 
   private static PermissionMap getPermissionMap(boolean grantToAllDatasets,
-      Map<String, DatasetAccessLevel> accessLevelMap,
+      List<DatasetProps> datasetProps,
       Map<String, Boolean> providerInfoMap,
       List<String> approvedDatasetsList) {
     var permissionMap = new PermissionMap();
-    for (var datasetAccessEntry : accessLevelMap.entrySet()) {
+    for (DatasetProps dataset : datasetProps) {
 
-      String datasetId = datasetAccessEntry.getKey();
       DatasetPermissionEntry permEntry = new DatasetPermissionEntryImpl();
 
-      boolean isProvider = providerInfoMap.containsKey(datasetId);
+      permEntry.setStudyId(dataset.studyId);
+
+      boolean isProvider = providerInfoMap.containsKey(dataset.id);
 
       // set permission type for this dataset
       permEntry.setType(isProvider ?
@@ -86,10 +90,9 @@ public class PermissionService
           DatasetPermissionLevel.ENDUSER);
 
       // is manager if isProvider and provider info map has value true
-      permEntry.setIsManager(isProvider && providerInfoMap.get(datasetId));
+      permEntry.setIsManager(isProvider && providerInfoMap.get(dataset.id));
 
-      DatasetAccessLevel accessLevel = datasetAccessEntry.getValue();
-      boolean accessGranted = approvedDatasetsList.contains(datasetId);
+      boolean accessGranted = approvedDatasetsList.contains(dataset.id);
       boolean grantAllPermsForThisDataset = grantToAllDatasets || isProvider || accessGranted;
 
       ActionList actions = new ActionListImpl();
@@ -98,19 +101,19 @@ public class PermissionService
       actions.setStudyMetadata(true);
 
       // controls search, visualizations, small results
-      boolean allowBasicAccess = grantAllPermsForThisDataset || accessLevel.allowsBasicAccess();
+      boolean allowBasicAccess = grantAllPermsForThisDataset || dataset.accessLevel.allowsBasicAccess();
       actions.setSubsetting(allowBasicAccess);
       actions.setVisualizations(allowBasicAccess);
       actions.setResultsFirstPage(allowBasicAccess);
 
       // controls access to full dataset, downloads
-      boolean allowFullAccess = grantAllPermsForThisDataset || accessLevel.allowsFullAccess();
+      boolean allowFullAccess = grantAllPermsForThisDataset || dataset.accessLevel.allowsFullAccess();
       actions.setResultsAll(allowFullAccess);
 
       permEntry.setActionAuthorization(actions);
 
       // add to map
-      permissionMap.put(datasetId, permEntry);
+      permissionMap.put(dataset.id, permEntry);
     }
 
     return permissionMap;
