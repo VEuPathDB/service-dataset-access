@@ -1,5 +1,7 @@
 package org.veupathdb.service.access.service.permissions;
 
+import java.util.List;
+import java.util.Map;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Request;
@@ -7,8 +9,15 @@ import javax.ws.rs.core.Request;
 import org.gusdb.fgputil.Wrapper;
 import org.veupathdb.lib.container.jaxrs.model.User;
 import org.veupathdb.service.access.controller.Util;
+import org.veupathdb.service.access.generated.model.ActionList;
+import org.veupathdb.service.access.generated.model.ActionListImpl;
+import org.veupathdb.service.access.generated.model.DatasetPermissionEntry;
+import org.veupathdb.service.access.generated.model.DatasetPermissionEntryImpl;
+import org.veupathdb.service.access.generated.model.DatasetPermissionLevel;
 import org.veupathdb.service.access.generated.model.PermissionsGetResponse;
 import org.veupathdb.service.access.generated.model.PermissionsGetResponseImpl;
+import org.veupathdb.service.access.service.dataset.DatasetAccessLevel;
+import org.veupathdb.service.access.service.dataset.DatasetRepo;
 import org.veupathdb.service.access.service.provider.ProviderRepo;
 import org.veupathdb.service.access.service.staff.StaffRepo;
 import org.veupathdb.service.access.service.user.EndUserRepo;
@@ -39,16 +48,17 @@ public class PermissionService
           }
         });
 
-      var tmp = new PermissionMap();
+      // level of access assigned to each dataset
+      var accessLevelMap = DatasetRepo.Select.getAccessLevelMap();
 
-      ProviderRepo.Select.datasets(user.getUserID())
-        .forEach((k, v) -> tmp.put(k, PermissionUtil.getInstance().bool2entry(v)));
+      // if datasetId is present, then user is provider; boolean indicates isManager
+      Map<String,Boolean> providerInfoMap = ProviderRepo.Select.datasets(user.getUserID());
 
-      EndUserRepo.Select.datasets(user.getUserID())
-        .forEach(s -> tmp.putIfAbsent(s, PermissionUtil.getInstance().string2entry(s)));
+      // list of datasetIds user has approved access for
+      List<String> approvedStudiesList = EndUserRepo.Select.datasets(user.getUserID());
 
-      if (!tmp.isEmpty())
-        out.setPerDataset(tmp);
+      // set permission map on permissions object
+      out.setPerDataset(getPermissionMap(grantAll.get(), accessLevelMap, providerInfoMap, approvedStudiesList));
 
       return out;
     } catch (WebApplicationException e) {
@@ -56,6 +66,54 @@ public class PermissionService
     } catch (Exception e) {
       throw new InternalServerErrorException(e);
     }
+  }
+
+  private static PermissionMap getPermissionMap(boolean grantToAllDatasets,
+      Map<String, DatasetAccessLevel> accessLevelMap,
+      Map<String, Boolean> providerInfoMap,
+      List<String> approvedDatasetsList) {
+    var permissionMap = new PermissionMap();
+    for (var datasetAccessEntry : accessLevelMap.entrySet()) {
+
+      String datasetId = datasetAccessEntry.getKey();
+      DatasetPermissionEntry permEntry = new DatasetPermissionEntryImpl();
+
+      boolean isProvider = providerInfoMap.containsKey(datasetId);
+
+      // set permission type for this dataset
+      permEntry.setType(isProvider ?
+          DatasetPermissionLevel.PROVIDER :
+          DatasetPermissionLevel.ENDUSER);
+
+      // is manager if isProvider and provider info map has value true
+      permEntry.setIsManager(isProvider && providerInfoMap.get(datasetId));
+
+      DatasetAccessLevel accessLevel = datasetAccessEntry.getValue();
+      boolean accessGranted = approvedDatasetsList.contains(datasetId);
+      boolean grantAllPermsForThisDataset = grantToAllDatasets || isProvider || accessGranted;
+
+      ActionList actions = new ActionListImpl();
+
+      // all users have access to the study page of all studies
+      actions.setStudyMetadata(true);
+
+      // controls search, visualizations, small results
+      boolean allowBasicAccess = grantAllPermsForThisDataset || accessLevel.allowsBasicAccess();
+      actions.setSubsetting(allowBasicAccess);
+      actions.setVisualizations(allowBasicAccess);
+      actions.setResultsFirstPage(allowBasicAccess);
+
+      // controls access to full dataset, downloads
+      boolean allowFullAccess = grantAllPermsForThisDataset || accessLevel.allowsFullAccess();
+      actions.setResultsAll(allowFullAccess);
+
+      permEntry.setActionAuthorization(actions);
+
+      // add to map
+      permissionMap.put(datasetId, permEntry);
+    }
+
+    return permissionMap;
   }
 
   public static PermissionService getInstance() {

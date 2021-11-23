@@ -1,9 +1,12 @@
 package org.veupathdb.service.access.service.dataset;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import io.vulpine.lib.query.util.basic.BasicPreparedReadQuery;
 import org.veupathdb.service.access.model.Dataset;
+import org.veupathdb.service.access.repo.DB;
 import org.veupathdb.service.access.repo.SQL;
 import org.veupathdb.service.access.service.QueryUtil;
 import org.veupathdb.service.access.util.SqlUtil;
@@ -13,6 +16,27 @@ public final class DatasetRepo
   public static final class Select
   {
     static Select instance;
+
+    public Map<String,DatasetAccessLevel> selectAccessLevelMap() throws Exception {
+      final var sql = SQL.Select.Datasets.Access;
+
+      try (
+        final var cn = QueryUtil.appDbConnection();
+        final var stmt = cn.createStatement();
+        final var rs = QueryUtil.executeQueryLogged(stmt, sql);
+      ) {
+        Map<String,DatasetAccessLevel> accessLevelMap = new HashMap<>();
+        while (rs.next()) {
+          accessLevelMap.put(
+            rs.getString(DB.Column.DatasetPresenters.DatasetId),
+            DatasetAccessLevel.valueOf(
+              rs.getString(DB.Column.DatasetProperties.Value).toUpperCase()
+            )
+          );
+        }
+        return accessLevelMap;
+      }
+    }
 
     /**
      * @param datasetId ID string for the dataset to check.
@@ -60,6 +84,10 @@ public final class DatasetRepo
 
     public static Optional<Dataset> getDataset(final String datasetId) throws Exception {
       return getInstance().selectDataset(datasetId);
+    }
+
+    public static Map<String,DatasetAccessLevel> getAccessLevelMap() throws Exception {
+      return getInstance().selectAccessLevelMap();
     }
   }
 }
