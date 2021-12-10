@@ -40,7 +40,6 @@ public class ProviderRepo
           .setLong(row.getUserId())
           .setBoolean(row.isManager())
           .setString(row.getDatasetId())
-          .setReturnInt()
           ::build
       ).execute().getValue();
     }

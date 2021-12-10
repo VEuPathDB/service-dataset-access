@@ -37,7 +37,6 @@ public class StaffRepo
         new PsBuilder()
           .setLong(row.getUserId())
           .setBoolean(row.isOwner())
-          .setReturnInt()
           ::build
       ).execute().getValue();
     }
