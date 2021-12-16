@@ -6,7 +6,7 @@ val coreLib   = "5.3.0"  // Container core lib version
 val jersey    = "2.33"   // Jersey/JaxRS version
 val jackson   = "2.12.2" // FasterXML Jackson version
 val junit     = "5.7.1"  // JUnit version
-val log4j     = "2.14.0" // Log4J version
+val log4j     = "2.16.0" // Log4J version
 val metrics   = "0.9.0"  // Prometheus lib version
 
 val implementation      by configurations
