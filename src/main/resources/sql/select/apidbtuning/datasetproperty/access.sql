@@ -1,11 +1,15 @@
 SELECT
-  p.dataset_presenter_id
-, p.value
-, s.study_stable_id
+  pres.dataset_presenter_id,
+  pres.dataset_sha1_digest,
+  prop.value,
+  study.study_stable_id
 FROM
-  apidbtuning.datasetproperty p,
-  apidbtuning.studyiddatasetid s
+  apidbtuning.datasetpresenter pres,
+  apidbtuning.datasetproperty prop,
+  apidbtuning.studyiddatasetid study
 WHERE
-  p.dataset_presenter_id = s.dataset_id
+  pres.dataset_presenter_id = study.dataset_id
 AND
-  p.property = 'studyAccess'
+  pres.dataset_presenter_id = prop.dataset_presenter_id
+AND
+  prop.property = 'studyAccess'

@@ -35,6 +35,7 @@ public final class DatasetRepo
           datasetProps.add(new DatasetProps(
             rs.getString(DB.Column.DatasetPresenters.DatasetId),
             rs.getString(DB.Column.StudyIdDatasetId.StudyId),
+            rs.getString(DB.Column.DatasetPresenters.DatasetSha1Digest),
             DatasetAccessLevel.valueOf(
               rs.getString(DB.Column.DatasetProperties.Value).toUpperCase()
             )

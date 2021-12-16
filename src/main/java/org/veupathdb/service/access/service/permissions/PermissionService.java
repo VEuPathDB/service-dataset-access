@@ -81,6 +81,7 @@ public class PermissionService
       DatasetPermissionEntry permEntry = new DatasetPermissionEntryImpl();
 
       permEntry.setStudyId(dataset.studyId);
+      permEntry.setSha1Hash(dataset.sha1hash);
 
       boolean isProvider = providerInfoMap.containsKey(dataset.id);
 
