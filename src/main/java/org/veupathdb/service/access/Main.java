@@ -5,6 +5,7 @@ import org.gusdb.fgputil.db.slowquery.QueryLogger;
 import org.veupathdb.lib.container.jaxrs.config.Options;
 import org.veupathdb.lib.container.jaxrs.server.ContainerResources;
 import org.veupathdb.lib.container.jaxrs.server.Server;
+import org.veupathdb.lib.prom.PrometheusJVM;
 import org.veupathdb.service.access.model.Config;
 
 public class Main extends Server {
@@ -17,6 +18,7 @@ public class Main extends Server {
 
   public Main() {
     QueryLogger.initialize(new QLF(){});
+    PrometheusJVM.enable();
   }
 
   @Override
