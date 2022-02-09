@@ -70,8 +70,9 @@ dependencies {
   implementation("org.apache.logging.log4j:log4j:${log4j}")
 
   // Metrics
-  implementation("io.prometheus:simpleclient:0.9.0")
-  implementation("io.prometheus:simpleclient_common:0.9.0")
+  implementation("io.prometheus:simpleclient:0.14.1")
+  implementation("io.prometheus:simpleclient_common:0.14.1")
+  implementation("org.veupathdb.lib:lib-prometheus-stats:1.1.0")
 
   // Utils
   implementation("io.vulpine.lib:Jackfish:1.+")
