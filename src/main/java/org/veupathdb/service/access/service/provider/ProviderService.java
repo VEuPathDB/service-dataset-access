@@ -89,8 +89,8 @@ public class ProviderService
    */
   public DatasetProviderList getDatasetProviderList(
     final String datasetId,
-    final int limit,
-    final int offset,
+    final Long limit,
+    final Long offset,
     final User currentUser
   ) {
     log.trace("ProviderService#getDatasetProviderList(String, int, int, UserProfile)");
@@ -127,7 +127,7 @@ public class ProviderService
    * Locates a provider with the given <code>providerId</code> or throws a 404
    * exception.
    */
-  public ProviderRow mustGetProviderById(final int providerId) {
+  public ProviderRow mustGetProviderById(final Long providerId) {
     log.trace("ProviderService#requireProviderById(int)");
 
     try {
@@ -193,8 +193,8 @@ public class ProviderService
       .anyMatch(row -> ds.equals(row.getDatasetId().toUpperCase()));
   }
 
-  public void deleteProviderRecord(final int providerId) {
-    log.trace("ProviderService#deleteProvider(int)");
+  public void deleteProviderRecord(final long providerId) {
+    log.trace("ProviderService#deleteProvider(long)");
 
     try {
       ProviderRepo.Delete.byId(providerId);
@@ -263,18 +263,18 @@ public class ProviderService
 
   public static DatasetProviderList getProviderList(
     final String datasetId,
-    final int limit,
-    final int offset,
+    final Long limit,
+    final Long offset,
     final User user
   ) {
     return getInstance().getDatasetProviderList(datasetId, limit, offset, user);
   }
 
-  public static ProviderRow requireProviderById(final int providerId) {
+  public static ProviderRow requireProviderById(final Long providerId) {
     return getInstance().mustGetProviderById(providerId);
   }
 
-  public static List<ProviderRow> lookupProviderByUserId(final long userId) {
+  public static List<ProviderRow> lookupProviderByUserId(final Long userId) {
     return getInstance().getProviderByUserId(userId);
   }
 
@@ -282,11 +282,11 @@ public class ProviderService
     return getInstance().isUserManager(req, datasetId);
   }
 
-  public static boolean userIsManager(final long userId, final String datasetId) {
+  public static boolean userIsManager(final Long userId, final String datasetId) {
     return getInstance().isUserManager(userId, datasetId);
   }
 
-  public static void deleteProvider(final int providerId) {
+  public static void deleteProvider(final Long providerId) {
     getInstance().deleteProviderRecord(providerId);
   }
 
@@ -296,8 +296,8 @@ public class ProviderService
 
   private static DatasetProviderList list2Providers(
     final List<ProviderRow> rows,
-    final int offset,
-    final int total
+    final Long offset,
+    final Long total
   ) {
     return getInstance().listToProviders(rows, offset, total);
   }

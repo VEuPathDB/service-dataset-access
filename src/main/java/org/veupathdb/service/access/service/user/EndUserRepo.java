@@ -91,11 +91,11 @@ public class EndUserRepo
           else
             ps.setNull(1, Types.VARCHAR);
           if (query.hasLimit())
-            ps.setInt(2, query.getLimit());
+            ps.setLong(2, query.getLimit());
           else
             ps.setNull(2, Types.INTEGER);
           if (query.hasOffset())
-            ps.setInt(3, query.getOffset());
+            ps.setLong(3, query.getOffset());
           else
             ps.setNull(3, Types.INTEGER);
           if (query.hasApprovalStatus())

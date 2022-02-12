@@ -24,7 +24,7 @@ public class HistoryService
 {
   private static final Logger Log = LogManager.getLogger(HistoryService.class);
 
-  public static HistoryResponse getHistory(long userID, long limit, long offset) {
+  public static HistoryResponse getHistory(long userID, Long limit, Long offset) {
     Log.trace("::getHistory(userID={}, limit={}, offset={})", userID, limit, offset);
 
     List<HistoryResultRow>    rows;

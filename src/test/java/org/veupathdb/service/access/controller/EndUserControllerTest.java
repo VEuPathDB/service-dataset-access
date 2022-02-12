@@ -49,8 +49,8 @@ class EndUserControllerTest
     @DisplayName("passes parameters through to the backing service")
     void test1() {
       var dsId   = RandUtil.randString();
-      var limit  = RandUtil.randInt();
-      var offset = RandUtil.randInt();
+      var limit  = RandUtil.randLong();
+      var offset = RandUtil.randLong();
       var status = ApprovalStatus.DENIED;
       var retVal = mock(EndUserList.class);
 

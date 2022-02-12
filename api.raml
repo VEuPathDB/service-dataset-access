@@ -1,13 +1,13 @@
 #%RAML 1.0 Extension
 
-extends: https://raw.githubusercontent.com/VEuPathDB/docs-api-schema/v1.1.1/libraries/base-service.raml
+extends: https://raw.githubusercontent.com/VEuPathDB/docs-api-schema/v2.0.2/libraries/base-service.raml
 
 title: Dataset Access Service
 version: v1.0.0
 mediaType: application/json
 
 uses:
-  error: https://raw.githubusercontent.com/VEuPathDB/docs-api-schema/v1.1.1/libraries/errors.raml
+  error: https://raw.githubusercontent.com/VEuPathDB/docs-api-schema/v2.0.2/libraries/errors.raml
   lib: schema/library.raml
 
 securitySchemes:
@@ -40,12 +40,6 @@ securitySchemes:
       200:
         body:
           type: lib.StaffList
-      401:
-        body: error.Unauthorized
-      403:
-        body: error.Forbidden
-      500:
-        body: error.Server
   post:
     displayName: New Staff Entry
     description: Create a new dataset staff record.
@@ -53,16 +47,6 @@ securitySchemes:
     responses:
       200:
         body: lib.NewStaffResponse
-      400:
-        body: error.BadRequest
-      401:
-        body: error.Unauthorized
-      403:
-        body: error.Forbidden
-      422:
-        body: error.UnprocessableEntity
-      500:
-        body: error.Server
 
   /{staff-id}:
     uriParameters:
@@ -74,31 +58,11 @@ securitySchemes:
       body: lib.StaffPatch[]
       responses:
         204:
-        400:
-          body: error.BadRequest
-        401:
-          body: error.Unauthorized
-        403:
-          body: error.Forbidden
-        404:
-          body: error.NotFound
-        422:
-          body: error.UnprocessableEntity
-        500:
-          body: error.Server
     delete:
       displayName: Delete Staff Entry
       description: Delete dataset staff.
       responses:
         204:
-        401:
-          body: error.Unauthorized
-        403:
-          body: error.Forbidden
-        404:
-          body: error.NotFound
-        500:
-          body: error.Server
 
 /dataset-providers:
   get:
@@ -121,12 +85,6 @@ securitySchemes:
     responses:
       200:
         body: lib.DatasetProviderList
-      401:
-        body: error.Unauthorized
-      403:
-        body: error.Forbidden
-      500:
-        body: error.Server
 
   post:
     displayName: New Provider
@@ -135,17 +93,6 @@ securitySchemes:
     responses:
       200:
         body: lib.DatasetProviderCreateResponse
-      400:
-        body: error.BadRequest
-      401:
-        body: error.Unauthorized
-      403:
-        body: error.Forbidden
-      422:
-        body: error.UnprocessableEntity
-      500:
-        body: error.Server
-
 
   /{provider-id}:
     uriParameters:
@@ -158,31 +105,11 @@ securitySchemes:
       body: lib.DatasetProviderPatch[]
       responses:
         204:
-        400:
-          body: error.BadRequest
-        401:
-          body: error.Unauthorized
-        403:
-          body: error.Forbidden
-        404:
-          body: error.NotFound
-        422:
-          body: error.UnprocessableEntity
-        500:
-          body: error.Server
     delete:
       displayName: Delete Provider
       description: Delete a dataset provider record.
       responses:
         204:
-        401:
-          body: error.Unauthorized
-        403:
-          body: error.Forbidden
-        404:
-          body: error.NotFound
-        500:
-          body: error.Server
 
 /dataset-end-users:
   get:
@@ -211,12 +138,6 @@ securitySchemes:
     responses:
       200:
         body: lib.EndUserList
-      401:
-        body: error.Unauthorized
-      403:
-        body: error.Forbidden
-      500:
-        body: error.Server
   post:
     displayName: New End User
     description: Create a new dataset end-user record.
@@ -224,16 +145,6 @@ securitySchemes:
     responses:
       200:
         body: lib.EndUserCreateResponse
-      400:
-        body: error.BadRequest
-      401:
-        body: error.Unauthorized
-      403:
-        body: error.Forbidden
-      422:
-        body: error.UnprocessableEntity
-      500:
-        body: error.Server
 
   /{end-user-id}:
     uriParameters:
@@ -250,26 +161,12 @@ securitySchemes:
       responses:
         200:
           body: lib.EndUser
-        401:
-          body: error.Unauthorized
-        403:
-          body: error.Forbidden
-        404:
-          body: error.NotFound
-        500:
-          body: error.Server
     delete:
       displayName: Delete End User
       description: Delete an end user access grant.
       responses:
         204:
           description: Success
-        401:
-          body: error.Unauthorized
-        404:
-          body: error.NotFound
-        500:
-          body: error.Server
     patch:
       displayName: Update End User
       description: |
@@ -387,27 +284,11 @@ securitySchemes:
       body: lib.EndUserPatch[]
       responses:
         204:
-        400:
-          body: error.BadRequest
-        401:
-          body: error.Unauthorized
-        403:
-          body: error.Forbidden
-        404:
-          body: error.NotFound
-        422:
-          body: error.UnprocessableEntity
-        500:
-          body: error.Server
 /permissions:
   get:
     responses:
       200:
         body: lib.PermissionsGetResponse
-      401:
-        body: error.Unauthorized
-      500:
-        body: error.Server
 
 /history:
   get:
@@ -424,7 +305,3 @@ securitySchemes:
     responses:
       200:
         body: lib.HistoryResponse
-      401:
-        body: error.Unauthorized
-      500:
-        body: error.Server

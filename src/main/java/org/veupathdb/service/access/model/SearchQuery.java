@@ -4,9 +4,9 @@ public class SearchQuery
 {
   private String datasetId;
 
-  private Integer limit;
+  private Long limit;
 
-  private Integer offset;
+  private Long offset;
 
   private ApprovalStatus approvalStatus;
 
@@ -31,11 +31,11 @@ public class SearchQuery
     return limit != null;
   }
 
-  public Integer getLimit() {
+  public Long getLimit() {
     return limit;
   }
 
-  public SearchQuery setLimit(final Integer limit) {
+  public SearchQuery setLimit(final Long limit) {
     if (limit != null)
       this.limit = limit < 1 ? null : limit;
     else
@@ -48,11 +48,11 @@ public class SearchQuery
     return offset != null;
   }
 
-  public Integer getOffset() {
+  public Long getOffset() {
     return offset;
   }
 
-  public SearchQuery setOffset(final Integer offset) {
+  public SearchQuery setOffset(final Long offset) {
     if (offset != null)
       this.offset = offset < 1 ? null : offset;
     else

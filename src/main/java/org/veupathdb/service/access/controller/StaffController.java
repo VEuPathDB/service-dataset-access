@@ -21,7 +21,7 @@ public class StaffController implements Staff
   private Request _request;
 
   @Override
-  public GetStaffResponse getStaff(final int limit, final int offset) {
+  public GetStaffResponse getStaff(final Long limit, final Long offset) {
     if (!StaffService.userIsStaff(_request))
       throw new ForbiddenException();
 
@@ -43,7 +43,7 @@ public class StaffController implements Staff
   @SuppressWarnings("unchecked")
   @Override
   public PatchStaffByStaffIdResponse patchStaffByStaffId(
-    final int staffId,
+    final Long staffId,
     final List < StaffPatch > entity
   ) {
     if (!StaffService.userIsOwner(_request))
@@ -66,7 +66,7 @@ public class StaffController implements Staff
   }
 
   @Override
-  public DeleteStaffByStaffIdResponse deleteStaffByStaffId(final int staffId) {
+  public DeleteStaffByStaffIdResponse deleteStaffByStaffId(final Long staffId) {
     if (!StaffService.userIsOwner(_request))
       throw new ForbiddenException();
 

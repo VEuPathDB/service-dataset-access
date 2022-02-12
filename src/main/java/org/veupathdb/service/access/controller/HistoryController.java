@@ -14,7 +14,7 @@ public class HistoryController implements History
   private Request _request;
 
   @Override
-  public GetHistoryResponse getHistory(int limit, int offset) {
+  public GetHistoryResponse getHistory(Long limit, Long offset) {
     var user = Util.requireUser(_request);
 
     return GetHistoryResponse.respond200WithApplicationJson(

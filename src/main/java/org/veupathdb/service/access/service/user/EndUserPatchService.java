@@ -86,7 +86,7 @@ public class EndUserPatchService
       final var ds = DatasetRepo.Select.getInstance()
         .selectDataset(row.getDatasetId())
         .orElseThrow();
-      final var ccs = ProviderRepo.Select.byDataset(row.getDatasetId(), 100, 0)
+      final var ccs = ProviderRepo.Select.byDataset(row.getDatasetId(), 100L, 0L)
         .stream()
         .map(UserRow::getEmail)
         .toArray(String[]::new);

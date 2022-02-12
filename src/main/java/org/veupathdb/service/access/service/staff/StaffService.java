@@ -114,8 +114,8 @@ public class StaffService {
     getInstance().updateStaffRecord(row);
   }
 
-  public StaffList getStaffList(final int limit, final int offset) {
-    log.trace("StaffService#getStaffList(int, int)");
+  public StaffList getStaffList(final long limit, final long offset) {
+    log.trace("StaffService#getStaffList(long, long)");
 
     try {
       return rows2StaffList(StaffRepo.Select.list(limit, offset), offset, StaffRepo.Select.count());
@@ -124,11 +124,11 @@ public class StaffService {
     }
   }
 
-  public static StaffList getStaff(final int limit, final int offset) {
+  public static StaffList getStaff(final long limit, final long offset) {
     return getInstance().getStaffList(limit, offset);
   }
 
-  public StaffRow mustGetStaffById(final int staffId) {
+  public StaffRow mustGetStaffById(final Long staffId) {
     log.trace("StaffService#mustGetStaffById(int)");
 
     try {
@@ -138,7 +138,7 @@ public class StaffService {
     }
   }
 
-  public static StaffRow requireStaffById(final int staffId) {
+  public static StaffRow requireStaffById(final Long staffId) {
     return getInstance().mustGetStaffById(staffId);
   }
 
@@ -162,7 +162,7 @@ public class StaffService {
   }
 
 
-  public void deleteStaffRecord(final int staffId) {
+  public void deleteStaffRecord(final Long staffId) {
     log.trace("StaffService#deleteStaff(int)");
 
     try {
@@ -172,7 +172,7 @@ public class StaffService {
     }
   }
 
-  public static void deleteStaff(final int staffId) {
+  public static void deleteStaff(final Long staffId) {
     getInstance().deleteStaffRecord(staffId);
   }
 

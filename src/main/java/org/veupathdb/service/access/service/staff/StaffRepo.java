@@ -18,11 +18,11 @@ public class StaffRepo
 {
   public interface Delete
   {
-    static void byId(final int staffId) throws Exception {
+    static void byId(final Long staffId) throws Exception {
       new BasicPreparedWriteQuery(
         SQL.Delete.Staff.ById,
         QueryUtil.getInstance()::getAcctDbConnection,
-        SqlUtil.prepareSingleInt(staffId)
+        SqlUtil.prepareSingleLong(staffId)
       ).execute();
     }
   }
@@ -44,12 +44,12 @@ public class StaffRepo
 
   public interface Select
   {
-    static Optional<StaffRow> byId(final int staffId) throws Exception {
+    static Optional<StaffRow> byId(final Long staffId) throws Exception {
       return new BasicPreparedReadQuery<>(
         SQL.Select.Staff.ById,
         QueryUtil.getInstance()::getAcctDbConnection,
         SqlUtil.optParser(StaffUtil.getInstance()::resultRowToStaffRow),
-        SqlUtil.prepareSingleInt(staffId)
+        SqlUtil.prepareSingleLong(staffId)
       ).execute().getValue();
     }
 
@@ -70,12 +70,12 @@ public class StaffRepo
       ).execute().getValue();
     }
 
-    static List<StaffRow> list(final int limit, final int offset) throws Exception {
+    static List<StaffRow> list(final long limit, final long offset) throws Exception {
       return new BasicPreparedListReadQuery<>(
         SQL.Select.Staff.All,
         QueryUtil.getInstance()::getAcctDbConnection,
         StaffUtil.getInstance()::resultRowToStaffRow,
-        new PsBuilder().setInt(offset).setInt(limit)::build
+        new PsBuilder().setLong(offset).setLong(limit)::build
       ).execute().getValue();
     }
   } // End::Select

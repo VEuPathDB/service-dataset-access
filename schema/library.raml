@@ -7,76 +7,6 @@
 ################################################################################
 
 types:
-  PermissionsGetResponse:
-    type: object
-    additionalProperties: false
-    properties:
-      isStaff?:
-        description: |
-          Indicates whether the current user is listed in the service's staff
-          entries.
-        type: boolean
-        default: false
-      isOwner?:
-        description: |
-          Indicates whether the current user is listed in the service's staff
-          entries _and_ is marked as a site owner.
-        type: boolean
-        default: false
-      perDataset?:
-        description: |
-          If the current user is a provider or an end user of one or more
-          datasets, these datasets will be listed here with the user's
-          permission level for each specific dataset.
-
-          If the user is not a provider or end user for any datasets, this field
-          will be omitted.
-        type: object
-        additionalProperties: false
-        properties:
-          //: DatasetPermissionEntry
-  ActionList:
-    type: object
-    additionalProperties: false
-    properties:
-      studyMetadata:
-        description: study metadata
-        type: boolean
-      subsetting:
-        description: count, distribution
-        type: boolean
-      visualizations:
-        description: all viz plugins
-        type: boolean
-      resultsFirstPage:
-        description: 'offset:0, numRecords: <=20'
-        type: boolean
-      resultsAll:
-        description: any other tabular response
-        type: boolean
-  DatasetPermissionEntry:
-    type: object
-    additionalProperties: false
-    properties:
-      studyId: string
-      sha1Hash: string
-      type: DatasetPermissionLevel
-      actionAuthorization: ActionList
-      isManager?:
-        description: |
-          For providers, this field indicates whether the current user is marked
-          as a manager for the dataset represented by the containing permission
-          entry.
-
-          This field will only be present if the containing permission entry
-          type = `provider`.
-        type: boolean
-        default: false
-  DatasetPermissionLevel:
-    type: string
-    enum:
-      - provider
-      - end-user
   Staff:
     type: object
     additionalProperties: false
@@ -396,4 +326,74 @@ types:
       denialReason: string
       dateDenied: datetime-only
       allowSelfEdits: boolean
+  PermissionsGetResponse:
+    type: object
+    additionalProperties: false
+    properties:
+      isStaff?:
+        description: |
+          Indicates whether the current user is listed in the service's staff
+          entries.
+        type: boolean
+        default: false
+      isOwner?:
+        description: |
+          Indicates whether the current user is listed in the service's staff
+          entries _and_ is marked as a site owner.
+        type: boolean
+        default: false
+      perDataset?:
+        description: |
+          If the current user is a provider or an end user of one or more
+          datasets, these datasets will be listed here with the user's
+          permission level for each specific dataset.
+
+          If the user is not a provider or end user for any datasets, this field
+          will be omitted.
+        type: object
+        additionalProperties: false
+        properties:
+          //: DatasetPermissionEntry
+  ActionList:
+    type: object
+    additionalProperties: false
+    properties:
+      studyMetadata:
+        description: study metadata
+        type: boolean
+      subsetting:
+        description: count, distribution
+        type: boolean
+      visualizations:
+        description: all viz plugins
+        type: boolean
+      resultsFirstPage:
+        description: 'offset:0, numRecords: <=20'
+        type: boolean
+      resultsAll:
+        description: any other tabular response
+        type: boolean
+  DatasetPermissionEntry:
+    type: object
+    additionalProperties: false
+    properties:
+      studyId: string
+      sha1Hash: string
+      type: DatasetPermissionLevel
+      actionAuthorization: ActionList
+      isManager?:
+        description: |
+          For providers, this field indicates whether the current user is marked
+          as a manager for the dataset represented by the containing permission
+          entry.
+
+          This field will only be present if the containing permission entry
+          type = `provider`.
+        type: boolean
+        default: false
+  DatasetPermissionLevel:
+    type: string
+    enum:
+      - provider
+      - end-user
 

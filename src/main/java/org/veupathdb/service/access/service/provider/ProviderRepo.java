@@ -20,11 +20,11 @@ public class ProviderRepo
 {
   public static class Delete
   {
-    public static void byId(final int providerId) throws Exception {
+    public static void byId(final long providerId) throws Exception {
       new BasicPreparedWriteQuery(
         SQL.Delete.Providers.ById,
         QueryUtil::acctDbConnection,
-        SqlUtil.prepareSingleInt(providerId)
+        SqlUtil.prepareSingleLong(providerId)
       ).execute();
     }
   }
@@ -35,7 +35,7 @@ public class ProviderRepo
       return new BasicPreparedReadQuery<>(
         SQL.Insert.Providers,
         QueryUtil::acctDbConnection,
-        SqlUtil.reqParser(SqlUtil::parseSingleInt),
+        SqlUtil.reqParser(SqlUtil::parseSingleLong),
         new PsBuilder()
           .setLong(row.getUserId())
           .setBoolean(row.isManager())
@@ -49,23 +49,23 @@ public class ProviderRepo
   {
     public static List<ProviderRow> byDataset(
       final String datasetId,
-      final int limit,
-      final int offset
+      final Long limit,
+      final Long offset
     ) throws Exception {
       return new BasicPreparedListReadQuery<>(
         SQL.Select.Providers.ByDataset,
         QueryUtil::acctDbConnection,
         ProviderUtil.getInstance()::resultToProviderRow,
-        new PsBuilder().setString(datasetId).setInt(offset).setInt(limit)::build
+        new PsBuilder().setString(datasetId).setLong(offset).setLong(limit)::build
       ).execute().getValue();
     }
 
-    public static Optional<ProviderRow> byId(final int providerId) throws Exception {
+    public static Optional<ProviderRow> byId(final long providerId) throws Exception {
       return new BasicPreparedReadQuery<>(
         SQL.Select.Providers.ById,
         QueryUtil::acctDbConnection,
         SqlUtil.optParser(ProviderUtil.getInstance()::resultToProviderRow),
-        SqlUtil.prepareSingleInt(providerId)
+        SqlUtil.prepareSingleLong(providerId)
       ).execute().getValue();
     }
 
@@ -88,11 +88,11 @@ public class ProviderRepo
       ).execute().getValue();
     }
 
-    public static int countByDataset(final String datasetId) throws Exception {
+    public static long countByDataset(final String datasetId) throws Exception {
       return new BasicPreparedReadQuery<>(
         SQL.Select.Providers.CountByDataset,
         QueryUtil::acctDbConnection,
-        SqlUtil.reqParser(rs -> rs.getInt(1)),
+        SqlUtil.reqParser(rs -> rs.getLong(1)),
         SqlUtil.prepareSingleString(datasetId)
       ).execute().getValue();
     }

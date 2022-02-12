@@ -52,8 +52,8 @@ public class EndUserSearchService
    */
   public EndUserList findEndUsers(
     final String datasetId,
-    final int limit,
-    final int offset,
+    final Long limit,
+    final Long offset,
     final ApprovalStatus approval,
     final Request request
     ) {
