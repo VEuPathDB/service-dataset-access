@@ -35,10 +35,10 @@ public class StaffRepo
           SQL.Insert.Staff,
           QueryUtil.getInstance()::getAcctDbConnection,
           DB.Column.Staff.StaffId,
-          ps -> new PsBuilder()
+          new PsBuilder()
               .setLong(row.getUserId())
               .setBoolean(row.isOwner())
-              .build(ps)
+              ::build
       );
     }
   }

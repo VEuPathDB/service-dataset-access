@@ -36,11 +36,11 @@ public class ProviderRepo
         SQL.Insert.Providers,
         QueryUtil::acctDbConnection,
         DB.Column.Provider.ProviderId,
-        ps -> new PsBuilder()
+        new PsBuilder()
           .setLong(row.getUserId())
           .setBoolean(row.isManager())
           .setString(row.getDatasetId())
-          .build(ps)
+          ::build
       );
     }
   }

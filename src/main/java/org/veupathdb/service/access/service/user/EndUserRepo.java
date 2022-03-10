@@ -42,26 +42,27 @@ public class EndUserRepo
 
       try (Connection con = QueryUtil.acctDbConnection()) {
         long endUserId = QueryUtil.performInsertionWithIdGeneration(
-            SQL.Insert.EndUser,
-            () -> con,
-            DB.Column.EndUser.EndUserID,
-            ps -> new PsBuilder()
-                .setLong(row.getUserId())
-                .setString(row.getDatasetId())
-                .setShort(RestrictionLevelCache.getInstance()
-                    .get(row.getRestrictionLevel()).orElseThrow())
-                .setShort(ApprovalStatusCache.getInstance()
-                    .get(row.getApprovalStatus()).orElseThrow())
-                .setObject(row.getStartDate(), Types.DATE)
-                .setLong(row.getDuration())
-                .setString(row.getPurpose())
-                .setString(row.getResearchQuestion())
-                .setString(row.getAnalysisPlan())
-                .setString(row.getDisseminationPlan())
-                .setString(row.getPriorAuth())
-                .setString(row.getDenialReason())
-                .setObject(row.getDateDenied(), Types.TIMESTAMP_WITH_TIMEZONE)
-                .setBoolean(row.isAllowSelfEdits())
+          SQL.Insert.EndUser,
+          () -> con,
+          DB.Column.EndUser.EndUserID,
+          new PsBuilder()
+            .setLong(row.getUserId())
+            .setString(row.getDatasetId())
+            .setShort(RestrictionLevelCache.getInstance()
+                .get(row.getRestrictionLevel()).orElseThrow())
+            .setShort(ApprovalStatusCache.getInstance()
+                .get(row.getApprovalStatus()).orElseThrow())
+            .setObject(row.getStartDate(), Types.DATE)
+            .setLong(row.getDuration())
+            .setString(row.getPurpose())
+            .setString(row.getResearchQuestion())
+            .setString(row.getAnalysisPlan())
+            .setString(row.getDisseminationPlan())
+            .setString(row.getPriorAuth())
+            .setString(row.getDenialReason())
+            .setObject(row.getDateDenied(), Types.TIMESTAMP_WITH_TIMEZONE)
+            .setBoolean(row.isAllowSelfEdits())
+            ::build
         );
 
         row.setEndUserID(endUserId);
