@@ -36,7 +36,7 @@ Value must be the MD5 hash of the entire salt file used by WDK sites.
 | CLI | --auth-secret=<string>
 | ENV | AUTH_SECRET_KEY=<string>
 |===
-//------------------------------------------------------------------------------
+//----------------------------------------------------------------------------`--
 
 ==== LDAP Server
 

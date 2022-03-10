@@ -1,13 +1,20 @@
 package org.veupathdb.service.access.service;
 
+import io.vulpine.lib.query.util.ConnectionProvider;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 import io.vulpine.lib.jcfi.CheckedBiFunction;
 import io.vulpine.lib.jcfi.CheckedFunction;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import org.apache.logging.log4j.Logger;
+import org.gusdb.fgputil.functional.FunctionalInterfaces;
+import org.gusdb.fgputil.functional.FunctionalInterfaces.ConsumerWithException;
+import org.gusdb.fgputil.functional.FunctionalInterfaces.SupplierWithException;
 import org.veupathdb.lib.container.jaxrs.providers.LogProvider;
 import org.veupathdb.lib.container.jaxrs.utils.db.DbManager;
 
@@ -117,5 +124,27 @@ public class QueryUtil
     final String[] returning
   ) throws Exception {
     return getInstance().prepareSqlStatement(con, sql, returning);
+  }
+
+  public static Long performInsertionWithIdGeneration(
+      final String sql,
+      final SupplierWithException<Connection> connection,
+      final String idColumnName,
+      final ConsumerWithException<PreparedStatement> statementPreparer) throws Exception {
+    try (Connection conn = connection.get();
+         PreparedStatement ps = conn.prepareStatement(sql, new String[]{ idColumnName })) {
+      statementPreparer.accept(ps);
+      int numRowsInserted = ps.executeUpdate();
+      if (numRowsInserted > 0) {
+        // only return the first ID
+        try (ResultSet rs = ps.getGeneratedKeys()) {
+          if (rs.next()) {
+            return rs.getLong(idColumnName);
+          }
+          else throw new RuntimeException("1: No ID generated with name " + idColumnName + " via SQL: " + sql);
+        }
+      }
+      else throw new RuntimeException("2: No ID generated with name " + idColumnName + " via SQL: " + sql);
+    }
   }
 }
