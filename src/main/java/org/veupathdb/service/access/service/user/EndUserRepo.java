@@ -1,5 +1,6 @@
 package org.veupathdb.service.access.service.user;
 
+import java.sql.Connection;
 import java.sql.Types;
 import java.util.List;
 import java.util.Optional;
@@ -8,11 +9,10 @@ import io.vulpine.lib.query.util.basic.BasicPreparedListReadQuery;
 import io.vulpine.lib.query.util.basic.BasicPreparedReadQuery;
 import io.vulpine.lib.query.util.basic.BasicPreparedVoidQuery;
 import io.vulpine.lib.query.util.basic.BasicPreparedWriteQuery;
-import oracle.jdbc.OraclePreparedStatement;
-import org.apache.commons.dbcp2.DelegatingPreparedStatement;
 import org.apache.logging.log4j.Logger;
 import org.veupathdb.lib.container.jaxrs.providers.LogProvider;
 import org.veupathdb.service.access.model.*;
+import org.veupathdb.service.access.repo.DB;
 import org.veupathdb.service.access.repo.SQL;
 import org.veupathdb.service.access.service.QueryUtil;
 import org.veupathdb.service.access.util.PsBuilder;
@@ -40,37 +40,32 @@ public class EndUserRepo
     static void newEndUser(final EndUserRow row, final long creatorID) throws Exception {
       log.trace("EndUserRepo$Insert#newEndUser(EndUserRow)");
 
-      try (var con = QueryUtil.acctDbConnection()) {
-        // Insert initial row
-        try (var ps = con.prepareStatement(SQL.Insert.EndUser)) {
-          ps.setLong(1, row.getUserId());
-          ps.setString(2, row.getDatasetId());
-          ps.setShort(3, RestrictionLevelCache.getInstance()
-            .get(row.getRestrictionLevel())
-            .orElseThrow());
-          ps.setShort(4, ApprovalStatusCache
-            .getInstance()
-            .get(row.getApprovalStatus()).orElseThrow());
-          ps.setObject(5, row.getStartDate(), Types.DATE);
-          ps.setLong(6, row.getDuration());
-          ps.setString(7, row.getPurpose());
-          ps.setString(8, row.getResearchQuestion());
-          ps.setString(9, row.getAnalysisPlan());
-          ps.setString(10, row.getDisseminationPlan());
-          ps.setString(11, row.getPriorAuth());
-          ps.setString(12, row.getDenialReason());
-          ps.setObject(13, row.getDateDenied(), Types.TIMESTAMP_WITH_TIMEZONE);
-          ps.setBoolean(14, row.isAllowSelfEdits());
-          if (ps instanceof OraclePreparedStatement)
-            ((OraclePreparedStatement)ps).registerReturnParameter(15, Types.BIGINT);
-          else if (ps instanceof DelegatingPreparedStatement)
-            ((OraclePreparedStatement)((DelegatingPreparedStatement) ps).getInnermostDelegate()).registerReturnParameter(15, Types.BIGINT);
+      try (Connection con = QueryUtil.acctDbConnection()) {
+        long endUserId = QueryUtil.performInsertWithIdGeneration(
+          SQL.Insert.EndUser,
+          () -> con,
+          DB.Column.EndUser.EndUserID,
+          new PsBuilder()
+            .setLong(row.getUserId())
+            .setString(row.getDatasetId())
+            .setShort(RestrictionLevelCache.getInstance()
+                .get(row.getRestrictionLevel()).orElseThrow())
+            .setShort(ApprovalStatusCache.getInstance()
+                .get(row.getApprovalStatus()).orElseThrow())
+            .setObject(row.getStartDate(), Types.DATE)
+            .setLong(row.getDuration())
+            .setString(row.getPurpose())
+            .setString(row.getResearchQuestion())
+            .setString(row.getAnalysisPlan())
+            .setString(row.getDisseminationPlan())
+            .setString(row.getPriorAuth())
+            .setString(row.getDenialReason())
+            .setObject(row.getDateDenied(), Types.TIMESTAMP_WITH_TIMEZONE)
+            .setBoolean(row.isAllowSelfEdits())
+            ::build
+        );
 
-          try (var rs = ps.executeQuery()) {
-            rs.next();
-            row.setEndUserID(rs.getLong(1));
-          }
-        }
+        row.setEndUserID(endUserId);
 
         // Insert history entry
         EndUserUtil.insertHistoryEvent(con, HistoryAction.CREATE, row, creatorID);

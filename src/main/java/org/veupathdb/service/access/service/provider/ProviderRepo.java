@@ -32,16 +32,16 @@ public class ProviderRepo
   public static class Insert
   {
     public static long newProvider(final PartialProviderRow row) throws Exception {
-      return new BasicPreparedReadQuery<>(
+      return QueryUtil.performInsertWithIdGeneration(
         SQL.Insert.Providers,
         QueryUtil::acctDbConnection,
-        SqlUtil.reqParser(SqlUtil::parseSingleLong),
+        DB.Column.Provider.ProviderId,
         new PsBuilder()
           .setLong(row.getUserId())
           .setBoolean(row.isManager())
           .setString(row.getDatasetId())
           ::build
-      ).execute().getValue();
+      );
     }
   }
 

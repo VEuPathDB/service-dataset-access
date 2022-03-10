@@ -9,6 +9,7 @@ import io.vulpine.lib.query.util.basic.BasicPreparedWriteQuery;
 import io.vulpine.lib.query.util.basic.BasicStatementReadQuery;
 import org.veupathdb.service.access.model.PartialStaffRow;
 import org.veupathdb.service.access.model.StaffRow;
+import org.veupathdb.service.access.repo.DB;
 import org.veupathdb.service.access.repo.SQL;
 import org.veupathdb.service.access.service.QueryUtil;
 import org.veupathdb.service.access.util.PsBuilder;
@@ -29,16 +30,16 @@ public class StaffRepo
 
   public interface Insert
   {
-    static int newStaff(final PartialStaffRow row) throws Exception {
-      return new BasicPreparedReadQuery<>(
+    static long newStaff(final PartialStaffRow row) throws Exception {
+      return QueryUtil.performInsertWithIdGeneration(
         SQL.Insert.Staff,
         QueryUtil.getInstance()::getAcctDbConnection,
-        SqlUtil.reqParser(SqlUtil::parseSingleInt),
+        DB.Column.Staff.StaffId,
         new PsBuilder()
           .setLong(row.getUserId())
           .setBoolean(row.isOwner())
           ::build
-      ).execute().getValue();
+      );
     }
   }
 
