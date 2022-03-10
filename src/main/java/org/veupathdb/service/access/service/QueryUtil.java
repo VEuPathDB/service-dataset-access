@@ -1,20 +1,14 @@
 package org.veupathdb.service.access.service;
 
-import io.vulpine.lib.query.util.ConnectionProvider;
+import io.vulpine.lib.jcfi.CheckedBiFunction;
+import io.vulpine.lib.jcfi.CheckedConsumer;
+import io.vulpine.lib.jcfi.CheckedFunction;
+import io.vulpine.lib.jcfi.CheckedSupplier;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
-
-import io.vulpine.lib.jcfi.CheckedBiFunction;
-import io.vulpine.lib.jcfi.CheckedFunction;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 import org.apache.logging.log4j.Logger;
-import org.gusdb.fgputil.functional.FunctionalInterfaces;
-import org.gusdb.fgputil.functional.FunctionalInterfaces.ConsumerWithException;
-import org.gusdb.fgputil.functional.FunctionalInterfaces.SupplierWithException;
 import org.veupathdb.lib.container.jaxrs.providers.LogProvider;
 import org.veupathdb.lib.container.jaxrs.utils.db.DbManager;
 
@@ -128,9 +122,9 @@ public class QueryUtil
 
   public static Long performInsertionWithIdGeneration(
       final String sql,
-      final SupplierWithException<Connection> connection,
+      final CheckedSupplier<Connection> connection,
       final String idColumnName,
-      final ConsumerWithException<PreparedStatement> statementPreparer) throws Exception {
+      final CheckedConsumer<PreparedStatement> statementPreparer) throws Exception {
     try (Connection conn = connection.get();
          PreparedStatement ps = conn.prepareStatement(sql, new String[]{ idColumnName })) {
       statementPreparer.accept(ps);
