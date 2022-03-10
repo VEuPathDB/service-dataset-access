@@ -32,13 +32,13 @@ public class StaffRepo
   {
     static long newStaff(final PartialStaffRow row) throws Exception {
       return QueryUtil.performInsertionWithIdGeneration(
-          SQL.Insert.Staff,
-          QueryUtil.getInstance()::getAcctDbConnection,
-          DB.Column.Staff.StaffId,
-          new PsBuilder()
-              .setLong(row.getUserId())
-              .setBoolean(row.isOwner())
-              ::build
+        SQL.Insert.Staff,
+        QueryUtil.getInstance()::getAcctDbConnection,
+        DB.Column.Staff.StaffId,
+        new PsBuilder()
+          .setLong(row.getUserId())
+          .setBoolean(row.isOwner())
+          ::build
       );
     }
   }
