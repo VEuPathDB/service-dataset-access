@@ -120,7 +120,7 @@ public class QueryUtil
     return getInstance().prepareSqlStatement(con, sql, returning);
   }
 
-  public static Long performInsertionWithIdGeneration(
+  public static Long performInsertWithIdGeneration(
       final String sql,
       final CheckedSupplier<Connection> connection,
       final String idColumnName,

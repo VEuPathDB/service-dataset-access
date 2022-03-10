@@ -32,7 +32,7 @@ public class ProviderRepo
   public static class Insert
   {
     public static long newProvider(final PartialProviderRow row) throws Exception {
-      return QueryUtil.performInsertionWithIdGeneration(
+      return QueryUtil.performInsertWithIdGeneration(
         SQL.Insert.Providers,
         QueryUtil::acctDbConnection,
         DB.Column.Provider.ProviderId,

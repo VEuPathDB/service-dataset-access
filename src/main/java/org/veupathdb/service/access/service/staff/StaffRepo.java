@@ -31,7 +31,7 @@ public class StaffRepo
   public interface Insert
   {
     static long newStaff(final PartialStaffRow row) throws Exception {
-      return QueryUtil.performInsertionWithIdGeneration(
+      return QueryUtil.performInsertWithIdGeneration(
         SQL.Insert.Staff,
         QueryUtil.getInstance()::getAcctDbConnection,
         DB.Column.Staff.StaffId,

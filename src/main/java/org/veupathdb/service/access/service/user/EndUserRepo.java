@@ -41,7 +41,7 @@ public class EndUserRepo
       log.trace("EndUserRepo$Insert#newEndUser(EndUserRow)");
 
       try (Connection con = QueryUtil.acctDbConnection()) {
-        long endUserId = QueryUtil.performInsertionWithIdGeneration(
+        long endUserId = QueryUtil.performInsertWithIdGeneration(
           SQL.Insert.EndUser,
           () -> con,
           DB.Column.EndUser.EndUserID,
