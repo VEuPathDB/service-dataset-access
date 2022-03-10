@@ -133,7 +133,7 @@ public class QueryUtil
         // only return the first ID
         try (ResultSet rs = ps.getGeneratedKeys()) {
           if (rs.next()) {
-            return rs.getLong(idColumnName);
+            return rs.getLong(1);
           }
           else throw new RuntimeException("1: No ID generated with name " + idColumnName + " via SQL: " + sql);
         }
