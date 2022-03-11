@@ -11,6 +11,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 import org.apache.logging.log4j.Logger;
+import org.gusdb.fgputil.FormatUtil;
 import org.veupathdb.lib.container.jaxrs.providers.LogProvider;
 import org.veupathdb.service.access.Main;
 import org.veupathdb.service.access.model.Dataset;
@@ -82,10 +83,11 @@ public class EmailService
       log.debug("Per configuration, email is disabled.");
       return;
     }
+
+    final var props = new Properties();
     try {
       final var util = EmailUtil.getInstance();
 
-      final var props = new Properties();
       props.put("mail.smtp.host", Main.config.getSmtpHost());
       props.put("mail.debug", String.valueOf(Main.config.isEmailDebug()));
 
@@ -110,7 +112,8 @@ public class EmailService
       Transport.send(message);
     }
     catch (Exception e) {
-      log.error("Failed to create and send email message", e);
+      log.error("Failed to create and send email message using config: " +
+          (props == null ? "???" : FormatUtil.prettyPrint(props, FormatUtil.Style.MULTI_LINE)), e);
       throw e;
     }
   }
