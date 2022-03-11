@@ -82,31 +82,37 @@ public class EmailService
       log.debug("Per configuration, email is disabled.");
       return;
     }
-    final var util = EmailUtil.getInstance();
+    try {
+      final var util = EmailUtil.getInstance();
 
-    final var props = new Properties();
-    props.put("mail.smtp.host", Main.config.getSmtpHost());
-    props.put("mail.debug", String.valueOf(Main.config.isEmailDebug()));
+      final var props = new Properties();
+      props.put("mail.smtp.host", Main.config.getSmtpHost());
+      props.put("mail.debug", String.valueOf(Main.config.isEmailDebug()));
 
-    final var session = Session.getInstance(props);
+      final var session = Session.getInstance(props);
 
-    final var message = util.prepMessage(session, mail);
+      final var message = util.prepMessage(session, mail);
 
-    message.setFrom(mail.getFrom());
-    message.setRecipients(MimeMessage.RecipientType.TO, util.toAddresses(mail.getTo()));
-    message.setRecipients(MimeMessage.RecipientType.CC, util.toAddresses(mail.getCc()));
-    message.setRecipients(MimeMessage.RecipientType.BCC, util.toAddresses(mail.getBcc()));
-    message.setReplyTo(util.toAddresses(new String[]{Main.config.getSupportEmail()}));
-    message.setSubject(mail.getSubject());
+      message.setFrom(mail.getFrom());
+      message.setRecipients(MimeMessage.RecipientType.TO, util.toAddresses(mail.getTo()));
+      message.setRecipients(MimeMessage.RecipientType.CC, util.toAddresses(mail.getCc()));
+      message.setRecipients(MimeMessage.RecipientType.BCC, util.toAddresses(mail.getBcc()));
+      message.setReplyTo(util.toAddresses(new String[]{ Main.config.getSupportEmail() }));
+      message.setSubject(mail.getSubject());
 
-    final var content = new MimeBodyPart();
-    content.setContent(mail.getBody(), "text/plain");
-    final var body = new MimeMultipart();
-    body.addBodyPart(content);
+      final var content = new MimeBodyPart();
+      content.setContent(mail.getBody(), "text/plain");
+      final var body = new MimeMultipart();
+      body.addBodyPart(content);
 
-    message.setContent(body);
+      message.setContent(body);
 
-    Transport.send(message);
+      Transport.send(message);
+    }
+    catch (Exception e) {
+      log.error("Failed to create and send email message", e);
+      throw e;
+    }
   }
 
   public static EmailService getInstance() {
