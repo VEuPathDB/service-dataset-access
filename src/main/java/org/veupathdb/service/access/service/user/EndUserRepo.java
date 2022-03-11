@@ -40,34 +40,34 @@ public class EndUserRepo
     static void newEndUser(final EndUserRow row, final long creatorID) throws Exception {
       log.trace("EndUserRepo$Insert#newEndUser(EndUserRow)");
 
-      try (Connection con = QueryUtil.acctDbConnection()) {
-        long endUserId = QueryUtil.performInsertWithIdGeneration(
-          SQL.Insert.EndUser,
-          () -> con,
-          DB.Column.EndUser.EndUserID,
-          new PsBuilder()
-            .setLong(row.getUserId())
-            .setString(row.getDatasetId())
-            .setShort(RestrictionLevelCache.getInstance()
-                .get(row.getRestrictionLevel()).orElseThrow())
-            .setShort(ApprovalStatusCache.getInstance()
-                .get(row.getApprovalStatus()).orElseThrow())
-            .setObject(row.getStartDate(), Types.DATE)
-            .setLong(row.getDuration())
-            .setString(row.getPurpose())
-            .setString(row.getResearchQuestion())
-            .setString(row.getAnalysisPlan())
-            .setString(row.getDisseminationPlan())
-            .setString(row.getPriorAuth())
-            .setString(row.getDenialReason())
-            .setObject(row.getDateDenied(), Types.TIMESTAMP_WITH_TIMEZONE)
-            .setBoolean(row.isAllowSelfEdits())
-            ::build
-        );
+      long endUserId = QueryUtil.performInsertWithIdGeneration(
+        SQL.Insert.EndUser,
+        QueryUtil::acctDbConnection,
+        DB.Column.EndUser.EndUserID,
+        new PsBuilder()
+          .setLong(row.getUserId())
+          .setString(row.getDatasetId())
+          .setShort(RestrictionLevelCache.getInstance()
+              .get(row.getRestrictionLevel()).orElseThrow())
+          .setShort(ApprovalStatusCache.getInstance()
+              .get(row.getApprovalStatus()).orElseThrow())
+          .setObject(row.getStartDate(), Types.DATE)
+          .setLong(row.getDuration())
+          .setString(row.getPurpose())
+          .setString(row.getResearchQuestion())
+          .setString(row.getAnalysisPlan())
+          .setString(row.getDisseminationPlan())
+          .setString(row.getPriorAuth())
+          .setString(row.getDenialReason())
+          .setObject(row.getDateDenied(), Types.TIMESTAMP_WITH_TIMEZONE)
+          .setBoolean(row.isAllowSelfEdits())
+          ::build
+      );
 
-        row.setEndUserID(endUserId);
+      row.setEndUserID(endUserId);
 
         // Insert history entry
+      try (Connection con = QueryUtil.acctDbConnection()) {
         EndUserUtil.insertHistoryEvent(con, HistoryAction.CREATE, row, creatorID);
       }
     }
