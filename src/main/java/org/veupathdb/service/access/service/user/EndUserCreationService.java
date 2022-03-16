@@ -32,7 +32,7 @@ public class EndUserCreationService
 
   private static EndUserCreationService instance;
 
-  private final Logger log = LogProvider.logger(EndUserCreationService.class);
+  private static final Logger log = LogProvider.logger(EndUserCreationService.class);
 
   EndUserCreationService() {
   }
@@ -77,6 +77,7 @@ public class EndUserCreationService
 
         // User email was unrecognized.  Send an email and end here.
         if (optId.isEmpty()) {
+          log.info("Sending email to " + body.getEmail() + " telling user to register");
           EmailService.getInstance().sendEndUserRegistrationEmail(body.getEmail(), optDs.get());
 
           final var out = new EndUserCreateResponseImpl();

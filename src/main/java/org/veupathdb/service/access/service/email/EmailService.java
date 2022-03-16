@@ -22,19 +22,16 @@ public class EmailService
 {
   private static EmailService instance;
 
-  private final Logger log;
-
-  public EmailService() {
-    log = LogProvider.logger(getClass());
-  }
+  private static final Logger log = LogProvider.logger(EmailService.class);
 
   public void sendEndUserRegistrationEmail(final String address, final Dataset dataset)
   throws Exception {
-    log.trace("EmailService#sendEndUserRegistrationEmail(String, Dataset)");
+    log.info("EmailService#sendEndUserRegistrationEmail(String, Dataset)");
 
     final var template = Const.EndUserTemplate;
     final var util     = EmailUtil.getInstance();
 
+    log.info("Sending email");
     sendEmail(new Email()
       .setSubject(util.populateTemplate(template.getSubject(), dataset))
       .setBody(util.populateTemplate(template.getBody(), dataset))
@@ -78,9 +75,9 @@ public class EmailService
   }
 
   public void sendEmail(final Email mail) throws Exception {
-    log.trace("EmailService#sendEmail(Email)");
+    log.info("EmailService#sendEmail(Email)");
     if (!Main.config.isEmailEnabled()) {
-      log.debug("Per configuration, email is disabled.");
+      log.info("Per configuration, email is disabled.");
       return;
     }
 
@@ -109,6 +106,7 @@ public class EmailService
 
       message.setContent(body);
 
+      log.info("java mail should be sending message now! " + mail.getTo());
       Transport.send(message);
     }
     catch (Exception e) {
