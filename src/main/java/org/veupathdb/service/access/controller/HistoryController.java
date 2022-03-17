@@ -1,8 +1,8 @@
 package org.veupathdb.service.access.controller;
 
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Request;
 
+import org.glassfish.jersey.server.ContainerRequest;
 import org.veupathdb.lib.container.jaxrs.server.annotations.Authenticated;
 import org.veupathdb.service.access.generated.resources.History;
 import org.veupathdb.service.access.service.history.HistoryService;
@@ -11,7 +11,7 @@ import org.veupathdb.service.access.service.history.HistoryService;
 public class HistoryController implements History
 {
   @Context
-  private Request _request;
+  ContainerRequest _request;
 
   @Override
   public GetHistoryResponse getHistory(Long limit, Long offset) {

@@ -5,9 +5,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Request;
 
 import org.apache.logging.log4j.Logger;
+import org.glassfish.jersey.server.ContainerRequest;
 import org.veupathdb.lib.container.jaxrs.errors.UnprocessableEntityException;
 import org.veupathdb.lib.container.jaxrs.providers.LogProvider;
 import org.veupathdb.lib.container.jaxrs.providers.UserProvider;
@@ -52,7 +52,7 @@ public class EndUserCreationService
 
   public EndUserCreateResponse handleUserCreation(
     final EndUserCreateRequest body,
-    final Request request
+    final ContainerRequest request
   ) {
     final var requester = UserProvider.lookupUser(request)
       .orElseThrow(() -> new NotAuthorizedException("User must be logged in."));
@@ -77,7 +77,7 @@ public class EndUserCreationService
 
         // User email was unrecognized.  Send an email and end here.
         if (optId.isEmpty()) {
-          log.info("Sending email to " + body.getEmail() + " telling user to register");
+          log.info("Will send email to " + body.getEmail() + " telling user to register");
           EmailService.getInstance().sendEndUserRegistrationEmail(body.getEmail(), optDs.get());
 
           final var out = new EndUserCreateResponseImpl();

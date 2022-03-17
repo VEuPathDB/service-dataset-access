@@ -4,9 +4,9 @@ import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Request;
 
 import org.apache.logging.log4j.Logger;
+import org.glassfish.jersey.server.ContainerRequest;
 import org.veupathdb.lib.container.jaxrs.providers.LogProvider;
 import org.veupathdb.lib.container.jaxrs.providers.UserProvider;
 import org.veupathdb.service.access.generated.model.ApprovalStatus;
@@ -55,7 +55,7 @@ public class EndUserSearchService
     final Long limit,
     final Long offset,
     final ApprovalStatus approval,
-    final Request request
+    final ContainerRequest request
     ) {
     log.trace("EndUserSearchService#findEndUsers(String, int, int, ApprovalStatus)");
 

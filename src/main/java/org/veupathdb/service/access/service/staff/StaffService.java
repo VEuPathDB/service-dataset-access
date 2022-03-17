@@ -8,8 +8,8 @@ import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Request;
 import org.apache.logging.log4j.Logger;
+import org.glassfish.jersey.server.ContainerRequest;
 import org.veupathdb.lib.container.jaxrs.providers.LogProvider;
 import org.veupathdb.lib.container.jaxrs.providers.UserProvider;
 import org.veupathdb.service.access.generated.model.NewStaffRequest;
@@ -40,7 +40,7 @@ public class StaffService {
    *
    * @return whether or not the current user is a site owner.
    */
-  public boolean isUserOwner(final Request req) {
+  public boolean isUserOwner(final ContainerRequest req) {
     log.trace("StaffService#isUserOwner(Request)");
 
     return isUserOwner(UserProvider.lookupUser(req)
@@ -48,15 +48,15 @@ public class StaffService {
       .getUserID());
   }
 
-  public static boolean userIsOwner(final Request req) {
+  public static boolean userIsOwner(final ContainerRequest req) {
     return getInstance().isUserOwner(req);
   }
 
-  public static boolean userIsStaff(final Request req) {
+  public static boolean userIsStaff(final ContainerRequest req) {
     return getInstance().isUserStaff(req);
   }
 
-  public boolean isUserStaff(final Request req) {
+  public boolean isUserStaff(final ContainerRequest req) {
     log.trace("StaffService#isUserStaff(Request)");
 
     return isUserStaff(UserProvider.lookupUser(req)

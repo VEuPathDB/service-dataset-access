@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Request;
 
+import org.glassfish.jersey.server.ContainerRequest;
 import org.veupathdb.lib.container.jaxrs.server.annotations.Authenticated;
 import org.veupathdb.service.access.generated.model.NewStaffRequest;
 import org.veupathdb.service.access.generated.model.NewStaffResponseImpl;
@@ -18,7 +18,7 @@ import org.veupathdb.service.access.util.Keys;
 public class StaffController implements Staff
 {
   @Context
-  private Request _request;
+  ContainerRequest _request;
 
   @Override
   public GetStaffResponse getStaff(final Long limit, final Long offset) {

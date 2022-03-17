@@ -2,15 +2,22 @@ package org.veupathdb.service.access.service.provider;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Request;
-
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.ForbiddenException;
+import javax.ws.rs.InternalServerErrorException;
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.WebApplicationException;
 import org.apache.logging.log4j.Logger;
-import org.gusdb.fgputil.accountdb.UserProfile;
+import org.glassfish.jersey.server.ContainerRequest;
 import org.veupathdb.lib.container.jaxrs.model.User;
 import org.veupathdb.lib.container.jaxrs.providers.LogProvider;
 import org.veupathdb.lib.container.jaxrs.providers.UserProvider;
-import org.veupathdb.service.access.generated.model.*;
+import org.veupathdb.service.access.generated.model.DatasetProviderCreateRequest;
+import org.veupathdb.service.access.generated.model.DatasetProviderCreateResponse;
+import org.veupathdb.service.access.generated.model.DatasetProviderCreateResponseImpl;
+import org.veupathdb.service.access.generated.model.DatasetProviderList;
+import org.veupathdb.service.access.generated.model.DatasetProviderListImpl;
+import org.veupathdb.service.access.generated.model.DatasetProviderPatch;
 import org.veupathdb.service.access.model.PartialProviderRow;
 import org.veupathdb.service.access.model.ProviderRow;
 import org.veupathdb.service.access.service.dataset.DatasetRepo;
@@ -166,7 +173,7 @@ public class ProviderService
     return out;
   }
 
-  public boolean isUserManager(final Request req, final String datasetId) {
+  public boolean isUserManager(final ContainerRequest req, final String datasetId) {
     log.trace("ProviderService#userIsManager(Request, String)");
 
     return isUserManager(UserProvider.lookupUser(req)
@@ -278,7 +285,7 @@ public class ProviderService
     return getInstance().getProviderByUserId(userId);
   }
 
-  public static boolean userIsManager(final Request req, final String datasetId) {
+  public static boolean userIsManager(final ContainerRequest req, final String datasetId) {
     return getInstance().isUserManager(req, datasetId);
   }
 

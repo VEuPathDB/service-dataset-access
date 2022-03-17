@@ -75,9 +75,9 @@ public class EmailService
   }
 
   public void sendEmail(final Email mail) throws Exception {
-    log.info("EmailService#sendEmail(Email)");
+    log.trace("EmailService#sendEmail(Email)");
     if (!Main.config.isEmailEnabled()) {
-      log.info("Per configuration, email is disabled.");
+      log.warn("Per configuration, email is disabled.");
       return;
     }
 
@@ -106,7 +106,6 @@ public class EmailService
 
       message.setContent(body);
 
-      log.info("java mail should be sending message now! " + mail.getTo());
       Transport.send(message);
     }
     catch (Exception e) {

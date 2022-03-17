@@ -1,8 +1,8 @@
 package org.veupathdb.service.access.controller;
 
 import javax.ws.rs.InternalServerErrorException;
-import javax.ws.rs.core.Request;
 
+import org.glassfish.jersey.server.ContainerRequest;
 import org.veupathdb.lib.container.jaxrs.model.User;
 import org.veupathdb.lib.container.jaxrs.providers.UserProvider;
 
@@ -17,12 +17,12 @@ public class Util
     return instance;
   }
 
-  public User mustGetUser(final Request req) {
+  public User mustGetUser(final ContainerRequest req) {
     return UserProvider.lookupUser(req)
       .orElseThrow(InternalServerErrorException::new);
   }
 
-  public static User requireUser(final Request req) {
+  public static User requireUser(final ContainerRequest req) {
     return getInstance().mustGetUser(req);
   }
 }

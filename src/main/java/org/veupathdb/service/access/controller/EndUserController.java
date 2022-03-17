@@ -5,15 +5,18 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Request;
-
+import org.glassfish.jersey.server.ContainerRequest;
 import org.veupathdb.lib.container.jaxrs.server.annotations.Authenticated;
 import org.veupathdb.service.access.generated.model.ApprovalStatus;
 import org.veupathdb.service.access.generated.model.EndUserCreateRequest;
 import org.veupathdb.service.access.generated.model.EndUserPatch;
 import org.veupathdb.service.access.generated.resources.DatasetEndUsers;
 import org.veupathdb.service.access.service.provider.ProviderService;
-import org.veupathdb.service.access.service.user.*;
+import org.veupathdb.service.access.service.user.EndUserCreationService;
+import org.veupathdb.service.access.service.user.EndUserDeleteService;
+import org.veupathdb.service.access.service.user.EndUserLookupService;
+import org.veupathdb.service.access.service.user.EndUserPatchService;
+import org.veupathdb.service.access.service.user.EndUserSearchService;
 
 import static org.veupathdb.service.access.service.provider.ProviderService.userIsManager;
 import static org.veupathdb.service.access.service.staff.StaffService.userIsOwner;
@@ -22,7 +25,7 @@ import static org.veupathdb.service.access.service.staff.StaffService.userIsOwne
 public class EndUserController implements DatasetEndUsers
 {
   @Context
-  Request _request;
+  ContainerRequest _request;
 
   @Override
   public GetDatasetEndUsersResponse getDatasetEndUsers(

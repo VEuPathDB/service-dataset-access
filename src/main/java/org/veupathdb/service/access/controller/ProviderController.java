@@ -4,8 +4,8 @@ import java.util.List;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Request;
 
+import org.glassfish.jersey.server.ContainerRequest;
 import org.veupathdb.lib.container.jaxrs.server.annotations.Authenticated;
 import org.veupathdb.service.access.generated.model.DatasetProviderCreateRequest;
 import org.veupathdb.service.access.generated.model.DatasetProviderPatch;
@@ -19,7 +19,7 @@ import static org.veupathdb.service.access.service.staff.StaffService.userIsOwne
 public class ProviderController implements DatasetProviders
 {
   @Context
-  private Request _request;
+  ContainerRequest _request;
 
   @Override
   public GetDatasetProvidersResponse getDatasetProviders(

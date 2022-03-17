@@ -4,8 +4,7 @@ import java.util.List;
 import java.util.Map;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Request;
-
+import org.glassfish.jersey.server.ContainerRequest;
 import org.gusdb.fgputil.Wrapper;
 import org.veupathdb.lib.container.jaxrs.model.User;
 import org.veupathdb.service.access.controller.Util;
@@ -16,7 +15,6 @@ import org.veupathdb.service.access.generated.model.DatasetPermissionEntryImpl;
 import org.veupathdb.service.access.generated.model.DatasetPermissionLevel;
 import org.veupathdb.service.access.generated.model.PermissionsGetResponse;
 import org.veupathdb.service.access.generated.model.PermissionsGetResponseImpl;
-import org.veupathdb.service.access.model.DatasetAccessLevel;
 import org.veupathdb.service.access.model.DatasetProps;
 import org.veupathdb.service.access.service.dataset.DatasetRepo;
 import org.veupathdb.service.access.service.provider.ProviderRepo;
@@ -27,7 +25,7 @@ public class PermissionService
 {
   private static PermissionService instance;
 
-  public PermissionsGetResponse getUserPermissions(Request request) {
+  public PermissionsGetResponse getUserPermissions(ContainerRequest request) {
     return getUserPermissions(Util.requireUser(request));
   }
 
