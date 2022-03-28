@@ -4,7 +4,7 @@ import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import javax.ws.rs.*;
+import jakarta.ws.rs.*;
 
 import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.server.ContainerRequest;

@@ -1,6 +1,6 @@
 package org.veupathdb.service.access.controller;
 
-import javax.ws.rs.core.Context;
+import jakarta.ws.rs.core.Context;
 
 import org.glassfish.jersey.server.ContainerRequest;
 import org.veupathdb.lib.container.jaxrs.server.annotations.Authenticated;

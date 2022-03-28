@@ -84,6 +84,7 @@ gen-jaxrs: api.raml merge-raml
 	@$(BIN_DIR)/generate-jaxrs.sh $(GEN_PACKAGE)
 	@$(BIN_DIR)/generate-jaxrs-streams.sh $(GEN_PACKAGE)
 	@$(BIN_DIR)/generate-jaxrs-postgen-mods.sh $(GEN_PACKAGE)
+	@grep -Rl javax src | xargs -I{} sed -i 's/javax.ws/jakarta.ws/g' {}
 
 gen-docs: api.raml merge-raml
 	@$(BIN_DIR)/generate-docs.sh
