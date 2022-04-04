@@ -3,8 +3,8 @@ package org.veupathdb.service.access.service.user;
 import java.util.Collection;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.ForbiddenException;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.ForbiddenException;
 
 import org.apache.logging.log4j.Logger;
 import org.veupathdb.lib.container.jaxrs.providers.LogProvider;

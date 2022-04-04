@@ -20,12 +20,15 @@ types:
       data:
         type: DatasetProvider[]
       rows:
+        format: int64
         type: integer
         minimum: 0
       offset:
+        format: int64
         type: integer
         minimum: 0
       total:
+        format: int64
         type: integer
         minimum: 0
     additionalProperties: false
@@ -60,6 +63,7 @@ types:
           containing the primary key value of the newly created provider record.
       providerId?:
         type: integer
+        format: int64
         minimum: 1
     additionalProperties: false
 

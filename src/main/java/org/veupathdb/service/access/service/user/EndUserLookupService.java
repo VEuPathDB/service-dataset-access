@@ -1,9 +1,9 @@
 package org.veupathdb.service.access.service.user;
 
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.InternalServerErrorException;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.WebApplicationException;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.InternalServerErrorException;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.WebApplicationException;
 
 import org.apache.logging.log4j.Logger;
 import org.veupathdb.lib.container.jaxrs.providers.LogProvider;

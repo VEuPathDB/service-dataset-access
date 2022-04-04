@@ -12,8 +12,12 @@ types:
     type: object
     additionalProperties: false
     properties:
-      rows: integer
-      offset: integer
+      rows:
+        format: int64
+        type: integer
+      offset:
+        format: int64
+        type: integer
 
   HistoryResult:
     type: object

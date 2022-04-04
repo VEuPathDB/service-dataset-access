@@ -1,9 +1,9 @@
 package org.veupathdb.service.access.service.user;
 
-import javax.ws.rs.ForbiddenException;
-import javax.ws.rs.InternalServerErrorException;
-import javax.ws.rs.NotAuthorizedException;
-import javax.ws.rs.WebApplicationException;
+import jakarta.ws.rs.ForbiddenException;
+import jakarta.ws.rs.InternalServerErrorException;
+import jakarta.ws.rs.NotAuthorizedException;
+import jakarta.ws.rs.WebApplicationException;
 
 import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.server.ContainerRequest;

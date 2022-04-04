@@ -1,6 +1,6 @@
 package org.veupathdb.service.access.controller;
 
-import javax.ws.rs.InternalServerErrorException;
+import jakarta.ws.rs.InternalServerErrorException;
 
 import org.glassfish.jersey.server.ContainerRequest;
 import org.veupathdb.lib.container.jaxrs.model.User;

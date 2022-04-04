@@ -65,7 +65,7 @@ install-dev-env:
 	else \
 		cd .tools && git pull && cd ..; \
 	fi
-	cd .tools && git checkout int-to-long && cd ..
+	cd .tools && git checkout jersey-3 && cd ..
 	@$(BIN_DIR)/check-env.sh
 	@$(BIN_DIR)/install-fgputil.sh
 	@$(BIN_DIR)/install-oracle.sh
@@ -84,6 +84,7 @@ gen-jaxrs: api.raml merge-raml
 	@$(BIN_DIR)/generate-jaxrs.sh $(GEN_PACKAGE)
 	@$(BIN_DIR)/generate-jaxrs-streams.sh $(GEN_PACKAGE)
 	@$(BIN_DIR)/generate-jaxrs-postgen-mods.sh $(GEN_PACKAGE)
+	@grep -Rl javax src | xargs -I{} sed -i 's/javax.ws/jakarta.ws/g' {}
 
 gen-docs: api.raml merge-raml
 	@$(BIN_DIR)/generate-docs.sh

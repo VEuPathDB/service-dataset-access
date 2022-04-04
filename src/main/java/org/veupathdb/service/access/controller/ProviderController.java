@@ -1,9 +1,9 @@
 package org.veupathdb.service.access.controller;
 
 import java.util.List;
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.ForbiddenException;
-import javax.ws.rs.core.Context;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.ForbiddenException;
+import jakarta.ws.rs.core.Context;
 
 import org.glassfish.jersey.server.ContainerRequest;
 import org.veupathdb.lib.container.jaxrs.server.annotations.Authenticated;
