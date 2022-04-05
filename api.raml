@@ -28,11 +28,13 @@ securitySchemes:
     queryParameters:
       limit?:
         type: integer
+        format: int64
         minimum: 0
         default: 1000
         description: Number of rows to include in the result
       offset?:
         type: integer
+        format: int64
         minimum: 0
         default: 0
         description: Number of rows to skip from the result
@@ -74,11 +76,13 @@ securitySchemes:
         required: true
       limit?:
         type: integer
+        format: int64
         minimum: 0
         default: 1000
         description: Number of rows to include in the result
       offset?:
         type: integer
+        format: int64
         minimum: 0
         default: 0
         description: Number of rows to skip from the result
@@ -123,12 +127,14 @@ securitySchemes:
         displayName: Result Limit
         description: Number of rows to include in the result
         type: integer
+        format: int64
         minimum: 0
         default: 100
       offset?:
         displayName: Result Offset
         description: Number of rows to skip from the result
         type: integer
+        format: int64
         minimum: 0
         default: 0
       approval?:
@@ -295,11 +301,13 @@ securitySchemes:
     queryParameters:
       limit:
         type: integer
+        format: int64
         minimum: 1
         maximum: 100
         default: 100
       offset:
         type: integer
+        format: int64
         minimum: 0
         default: 0
     responses:

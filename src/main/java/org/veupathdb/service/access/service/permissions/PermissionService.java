@@ -2,8 +2,8 @@ package org.veupathdb.service.access.service.permissions;
 
 import java.util.List;
 import java.util.Map;
-import javax.ws.rs.InternalServerErrorException;
-import javax.ws.rs.WebApplicationException;
+import jakarta.ws.rs.InternalServerErrorException;
+import jakarta.ws.rs.WebApplicationException;
 import org.glassfish.jersey.server.ContainerRequest;
 import org.gusdb.fgputil.Wrapper;
 import org.veupathdb.lib.container.jaxrs.model.User;
