@@ -57,6 +57,7 @@ public class UserDatasetIsaStudies {
 
     permEntry.setStudyId(studyId);
     permEntry.setSha1Hash(""); // FIXME: Not sure where to get this for user dataset studies
+    permEntry.setIsUserStudy(true);
 
     // set permission type for this dataset
     permEntry.setType(isOwner ?
