@@ -56,7 +56,7 @@ public class UserDatasetIsaStudies {
     DatasetPermissionEntry permEntry = new DatasetPermissionEntryImpl();
 
     permEntry.setStudyId(studyId);
-    permEntry.setSha1Hash(""); // FIXME: Not sure where to get this for user dataset studies
+    permEntry.setSha1Hash(""); // not provided or needed for user dataset studies
     permEntry.setIsUserStudy(true);
 
     // set permission type for this dataset
@@ -64,18 +64,14 @@ public class UserDatasetIsaStudies {
         DatasetPermissionLevel.PROVIDER :
         DatasetPermissionLevel.ENDUSER);
 
-    permEntry.setIsManager(isOwner); // FIXME: Correct?  Maybe false all the time for user dataset studies
+    permEntry.setIsManager(isOwner);
 
     // if study is owned by or has been shared with a user, full access is granted
     ActionList actions = new ActionListImpl();
     actions.setStudyMetadata(true);
-
-    // controls search, visualizations, small results
     actions.setSubsetting(true);
     actions.setVisualizations(true);
     actions.setResultsFirstPage(true);
-
-    // controls access to full dataset, downloads
     actions.setResultsAll(true);
 
     permEntry.setActionAuthorization(actions);
