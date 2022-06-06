@@ -16,6 +16,7 @@ import org.veupathdb.service.access.generated.model.DatasetPermissionLevel;
 import org.veupathdb.service.access.generated.model.PermissionsGetResponse;
 import org.veupathdb.service.access.generated.model.PermissionsGetResponseImpl;
 import org.veupathdb.service.access.model.DatasetProps;
+import org.veupathdb.service.access.model.UserDatasetIsaStudies;
 import org.veupathdb.service.access.service.dataset.DatasetRepo;
 import org.veupathdb.service.access.service.provider.ProviderRepo;
 import org.veupathdb.service.access.service.staff.StaffRepo;
@@ -34,16 +35,17 @@ public class PermissionService
 
     try {
       Wrapper<Boolean> grantAll = new Wrapper<>(false);
+
+      // check if current user is staff and set outgoing perms accordingly
       StaffRepo.Select.byUserId(user.getUserID())
         .ifPresent(s -> {
+          // all staff get access to all studies
+          grantAll.set(true);
+          // assign staff role
+          out.setIsStaff(true);
           if (s.isOwner()) {
-            grantAll.set(true);
+            // staff/owner is essentially a superuser
             out.setIsOwner(true);
-            out.setIsStaff(true);
-          }
-          else {
-            grantAll.set(true);
-            out.setIsStaff(true);
           }
         });
 
@@ -56,8 +58,14 @@ public class PermissionService
       // list of datasetIds user has approved access for
       List<String> approvedStudiesList = EndUserRepo.Select.datasets(user.getUserID());
 
+      // assign specific permissions on each dataset for this user
+      PermissionMap datasetPerms = getPermissionMap(grantAll.get(), datasetProps, providerInfoMap, approvedStudiesList);
+
+      // supplement official studies with studies from user datasets
+      datasetPerms.putAll(UserDatasetIsaStudies.getUserDatasetPermissions(user.getUserID()));
+
       // set permission map on permissions object
-      out.setPerDataset(getPermissionMap(grantAll.get(), datasetProps, providerInfoMap, approvedStudiesList));
+      out.setPerDataset(datasetPerms);
 
       return out;
     }
