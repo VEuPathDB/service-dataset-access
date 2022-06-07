@@ -10,6 +10,8 @@ import java.util.Map;
 
 public class UserDatasetIsaStudies {
 
+  private static final String USER_DATASET_SCHEMA = "apidbuserdatasets.";
+
   private static final String STUDY_ID_COL = "study_id";
   private static final String IS_OWNER_COL = "is_owner";
 
@@ -19,14 +21,15 @@ public class UserDatasetIsaStudies {
       "  dataset.is_owner as " + IS_OWNER_COL + " " +
       "from ( " +
       "    select user_dataset_id, 1 as is_owner " +
-      "    from apidbuserdatasets.userdatasetowner " +
+      "    from " + USER_DATASET_SCHEMA + "userdatasetowner " +
       "    where user_id = ? " +
       "    union " +
       "    select user_dataset_id, 0 as is_owner " +
-      "    from apidbuserdatasets.userdatasetsharedwith " +
+      "    from " + USER_DATASET_SCHEMA + "userdatasetsharedwith " +
       "    where recipient_user_id = ? " +
-      ") dataset, eda_ud.studydataset studyds " +
-      "where studyds.user_dataset_id = dataset.user_dataset_id";
+      ") dataset, " + USER_DATASET_SCHEMA + "datasetattributes studyds " +
+      "where " +
+      "  studyds.user_dataset_id = dataset.user_dataset_id";
 
   private static Object[] userStudySqlParams(long userId) { return new Object[]{ userId, userId }; }
   private static final Integer[] USER_STUDY_SQL_PARAM_TYPES = new Integer[]{ Types.BIGINT, Types.BIGINT };
