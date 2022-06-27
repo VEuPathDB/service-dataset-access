@@ -12,11 +12,13 @@ public class UserDatasetIsaStudies {
 
   private static final String USER_DATASET_SCHEMA = "apidbuserdatasets.";
 
+  private static final String DATASET_ID_COL = "dataset_id";
   private static final String STUDY_ID_COL = "study_id";
   private static final String IS_OWNER_COL = "is_owner";
 
   private static final String USER_STUDY_SQL =
       "select " +
+      "  studyds.dataset_stable_id as " + DATASET_ID_COL + ", " +
       "  studyds.study_stable_id as " + STUDY_ID_COL + ", " +
       "  dataset.is_owner as " + IS_OWNER_COL + " " +
       "from ( " +
@@ -46,9 +48,10 @@ public class UserDatasetIsaStudies {
       .executeQuery(userStudySqlParams(userId), USER_STUDY_SQL_PARAM_TYPES, rs -> {
         Map<String, DatasetPermissionEntry> userStudies = new HashMap<>();
         while (rs.next()) {
+          String datasetId = rs.getString(DATASET_ID_COL);
           String studyId = rs.getString(STUDY_ID_COL);
           boolean isOwner = rs.getBoolean(IS_OWNER_COL);
-          userStudies.put(studyId, createDatasetPermissionEntry(studyId, isOwner));
+          userStudies.put(datasetId, createDatasetPermissionEntry(studyId, isOwner));
         }
         return userStudies;
       });
