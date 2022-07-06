@@ -7,85 +7,6 @@
 ################################################################################
 
 types:
-  HistoryResponse:
-    type: object
-    additionalProperties: false
-    properties:
-      meta: HistoryMeta
-      results: HistoryResult[]
-  HistoryMeta:
-    type: object
-    additionalProperties: false
-    properties:
-      rows:
-        type: integer
-        format: int64
-      offset:
-        type: integer
-        format: int64
-  HistoryResult:
-    type: object
-    additionalProperties: false
-    properties:
-      cause: HistoryCause
-      row: HistoryRow
-  HistoryCause:
-    type: object
-    additionalProperties: false
-    properties:
-      user: HistoryUser
-      action:
-        type: string
-        enum:
-          - CREATE
-          - UPDATE
-          - DELETE
-      timestamp: datetime-only
-  HistoryUser:
-    type: object
-    additionalProperties: false
-    properties:
-      userID:
-        type: integer
-        format: int64
-      firstName: string
-      lastName: string
-      email: string
-      organization: string
-  HistoryRow:
-    type: object
-    additionalProperties: false
-    properties:
-      endUserID:
-        type: integer
-        format: int64
-      user: HistoryUser
-      datasetPresenterID: string
-      restrictionLevel:
-        type: string
-        enum:
-          - PUBLIC
-          - PRERELEASE
-          - PROTECTED
-          - CONTROLLED
-          - PRIVATE
-      approvalStatus:
-        type: string
-        enum:
-          - APPROVED
-          - REQUESTED
-          - DENIED
-      startDate: datetime-only
-      duration:
-        type: integer
-        format: int64
-      purpose: string
-      researchQuestion: string
-      analysisPlan: string
-      priorAuth: string
-      denialReason: string
-      dateDenied: datetime-only
-      allowSelfEdits: boolean
   PermissionsGetResponse:
     type: object
     additionalProperties: false
@@ -415,4 +336,83 @@ types:
         type: string
         pattern: ^/isManager$
       value: boolean
+  HistoryResponse:
+    type: object
+    additionalProperties: false
+    properties:
+      meta: HistoryMeta
+      results: HistoryResult[]
+  HistoryMeta:
+    type: object
+    additionalProperties: false
+    properties:
+      rows:
+        type: integer
+        format: int64
+      offset:
+        type: integer
+        format: int64
+  HistoryResult:
+    type: object
+    additionalProperties: false
+    properties:
+      cause: HistoryCause
+      row: HistoryRow
+  HistoryCause:
+    type: object
+    additionalProperties: false
+    properties:
+      user: HistoryUser
+      action:
+        type: string
+        enum:
+          - CREATE
+          - UPDATE
+          - DELETE
+      timestamp: datetime-only
+  HistoryUser:
+    type: object
+    additionalProperties: false
+    properties:
+      userID:
+        type: integer
+        format: int64
+      firstName: string
+      lastName: string
+      email: string
+      organization: string
+  HistoryRow:
+    type: object
+    additionalProperties: false
+    properties:
+      endUserID:
+        type: integer
+        format: int64
+      user: HistoryUser
+      datasetPresenterID: string
+      restrictionLevel:
+        type: string
+        enum:
+          - PUBLIC
+          - PRERELEASE
+          - PROTECTED
+          - CONTROLLED
+          - PRIVATE
+      approvalStatus:
+        type: string
+        enum:
+          - APPROVED
+          - REQUESTED
+          - DENIED
+      startDate: datetime-only
+      duration:
+        type: integer
+        format: int64
+      purpose: string
+      researchQuestion: string
+      analysisPlan: string
+      priorAuth: string
+      denialReason: string
+      dateDenied: datetime-only
+      allowSelfEdits: boolean
 
