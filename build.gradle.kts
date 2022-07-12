@@ -88,7 +88,7 @@ repositories {
 //
 
 // versions
-val coreLib       = "6.7.4"         // Container core lib version
+val coreLib       = "6.8.0"         // Container core lib version
 val fgputil       = "2.7.1-jakarta" // FgpUtil version
 
 val jersey        = "3.0.4"       // Jersey/JaxRS version
