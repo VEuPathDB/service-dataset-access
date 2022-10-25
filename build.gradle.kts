@@ -2,7 +2,7 @@ import org.veupathdb.lib.gradle.container.util.Logger.Level
 
 plugins {
   java
-  id("org.veupathdb.lib.gradle.container.container-utils") version "4.0.0"
+  id("org.veupathdb.lib.gradle.container.container-utils") version "4.5.2"
   id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
@@ -88,14 +88,9 @@ repositories {
 //
 
 // versions
-val coreLib       = "6.8.0"         // Container core lib version
-val fgputil       = "2.7.1-jakarta" // FgpUtil version
+val coreLib       = "6.11.0"        // Container core lib version
+val fgputil       = "2.8.0-jakarta" // FgpUtil version
 
-val jersey        = "3.0.4"       // Jersey/JaxRS version
-val jackson       = "2.13.3"      // FasterXML Jackson version
-val junit         = "5.8.2"       // JUnit version
-val log4j         = "2.17.2"      // Log4J version
-val metrics       = "0.15.0"      // Prometheus lib version
 
 // ensures changing modules are never cached
 configurations.all {
@@ -114,37 +109,37 @@ dependencies {
   implementation("org.gusdb:fgputil-web:${fgputil}")
 
   // Jersey
-  implementation("org.glassfish.jersey.core:jersey-server:${jersey}")
+  implementation("org.glassfish.jersey.core:jersey-server:3.0.8")
 
   // Jackson
-  implementation("com.fasterxml.jackson.core:jackson-databind:${jackson}")
-  implementation("com.fasterxml.jackson.core:jackson-annotations:${jackson}")
-  implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jackson}")
+  implementation("com.fasterxml.jackson.core:jackson-databind:2.13.4.2")
+  implementation("com.fasterxml.jackson.core:jackson-annotations:2.13.4")
+  implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.4")
 
   // Log4J
-  implementation("org.apache.logging.log4j:log4j-api:${log4j}")
-  implementation("org.apache.logging.log4j:log4j-core:${log4j}")
+  implementation("org.apache.logging.log4j:log4j-api:2.19.0")
+  implementation("org.apache.logging.log4j:log4j-core:2.19.0")
 
   // Metrics
-  implementation("io.prometheus:simpleclient:${metrics}")
-  implementation("io.prometheus:simpleclient_common:${metrics}")
+  implementation("io.prometheus:simpleclient:0.16.0")
+  implementation("io.prometheus:simpleclient_common:0.16.0")
   implementation("org.veupathdb.lib:lib-prometheus-stats:1.1.0")
 
   // Utils
   implementation("io.vulpine.lib:Jackfish:1.1.0")
   implementation("com.devskiller.friendly-id:friendly-id:1.1.0")
   implementation("io.vulpine.lib:sql-import:0.2.1")
-  implementation("io.vulpine.lib:lib-query-util:2.0.2")
+  implementation("io.vulpine.lib:lib-query-util:2.1.0")
   implementation("javax.mail", "mail", "1.5.0-b01")
   implementation("org.antlr", "ST4", "4.3.1")
-  implementation("info.picocli:picocli:4.5.1")
-  annotationProcessor("info.picocli:picocli-codegen:4.5.1")
+  implementation("info.picocli:picocli:4.6.3")
+  annotationProcessor("info.picocli:picocli-codegen:4.6.3")
 
   // Unit Testing
-  testImplementation("org.junit.jupiter:junit-jupiter-api:${junit}")
-  testImplementation("org.mockito:mockito-core:4.6.1")
+  testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
+  testImplementation("org.mockito:mockito-core:4.8.0")
   testImplementation("org.veupathdb.lib.test", "test-utils", "1.1.2")
-  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junit}")
+  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.0")
 }
 
 val test by tasks.getting(Test::class) {
