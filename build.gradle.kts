@@ -22,7 +22,7 @@ containerBuild {
     group = "org.veupathdb.service"
 
     // Project Version
-    version = "3.0.0"
+    version = "3.1.1"
 
     // Project Root Package
     projectPackage = "org.veupathdb.service.access"
