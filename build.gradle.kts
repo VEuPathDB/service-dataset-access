@@ -109,12 +109,12 @@ dependencies {
   implementation("org.gusdb:fgputil-web:${fgputil}")
 
   // Jersey
-  implementation("org.glassfish.jersey.core:jersey-server:3.0.8")
+  implementation("org.glassfish.jersey.core:jersey-server:3.1.0")
 
   // Jackson
-  implementation("com.fasterxml.jackson.core:jackson-databind:2.13.4.2")
-  implementation("com.fasterxml.jackson.core:jackson-annotations:2.13.4")
-  implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.4")
+  implementation("com.fasterxml.jackson.core:jackson-databind:2.14.0")
+  implementation("com.fasterxml.jackson.core:jackson-annotations:2.14.0")
+  implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.14.0")
 
   // Log4J
   implementation("org.apache.logging.log4j:log4j-api:2.19.0")
