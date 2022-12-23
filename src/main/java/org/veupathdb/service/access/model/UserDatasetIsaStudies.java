@@ -14,12 +14,16 @@ public class UserDatasetIsaStudies {
 
   private static final String DATASET_ID_COL = "dataset_id";
   private static final String STUDY_ID_COL = "study_id";
+  private static final String NAME_COL = "name";
+  private static final String DESC_COL = "description";
   private static final String IS_OWNER_COL = "is_owner";
 
   private static final String USER_STUDY_SQL =
       "select " +
       "  studyds.dataset_stable_id as " + DATASET_ID_COL + ", " +
       "  studyds.study_stable_id as " + STUDY_ID_COL + ", " +
+      "  studyds.name as " + NAME_COL + ", " +
+      "  studyds.description as " + DESC_COL + ", " +
       "  dataset.is_owner as " + IS_OWNER_COL + " " +
       "from ( " +
       "    select user_dataset_id, 1 as is_owner " +
@@ -51,19 +55,24 @@ public class UserDatasetIsaStudies {
           String datasetId = rs.getString(DATASET_ID_COL);
           String studyId = rs.getString(STUDY_ID_COL);
           boolean isOwner = rs.getBoolean(IS_OWNER_COL);
-          userStudies.put(datasetId, createDatasetPermissionEntry(studyId, isOwner));
+          String name = rs.getString(NAME_COL);
+          String description = rs.getString(DESC_COL);
+          userStudies.put(datasetId, createDatasetPermissionEntry(studyId, isOwner, name, description));
         }
         return userStudies;
       });
   }
 
-  private static DatasetPermissionEntry createDatasetPermissionEntry(String studyId, boolean isOwner) {
+  private static DatasetPermissionEntry createDatasetPermissionEntry(String studyId, boolean isOwner, String name, String description) {
 
     DatasetPermissionEntry permEntry = new DatasetPermissionEntryImpl();
 
     permEntry.setStudyId(studyId);
     permEntry.setSha1Hash(""); // not provided or needed for user dataset studies
     permEntry.setIsUserStudy(true);
+    permEntry.setDisplayName(name);
+    permEntry.setShortDisplayName(name);
+    permEntry.setDescription(description);
 
     // set permission type for this dataset
     permEntry.setType(isOwner ?

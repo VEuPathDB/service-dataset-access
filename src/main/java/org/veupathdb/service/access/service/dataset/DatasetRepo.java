@@ -20,6 +20,12 @@ public final class DatasetRepo
 {
   public static final class Select
   {
+    // mapped property -> pseudo column names in SQL
+    static final String PROP_STUDY_ACCESS = "study_access";
+    static final String PROP_DISPLAY_NAME = "display_name";
+    static final String PROP_SHORT_DISPLAY_NAME = "short_display_name";
+    static final String PROP_DESCRIPTION = "description";
+
     static Select instance;
 
     public List<DatasetProps> datasetProps() throws Exception {
@@ -37,8 +43,11 @@ public final class DatasetRepo
             rs.getString(DB.Column.StudyIdDatasetId.StudyId),
             rs.getString(DB.Column.DatasetPresenters.DatasetSha1Digest),
             DatasetAccessLevel.valueOf(
-              rs.getString(DB.Column.DatasetProperties.Value).toUpperCase()
-            )
+              rs.getString(PROP_STUDY_ACCESS).toUpperCase()
+            ),
+            rs.getString(PROP_DISPLAY_NAME),
+            rs.getString(PROP_SHORT_DISPLAY_NAME),
+            rs.getString(PROP_DESCRIPTION)
           ));
         }
         return datasetProps;

@@ -88,9 +88,12 @@ public class PermissionService
 
       permEntry.setStudyId(dataset.studyId);
       permEntry.setSha1Hash(dataset.sha1hash);
+      permEntry.setDisplayName(dataset.displayName);
+      permEntry.setShortDisplayName(dataset.shortDisplayName);
+      permEntry.setDescription(dataset.description);
       permEntry.setIsUserStudy(false);
 
-      boolean isProvider = providerInfoMap.containsKey(dataset.id);
+      boolean isProvider = providerInfoMap.containsKey(dataset.datasetId);
 
       // set permission type for this dataset
       permEntry.setType(isProvider ?
@@ -98,9 +101,9 @@ public class PermissionService
           DatasetPermissionLevel.ENDUSER);
 
       // is manager if isProvider and provider info map has value true
-      permEntry.setIsManager(isProvider && providerInfoMap.get(dataset.id));
+      permEntry.setIsManager(isProvider && providerInfoMap.get(dataset.datasetId));
 
-      boolean accessGranted = approvedDatasetsList.contains(dataset.id);
+      boolean accessGranted = approvedDatasetsList.contains(dataset.datasetId);
       boolean grantAllPermsForThisDataset = grantToAllDatasets || isProvider || accessGranted;
 
       ActionList actions = new ActionListImpl();
@@ -121,7 +124,7 @@ public class PermissionService
       permEntry.setActionAuthorization(actions);
 
       // add to map
-      permissionMap.put(dataset.id, permEntry);
+      permissionMap.put(dataset.datasetId, permEntry);
     }
 
     return permissionMap;
