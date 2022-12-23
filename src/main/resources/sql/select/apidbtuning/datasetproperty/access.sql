@@ -22,4 +22,4 @@ FROM
 WHERE
   pres.dataset_presenter_id = study.dataset_id
 AND
-  pres.dataset_presenter_id = prop.dataset_presenter_id;
+  pres.dataset_presenter_id = prop.dataset_presenter_id
