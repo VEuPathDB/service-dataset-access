@@ -41,7 +41,7 @@ containerBuild {
     dockerFile = "Dockerfile"
 
     // Resulting image tag
-    imageName = "dataset-access"
+    imageName = "dataset-access-service"
 
   }
 
