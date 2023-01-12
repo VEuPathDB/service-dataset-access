@@ -2,7 +2,7 @@ import org.veupathdb.lib.gradle.container.util.Logger.Level
 
 plugins {
   java
-  id("org.veupathdb.lib.gradle.container.container-utils") version "4.6.0"
+  id("org.veupathdb.lib.gradle.container.container-utils") version "4.7.1"
   id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
@@ -88,8 +88,8 @@ repositories {
 //
 
 // versions
-val coreLib       = "6.13.1"        // Container core lib version
-val fgputil       = "2.9.3-jakarta" // FgpUtil version
+val coreLib       = "6.13.2"        // Container core lib version
+val fgputil       = "2.12.0-jakarta" // FgpUtil version
 
 
 // ensures changing modules are never cached
