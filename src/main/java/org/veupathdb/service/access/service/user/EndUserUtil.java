@@ -82,6 +82,7 @@ public class EndUserUtil
         case APPROVED -> ApprovalStatus.APPROVED;
         case DENIED -> ApprovalStatus.DENIED;
         case REQUESTED -> ApprovalStatus.REQUESTED;
+        case UNREQUESTED -> null; // not relevant to backend
       };
   }
 
@@ -92,12 +93,12 @@ public class EndUserUtil
    *
    * @return Translated external approval status value.
    */
-  static org.veupathdb.service.access.generated.model.ApprovalStatus convertApproval(
+  public static org.veupathdb.service.access.generated.model.ApprovalStatus convertApproval(
     final ApprovalStatus status
   ) {
     log.trace("EndUserService#convertApproval(ApprovalStatus)");
     return status == null
-      ? null
+      ? org.veupathdb.service.access.generated.model.ApprovalStatus.UNREQUESTED
       : switch (status) {
         case APPROVED -> org.veupathdb.service.access.generated.model.ApprovalStatus.APPROVED;
         case DENIED -> org.veupathdb.service.access.generated.model.ApprovalStatus.DENIED;

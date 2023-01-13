@@ -7,6 +7,136 @@
 ################################################################################
 
 types:
+  DatastoreId:
+    type: integer
+    format: int64
+    minimum: 1
+  UserDetails:
+    type: object
+    additionalProperties: false
+    properties:
+      userId:
+        type: integer
+        format: int64
+        minimum: 1
+      firstName: string
+      lastName: string
+      organization: string
+      email: string
+  RestrictionLevel:
+    type: string
+    enum:
+      - public
+      - prerelease
+      - protected
+      - controlled
+      - private
+  ApprovalStatus:
+    type: string
+    enum:
+      - unrequested
+      - approved
+      - requested
+      - denied
+  EndUser:
+    type: object
+    additionalProperties: false
+    properties:
+      user: UserDetails
+      datasetId: string
+      startDate?: datetime
+      duration?:
+        type: integer
+        format: int64
+      restrictionLevel: RestrictionLevel
+      purpose: string
+      researchQuestion: string
+      analysisPlan: string
+      disseminationPlan: string
+      approvalStatus: ApprovalStatus
+      denialReason?: string
+      priorAuth: string
+  EndUserCreateRequest:
+    description: |
+      New end user request body.
+
+      Body MUST contain either `userId` property or the `email` property.
+
+      If the `email` property is used, the service will attempt to locate a user
+      account with that email.  If one is found, a new record will be created
+      and it's ID returned in the response.  If one is not found, an email will
+      be sent to the given address requesting the user create an account and
+      **NO NEW RECORD WILL BE CREATED**.
+    type: object
+    additionalProperties: false
+    properties:
+      userId?:
+        type: integer
+        format: int64
+        minimum: 1
+      email?: string
+      purpose: string
+      researchQuestion: string
+      analysisPlan: string
+      disseminationPlan: string
+      priorAuth: string
+      datasetId: string
+      startDate?: datetime
+      duration?: integer
+      restrictionLevel?: RestrictionLevel
+      approvalStatus?: ApprovalStatus
+      denialReason?: string
+  EndUserCreateResponse:
+    description: |
+      End user creation response.
+
+      Returns a flag indicating whether or not the record was actually created
+      or not.  If `created == true` then the `endUserId` property will be
+      present and contain the new end user record's ID.  If `created == false`
+      then the `endUserId` property will NOT be present, and the successful
+      response indicates that an email was sent to the email address given in
+      the request.
+
+      If the creation request used the `userId` property instead of the `email`
+      property, a new record will always have been created on a success
+      response.
+    type: object
+    additionalProperties: false
+    properties:
+      created: boolean
+      endUserId?: string
+  EndUserList:
+    type: object
+    additionalProperties: false
+    properties:
+      data: EndUser[]
+      rows:
+        type: integer
+        format: int64
+        minimum: 0
+      offset:
+        type: integer
+        format: int64
+        minimum: 0
+      total:
+        type: integer
+        format: int64
+        minimum: 0
+  EndUserPatch:
+    type: object
+    additionalProperties: false
+    properties:
+      op:
+        type: string
+        enum:
+          - add
+          - remove
+          - replace
+      path:
+        type: string
+        pattern: ^/.+$
+      value?: any
+      from?: string
   DatasetProvider:
     type: object
     additionalProperties: false
@@ -228,6 +358,7 @@ types:
           type = `provider`.
         type: boolean
         default: false
+      accessRequestStatus: ApprovalStatus
   DatasetPermissionLevel:
     type: string
     enum:
@@ -289,133 +420,4 @@ types:
         type: string
         pattern: ^/isOwner$
       value: boolean
-  DatastoreId:
-    type: integer
-    format: int64
-    minimum: 1
-  UserDetails:
-    type: object
-    additionalProperties: false
-    properties:
-      userId:
-        type: integer
-        format: int64
-        minimum: 1
-      firstName: string
-      lastName: string
-      organization: string
-      email: string
-  RestrictionLevel:
-    type: string
-    enum:
-      - public
-      - prerelease
-      - protected
-      - controlled
-      - private
-  ApprovalStatus:
-    type: string
-    enum:
-      - approved
-      - requested
-      - denied
-  EndUser:
-    type: object
-    additionalProperties: false
-    properties:
-      user: UserDetails
-      datasetId: string
-      startDate?: datetime
-      duration?:
-        type: integer
-        format: int64
-      restrictionLevel: RestrictionLevel
-      purpose: string
-      researchQuestion: string
-      analysisPlan: string
-      disseminationPlan: string
-      approvalStatus: ApprovalStatus
-      denialReason?: string
-      priorAuth: string
-  EndUserCreateRequest:
-    description: |
-      New end user request body.
-
-      Body MUST contain either `userId` property or the `email` property.
-
-      If the `email` property is used, the service will attempt to locate a user
-      account with that email.  If one is found, a new record will be created
-      and it's ID returned in the response.  If one is not found, an email will
-      be sent to the given address requesting the user create an account and
-      **NO NEW RECORD WILL BE CREATED**.
-    type: object
-    additionalProperties: false
-    properties:
-      userId?:
-        type: integer
-        format: int64
-        minimum: 1
-      email?: string
-      purpose: string
-      researchQuestion: string
-      analysisPlan: string
-      disseminationPlan: string
-      priorAuth: string
-      datasetId: string
-      startDate?: datetime
-      duration?: integer
-      restrictionLevel?: RestrictionLevel
-      approvalStatus?: ApprovalStatus
-      denialReason?: string
-  EndUserCreateResponse:
-    description: |
-      End user creation response.
-
-      Returns a flag indicating whether or not the record was actually created
-      or not.  If `created == true` then the `endUserId` property will be
-      present and contain the new end user record's ID.  If `created == false`
-      then the `endUserId` property will NOT be present, and the successful
-      response indicates that an email was sent to the email address given in
-      the request.
-
-      If the creation request used the `userId` property instead of the `email`
-      property, a new record will always have been created on a success
-      response.
-    type: object
-    additionalProperties: false
-    properties:
-      created: boolean
-      endUserId?: string
-  EndUserList:
-    type: object
-    additionalProperties: false
-    properties:
-      data: EndUser[]
-      rows:
-        type: integer
-        format: int64
-        minimum: 0
-      offset:
-        type: integer
-        format: int64
-        minimum: 0
-      total:
-        type: integer
-        format: int64
-        minimum: 0
-  EndUserPatch:
-    type: object
-    additionalProperties: false
-    properties:
-      op:
-        type: string
-        enum:
-          - add
-          - remove
-          - replace
-      path:
-        type: string
-        pattern: ^/.+$
-      value?: any
-      from?: string
 

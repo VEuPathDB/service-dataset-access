@@ -3,6 +3,7 @@ package org.veupathdb.service.access.model;
 import org.gusdb.fgputil.db.runner.SQLRunner;
 import org.veupathdb.lib.container.jaxrs.utils.db.DbManager;
 import org.veupathdb.service.access.generated.model.*;
+import org.veupathdb.service.access.generated.model.ApprovalStatus;
 
 import java.sql.Types;
 import java.util.HashMap;
@@ -73,6 +74,7 @@ public class UserDatasetIsaStudies {
     permEntry.setDisplayName(name);
     permEntry.setShortDisplayName(name);
     permEntry.setDescription(description);
+    permEntry.setAccessRequestStatus(ApprovalStatus.UNREQUESTED); // no access requests on user datasets
 
     // set permission type for this dataset
     permEntry.setType(isOwner ?
