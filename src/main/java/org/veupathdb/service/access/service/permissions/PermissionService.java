@@ -15,12 +15,14 @@ import org.veupathdb.service.access.generated.model.DatasetPermissionEntryImpl;
 import org.veupathdb.service.access.generated.model.DatasetPermissionLevel;
 import org.veupathdb.service.access.generated.model.PermissionsGetResponse;
 import org.veupathdb.service.access.generated.model.PermissionsGetResponseImpl;
+import org.veupathdb.service.access.model.ApprovalStatus;
 import org.veupathdb.service.access.model.DatasetProps;
 import org.veupathdb.service.access.model.UserDatasetIsaStudies;
 import org.veupathdb.service.access.service.dataset.DatasetRepo;
 import org.veupathdb.service.access.service.provider.ProviderRepo;
 import org.veupathdb.service.access.service.staff.StaffRepo;
 import org.veupathdb.service.access.service.user.EndUserRepo;
+import org.veupathdb.service.access.service.user.EndUserUtil;
 
 public class PermissionService
 {
@@ -56,10 +58,10 @@ public class PermissionService
       Map<String,Boolean> providerInfoMap = ProviderRepo.Select.datasets(user.getUserID());
 
       // list of datasetIds user has approved access for
-      List<String> approvedStudiesList = EndUserRepo.Select.datasets(user.getUserID());
+      Map<String, ApprovalStatus> approvalStatusMap = EndUserRepo.Select.datasets(user.getUserID());
 
       // assign specific permissions on each dataset for this user
-      PermissionMap datasetPerms = getPermissionMap(grantAll.get(), datasetProps, providerInfoMap, approvedStudiesList);
+      PermissionMap datasetPerms = getPermissionMap(grantAll.get(), datasetProps, providerInfoMap, approvalStatusMap);
 
       // supplement official studies with studies from user datasets
       datasetPerms.putAll(UserDatasetIsaStudies.getUserDatasetPermissions(user.getUserID()));
@@ -80,7 +82,7 @@ public class PermissionService
   private static PermissionMap getPermissionMap(boolean grantToAllDatasets,
       List<DatasetProps> datasetProps,
       Map<String, Boolean> providerInfoMap,
-      List<String> approvedDatasetsList) {
+      Map<String, ApprovalStatus> approvalStatusMap) {
     var permissionMap = new PermissionMap();
     for (DatasetProps dataset : datasetProps) {
 
@@ -103,7 +105,10 @@ public class PermissionService
       // is manager if isProvider and provider info map has value true
       permEntry.setIsManager(isProvider && providerInfoMap.get(dataset.datasetId));
 
-      boolean accessGranted = approvedDatasetsList.contains(dataset.datasetId);
+      ApprovalStatus requestStatus = approvalStatusMap.get(dataset.datasetId);
+      permEntry.setAccessRequestStatus(EndUserUtil.convertApproval(requestStatus));
+
+      boolean accessGranted = requestStatus == ApprovalStatus.APPROVED;
       boolean grantAllPermsForThisDataset = grantToAllDatasets || isProvider || accessGranted;
 
       ActionList actions = new ActionListImpl();

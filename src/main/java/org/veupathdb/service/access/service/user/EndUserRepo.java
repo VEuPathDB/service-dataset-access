@@ -3,12 +3,10 @@ package org.veupathdb.service.access.service.user;
 import java.sql.Connection;
 import java.sql.Types;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
-import io.vulpine.lib.query.util.basic.BasicPreparedListReadQuery;
-import io.vulpine.lib.query.util.basic.BasicPreparedReadQuery;
-import io.vulpine.lib.query.util.basic.BasicPreparedVoidQuery;
-import io.vulpine.lib.query.util.basic.BasicPreparedWriteQuery;
+import io.vulpine.lib.query.util.basic.*;
 import org.apache.logging.log4j.Logger;
 import org.veupathdb.lib.container.jaxrs.providers.LogProvider;
 import org.veupathdb.service.access.model.*;
@@ -211,13 +209,14 @@ public class EndUserRepo
      *
      * @param userId ID of the user to check
      *
-     * @return a list of datasets the given user can access.
+     * @return a map of datasets to approval status for the given user
      */
-    static List<String> datasets(final long userId) throws Exception {
-      return new BasicPreparedListReadQuery<>(
+    static Map<String,ApprovalStatus> datasets(final long userId) throws Exception {
+      return new BasicPreparedMapReadQuery<>(
         SQL.Select.EndUsers.Datasets,
         QueryUtil::acctDbConnection,
-        SqlUtil::parseSingleString,
+        rs -> rs.getString(DB.Column.EndUser.DatasetId),
+        rs -> ApprovalStatus.valueOf(rs.getString("status").toUpperCase()),
         SqlUtil.prepareSingleLong(userId)
       ).execute().getValue();
     }
