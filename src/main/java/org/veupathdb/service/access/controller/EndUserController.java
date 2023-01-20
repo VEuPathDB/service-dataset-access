@@ -30,8 +30,8 @@ public class EndUserController implements DatasetEndUsers
   @Override
   public GetDatasetEndUsersResponse getDatasetEndUsers(
     final String datasetId,
-    final Long limit,
-    final Long offset,
+    final long limit,
+    final long offset,
     final ApprovalStatus approval
   ) {
     return GetDatasetEndUsersResponse.respond200WithApplicationJson(

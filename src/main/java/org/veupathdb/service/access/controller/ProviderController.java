@@ -24,8 +24,8 @@ public class ProviderController implements DatasetProviders
   @Override
   public GetDatasetProvidersResponse getDatasetProviders(
     final String datasetId,
-    final Long limit,
-    final Long offset
+    final long limit,
+    final long offset
   ) {
     final var currentUser = Util.requireUser(_request);
 
@@ -46,7 +46,7 @@ public class ProviderController implements DatasetProviders
 
   @Override
   public PatchDatasetProvidersByProviderIdResponse patchDatasetProvidersByProviderId(
-    final Long providerId,
+    final long providerId,
     final List <DatasetProviderPatch> entity
   ) {
     final var currentUser = Util.requireUser(_request);
@@ -68,7 +68,7 @@ public class ProviderController implements DatasetProviders
 
   @Override
   public DeleteDatasetProvidersByProviderIdResponse deleteDatasetProvidersByProviderId(
-    final Long providerId
+    final long providerId
   ) {
     if (!userIsOwner(_request))
       throw new ForbiddenException();
