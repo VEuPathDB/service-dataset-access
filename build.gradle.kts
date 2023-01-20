@@ -2,7 +2,7 @@ import org.veupathdb.lib.gradle.container.util.Logger.Level
 
 plugins {
   java
-  id("org.veupathdb.lib.gradle.container.container-utils") version "4.7.1"
+  id("org.veupathdb.lib.gradle.container.container-utils") version "4.8.2"
   id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
@@ -22,7 +22,7 @@ containerBuild {
     group = "org.veupathdb.service"
 
     // Project Version
-    version = "3.1.1"
+    version = "3.0.0"
 
     // Project Root Package
     projectPackage = "org.veupathdb.service.access"
@@ -44,20 +44,7 @@ containerBuild {
     imageName = "dataset-access-service"
 
   }
-
-  generateJaxRS {
-    // List of custom arguments to use in the jax-rs code generation command
-    // execution.
-    arguments = listOf(/*arg1, arg2, arg3*/)
-
-    // Map of custom environment variables to set for the jax-rs code generation
-    // command execution.
-    environment = mapOf(/*Pair("env-key", "env-val"), Pair("env-key", "env-val")*/)
-  }
-
 }
-
-tasks.register("print-gen-package") { print("org.veupathdb.service.access") }
 
 java {
   toolchain {
@@ -91,10 +78,12 @@ repositories {
 val coreLib       = "6.13.2"        // Container core lib version
 val fgputil       = "2.12.0-jakarta" // FgpUtil version
 
-
-// ensures changing modules are never cached
+// ensures changing and dynamic modules are never cached
 configurations.all {
-  resolutionStrategy.cacheChangingModulesFor(0, TimeUnit.SECONDS)
+  resolutionStrategy {
+    cacheChangingModulesFor(0, TimeUnit.SECONDS)
+    cacheDynamicVersionsFor(0, TimeUnit.SECONDS)
+  }
 }
 
 dependencies {
@@ -136,10 +125,10 @@ dependencies {
   annotationProcessor("info.picocli:picocli-codegen:4.6.3")
 
   // Unit Testing
-  testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
-  testImplementation("org.mockito:mockito-core:4.8.0")
+  testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
+  testImplementation("org.mockito:mockito-core:4.11.0")
   testImplementation("org.veupathdb.lib.test", "test-utils", "1.1.2")
-  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.0")
+  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
 }
 
 val test by tasks.getting(Test::class) {
