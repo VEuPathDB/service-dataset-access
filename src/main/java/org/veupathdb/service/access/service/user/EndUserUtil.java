@@ -239,6 +239,7 @@ public class EndUserUtil
     out.setResearchQuestion(row.getResearchQuestion());
     out.setRestrictionLevel(convertRestriction(row.getRestrictionLevel()));
     out.setStartDate(Date.from(row.getStartDate().toInstant()));
+    out.setPriorAuth(row.getPriorAuth());
 
     return out;
   }
