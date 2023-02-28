@@ -19,4 +19,10 @@ public class PermissionController implements Permissions
       PermissionService.getInstance().getUserPermissions(_request)
     );
   }
+
+  @Override
+  public GetPermissionsByStudyIdResponse getPermissionsByStudyId(String studyId) {
+    return GetPermissionsByStudyIdResponse.respond200WithApplicationJson(
+        PermissionService.getInstance().getUserPermissions(_request, studyId));
+  }
 }

@@ -29,7 +29,8 @@ public interface DB
     interface StudyIdDatasetId
     {
       String
-        StudyId = "study_stable_id";
+        StudyId = "study_stable_id",
+        DatasetId = "dataset_id";
     }
 
     interface EndUser

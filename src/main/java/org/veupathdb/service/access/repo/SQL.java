@@ -92,7 +92,8 @@ public interface SQL
         Exists = select(Table.Datasets, "exists"),
         ById   = select(Table.Datasets, "by-id"),
         Emails = select(Table.DatasetProperties, "emails"),
-        Access = select(Table.DatasetProperties, "access");
+        Access = select(Table.DatasetProperties, "access"),
+        ByStudyId = select(Table.DatasetProperties, "by-study-id");
     }
 
     interface Enums

@@ -1,13 +1,10 @@
 package org.veupathdb.service.access.service.dataset;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import io.vulpine.lib.query.util.basic.BasicPreparedReadQuery;
-import org.gusdb.fgputil.Tuples;
+import org.veupathdb.service.access.generated.model.ActionList;
+import org.veupathdb.service.access.generated.model.ActionListImpl;
+import org.veupathdb.service.access.generated.model.StudyPermissionInfo;
+import org.veupathdb.service.access.generated.model.StudyPermissionInfoImpl;
 import org.veupathdb.service.access.model.Dataset;
 import org.veupathdb.service.access.model.DatasetAccessLevel;
 import org.veupathdb.service.access.model.DatasetProps;
@@ -15,6 +12,10 @@ import org.veupathdb.service.access.repo.DB;
 import org.veupathdb.service.access.repo.SQL;
 import org.veupathdb.service.access.service.QueryUtil;
 import org.veupathdb.service.access.util.SqlUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public final class DatasetRepo
 {
@@ -27,6 +28,28 @@ public final class DatasetRepo
     static final String PROP_DESCRIPTION = "description";
 
     static Select instance;
+
+    public static Optional<StudyPermissionInfo> getUserStudyById(String studyId) throws Exception {
+      return new BasicPreparedReadQuery<>(
+          SQL.Select.Datasets.ByStudyId,
+          QueryUtil.getInstance()::getAppDbConnection,
+          SqlUtil.optParser(rs -> {
+            ActionList nullActions = new ActionListImpl();
+            nullActions.setStudyMetadata(false);
+            nullActions.setResultsAll(false);
+            nullActions.setVisualizations(false);
+            nullActions.setResultsFirstPage(false);
+            nullActions.setSubsetting(false);
+            StudyPermissionInfo info = new StudyPermissionInfoImpl();
+            info.setDatasetId(rs.getString(DB.Column.StudyIdDatasetId.DatasetId));
+            info.setStudyId(studyId);
+            info.setIsUserStudy(true);
+            info.setActionAuthorization(nullActions);
+            return info;
+          }),
+          SqlUtil.prepareSingleString(studyId)
+      ).execute().getValue();
+    }
 
     public List<DatasetProps> datasetProps() throws Exception {
       final var sql = SQL.Select.Datasets.Access;
