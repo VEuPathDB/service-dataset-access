@@ -1,5 +1,5 @@
 SELECT
-  study.dataset_id,
+  study.dataset_id
 FROM
   apidbtuning.studyiddatasetid study
 WHERE
