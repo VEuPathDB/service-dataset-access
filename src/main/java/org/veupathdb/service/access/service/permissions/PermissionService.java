@@ -14,7 +14,7 @@ import org.veupathdb.service.access.controller.Util;
 import org.veupathdb.service.access.generated.model.*;
 import org.veupathdb.service.access.model.ApprovalStatus;
 import org.veupathdb.service.access.model.DatasetProps;
-import org.veupathdb.service.access.model.UserDatasetIsaStudies;
+import org.veupathdb.service.access.service.userdataset.UserDatasetIsaStudies;
 import org.veupathdb.service.access.service.dataset.DatasetRepo;
 import org.veupathdb.service.access.service.provider.ProviderRepo;
 import org.veupathdb.service.access.service.staff.StaffRepo;
@@ -52,7 +52,7 @@ public class PermissionService
       if (studyPermission.isPresent()) return studyPermission.get();
 
       // otherwise, user does not have study visibility but want to see if it's a user study
-      return DatasetRepo.Select.getUserStudyById(studyId).orElseThrow(
+      return UserDatasetIsaStudies.getUserStudyById(studyId).orElseThrow(
           () -> new NotFoundException("No study exists with ID: " + studyId)
       );
     }
