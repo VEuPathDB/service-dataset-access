@@ -78,9 +78,9 @@ public class UserDatasetIsaStudies {
     return permEntry;
   }
 
-  public static Optional<StudyPermissionInfo> getUserStudyById(String studyId) throws Exception {
+  public static Optional<StudyPermissionInfo> getUserStudyByDatasetId(String datasetId) throws Exception {
     return new BasicPreparedReadQuery<>(
-        SQL.Select.UserDatasets.ByStudyId,
+        SQL.Select.UserDatasets.ByDatasetId,
         QueryUtil.getInstance()::getAppDbConnection,
         SqlUtil.optParser(rs -> {
           ActionList nullActions = new ActionListImpl();
@@ -90,13 +90,13 @@ public class UserDatasetIsaStudies {
           nullActions.setResultsFirstPage(false);
           nullActions.setSubsetting(false);
           StudyPermissionInfo info = new StudyPermissionInfoImpl();
-          info.setDatasetId(rs.getString(DB.Column.UserDatasetAttributes.DatasetId));
-          info.setStudyId(studyId);
+          info.setDatasetId(datasetId);
+          info.setStudyId(rs.getString(DB.Column.UserDatasetAttributes.StudyId));
           info.setIsUserStudy(true);
           info.setActionAuthorization(nullActions);
           return info;
         }),
-        SqlUtil.prepareSingleString(studyId)
+        SqlUtil.prepareSingleString(datasetId)
     ).execute().getValue();
   }
 

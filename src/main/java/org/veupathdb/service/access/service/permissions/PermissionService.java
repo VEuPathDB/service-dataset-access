@@ -29,7 +29,7 @@ public class PermissionService
     return getUserPermissions(Util.requireUser(request));
   }
 
-  public StudyPermissionInfo getUserPermissions(ContainerRequest request, String studyId) {
+  public StudyPermissionInfo getUserPermissions(ContainerRequest request, String datasetId) {
     try {
       User user = Util.requireUser(request);
       // get map of all datasets this user knows about (clunky but gets the job done)
@@ -37,7 +37,7 @@ public class PermissionService
 
       // find the one for this study if it exists
       Optional<StudyPermissionInfo> studyPermission = knownDatasets.entrySet().stream()
-          .filter(entry -> entry.getValue().getStudyId().equals(studyId))
+          .filter(entry -> entry.getKey().equals(datasetId))
           .findAny()
           // if found, convert for return
           .map(entry -> {
@@ -52,8 +52,8 @@ public class PermissionService
       if (studyPermission.isPresent()) return studyPermission.get();
 
       // otherwise, user does not have study visibility but want to see if it's a user study
-      return UserDatasetIsaStudies.getUserStudyById(studyId).orElseThrow(
-          () -> new NotFoundException("No study exists with ID: " + studyId)
+      return UserDatasetIsaStudies.getUserStudyByDatasetId(datasetId).orElseThrow(
+          () -> new NotFoundException("No study exists with dataset ID: " + datasetId)
       );
     }
     catch (WebApplicationException e) {

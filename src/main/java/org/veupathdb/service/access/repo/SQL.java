@@ -100,7 +100,7 @@ public interface SQL
     {
       String
         ByUserAccess = select(Table.UserDatasetAttributes, "by-user-access"),
-        ByStudyId = select(Table.UserDatasetAttributes, "by-study-id");
+        ByDatasetId = select(Table.UserDatasetAttributes, "by-dataset-id");
     }
 
     interface Enums
