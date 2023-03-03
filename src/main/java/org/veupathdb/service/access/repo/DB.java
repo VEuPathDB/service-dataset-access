@@ -6,6 +6,7 @@ public interface DB
   {
     String
       StudyAccess  = "studyaccess",
+      UserDatasets = "apidbuserdatasets",
       Tuning       = "apidbtuning",
       UserAccounts = "useraccounts";
   }
@@ -21,7 +22,8 @@ public interface DB
       Providers         = Schema.StudyAccess + ".providers",
       RestrictionLevel  = Schema.StudyAccess + ".restriction_level",
       Staff             = Schema.StudyAccess + ".staff",
-      DatasetProperties = Schema.Tuning + ".datasetproperty";
+      DatasetProperties = Schema.Tuning + ".datasetproperty",
+      UserDatasetAttributes = Schema.UserDatasets + ".datasetattributes";
   }
 
   interface Column
@@ -29,7 +31,8 @@ public interface DB
     interface StudyIdDatasetId
     {
       String
-        StudyId = "study_stable_id";
+        StudyId = "study_stable_id",
+        DatasetId = "dataset_id";
     }
 
     interface EndUser
@@ -106,6 +109,15 @@ public interface DB
         DatasetId = "dataset_presenter_id",
         Property  = "property",
         Value     = "value";
+    }
+
+    interface UserDatasetAttributes
+    {
+      String
+        DatasetId = "dataset_stable_id",
+        StudyId = "study_stable_id",
+        Name = "name",
+        Description = "description";
     }
 
     interface Misc

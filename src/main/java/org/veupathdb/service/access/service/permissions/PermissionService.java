@@ -2,22 +2,19 @@ package org.veupathdb.service.access.service.permissions;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
 import jakarta.ws.rs.InternalServerErrorException;
+import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.WebApplicationException;
 import org.glassfish.jersey.server.ContainerRequest;
 import org.gusdb.fgputil.Wrapper;
 import org.veupathdb.lib.container.jaxrs.model.User;
 import org.veupathdb.service.access.controller.Util;
-import org.veupathdb.service.access.generated.model.ActionList;
-import org.veupathdb.service.access.generated.model.ActionListImpl;
-import org.veupathdb.service.access.generated.model.DatasetPermissionEntry;
-import org.veupathdb.service.access.generated.model.DatasetPermissionEntryImpl;
-import org.veupathdb.service.access.generated.model.DatasetPermissionLevel;
-import org.veupathdb.service.access.generated.model.PermissionsGetResponse;
-import org.veupathdb.service.access.generated.model.PermissionsGetResponseImpl;
+import org.veupathdb.service.access.generated.model.*;
 import org.veupathdb.service.access.model.ApprovalStatus;
 import org.veupathdb.service.access.model.DatasetProps;
-import org.veupathdb.service.access.model.UserDatasetIsaStudies;
+import org.veupathdb.service.access.service.userdataset.UserDatasetIsaStudies;
 import org.veupathdb.service.access.service.dataset.DatasetRepo;
 import org.veupathdb.service.access.service.provider.ProviderRepo;
 import org.veupathdb.service.access.service.staff.StaffRepo;
@@ -30,6 +27,41 @@ public class PermissionService
 
   public PermissionsGetResponse getUserPermissions(ContainerRequest request) {
     return getUserPermissions(Util.requireUser(request));
+  }
+
+  public StudyPermissionInfo getUserPermissions(ContainerRequest request, String datasetId) {
+    try {
+      User user = Util.requireUser(request);
+      // get map of all datasets this user knows about (clunky but gets the job done)
+      PermissionMap knownDatasets = (PermissionMap)getUserPermissions(user).getPerDataset();
+
+      // find the one for this study if it exists
+      Optional<StudyPermissionInfo> studyPermission = knownDatasets.entrySet().stream()
+          .filter(entry -> entry.getKey().equals(datasetId))
+          .findAny()
+          // if found, convert for return
+          .map(entry -> {
+            StudyPermissionInfo info = new StudyPermissionInfoImpl();
+            info.setDatasetId(entry.getKey());
+            info.setStudyId(entry.getValue().getStudyId());
+            info.setIsUserStudy(entry.getValue().getIsUserStudy());
+            info.setActionAuthorization(entry.getValue().getActionAuthorization());
+            return info;
+          });
+
+      if (studyPermission.isPresent()) return studyPermission.get();
+
+      // otherwise, user does not have study visibility but want to see if it's a user study
+      return UserDatasetIsaStudies.getUserStudyByDatasetId(datasetId).orElseThrow(
+          () -> new NotFoundException("No study exists with dataset ID: " + datasetId)
+      );
+    }
+    catch (WebApplicationException e) {
+      throw e;
+    }
+    catch (Exception e) {
+      throw new InternalServerErrorException(e);
+    }
   }
 
   public PermissionsGetResponse getUserPermissions(User user) {

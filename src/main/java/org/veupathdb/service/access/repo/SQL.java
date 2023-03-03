@@ -46,6 +46,7 @@ public interface SQL
 
   interface Select
   {
+
     interface Accounts
     {
       String
@@ -93,6 +94,13 @@ public interface SQL
         ById   = select(Table.Datasets, "by-id"),
         Emails = select(Table.DatasetProperties, "emails"),
         Access = select(Table.DatasetProperties, "access");
+    }
+
+    interface UserDatasets
+    {
+      String
+        ByUserAccess = select(Table.UserDatasetAttributes, "by-user-access"),
+        ByDatasetId = select(Table.UserDatasetAttributes, "by-dataset-id");
     }
 
     interface Enums

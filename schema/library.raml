@@ -336,6 +336,14 @@ types:
       resultsAll:
         description: any other tabular response
         type: boolean
+  StudyPermissionInfo:
+    type: object
+    additionalProperties: false
+    properties:
+      studyId: string
+      datasetId: string
+      isUserStudy: boolean
+      actionAuthorization: ActionList
   DatasetPermissionEntry:
     type: object
     additionalProperties: false

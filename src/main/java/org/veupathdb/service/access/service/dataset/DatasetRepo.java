@@ -1,13 +1,6 @@
 package org.veupathdb.service.access.service.dataset;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import io.vulpine.lib.query.util.basic.BasicPreparedReadQuery;
-import org.gusdb.fgputil.Tuples;
 import org.veupathdb.service.access.model.Dataset;
 import org.veupathdb.service.access.model.DatasetAccessLevel;
 import org.veupathdb.service.access.model.DatasetProps;
@@ -15,6 +8,10 @@ import org.veupathdb.service.access.repo.DB;
 import org.veupathdb.service.access.repo.SQL;
 import org.veupathdb.service.access.service.QueryUtil;
 import org.veupathdb.service.access.util.SqlUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public final class DatasetRepo
 {

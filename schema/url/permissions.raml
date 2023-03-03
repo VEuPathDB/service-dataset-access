@@ -50,6 +50,17 @@ types:
         type: boolean
         description: any other tabular response
 
+  # providing less information here because it will be provided regardless
+  #   of whether user has permission to access this study
+  StudyPermissionInfo:
+    type: object
+    additionalProperties: false
+    properties:
+      studyId: string
+      datasetId: string
+      isUserStudy: boolean
+      actionAuthorization: ActionList
+
   DatasetPermissionEntry:
     type: object
     additionalProperties: false

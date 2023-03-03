@@ -297,6 +297,12 @@ securitySchemes:
       200:
         body: lib.PermissionsGetResponse
 
+  /{dataset-id}:
+    get:
+      responses:
+        200:
+          body: lib.StudyPermissionInfo
+
 /history:
   get:
     queryParameters:
