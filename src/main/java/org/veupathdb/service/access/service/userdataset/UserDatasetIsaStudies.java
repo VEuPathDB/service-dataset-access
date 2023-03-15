@@ -7,7 +7,6 @@ import org.veupathdb.service.access.repo.SQL;
 import org.veupathdb.service.access.service.QueryUtil;
 import org.veupathdb.service.access.util.SqlUtil;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -28,7 +27,7 @@ public class UserDatasetIsaStudies {
     return new BasicPreparedReadQuery<>(
         SQL.Select.UserDatasets.ByUserAccess,
         QueryUtil.getInstance()::getAppDbConnection,
-        SqlUtil.optParser(rs -> {
+        rs -> {
           Map<String, DatasetPermissionEntry> userStudies = new HashMap<>();
           while (rs.next()) {
             String datasetId = rs.getString(DB.Column.UserDatasetAttributes.DatasetId);
@@ -39,12 +38,12 @@ public class UserDatasetIsaStudies {
             userStudies.put(datasetId, createDatasetPermissionEntry(studyId, isOwner, name, description));
           }
           return userStudies;
-        }),
+        },
         ps -> {
           ps.setLong(1, userId);
           ps.setLong(2, userId);
         }
-    ).execute().getValue().orElse(Collections.emptyMap());
+    ).execute().getValue();
   }
 
   private static DatasetPermissionEntry createDatasetPermissionEntry(String studyId, boolean isOwner, String name, String description) {
