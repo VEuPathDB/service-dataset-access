@@ -75,8 +75,8 @@ repositories {
 //
 
 // versions
-val coreLib       = "6.14.3"        // Container core lib version
-val fgputil       = "2.12.3-jakarta" // FgpUtil version
+val coreLib       = "6.14.4"         // Container core lib version
+val fgputil       = "2.12.6-jakarta" // FgpUtil version
 
 // ensures changing and dynamic modules are never cached
 configurations.all {
@@ -98,16 +98,16 @@ dependencies {
   implementation("org.gusdb:fgputil-web:${fgputil}")
 
   // Jersey
-  implementation("org.glassfish.jersey.core:jersey-server:3.1.0")
+  implementation("org.glassfish.jersey.core:jersey-server:3.1.1")
 
   // Jackson
-  implementation("com.fasterxml.jackson.core:jackson-databind:2.14.0")
-  implementation("com.fasterxml.jackson.core:jackson-annotations:2.14.0")
-  implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.14.0")
+  implementation("com.fasterxml.jackson.core:jackson-databind:2.14.2")
+  implementation("com.fasterxml.jackson.core:jackson-annotations:2.14.2")
+  implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.14.2")
 
   // Log4J
-  implementation("org.apache.logging.log4j:log4j-api:2.19.0")
-  implementation("org.apache.logging.log4j:log4j-core:2.19.0")
+  implementation("org.apache.logging.log4j:log4j-api:2.20.0")
+  implementation("org.apache.logging.log4j:log4j-core:2.20.0")
 
   // Metrics
   implementation("io.prometheus:simpleclient:0.16.0")
@@ -121,12 +121,12 @@ dependencies {
   implementation("io.vulpine.lib:lib-query-util:2.1.0")
   implementation("javax.mail", "mail", "1.5.0-b01")
   implementation("org.antlr", "ST4", "4.3.1")
-  implementation("info.picocli:picocli:4.6.3")
-  annotationProcessor("info.picocli:picocli-codegen:4.6.3")
+  implementation("info.picocli:picocli:4.7.1")
+  annotationProcessor("info.picocli:picocli-codegen:4.7.1")
 
   // Unit Testing
   testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
-  testImplementation("org.mockito:mockito-core:4.11.0")
+  testImplementation("org.mockito:mockito-core:5.2.0")
   testImplementation("org.veupathdb.lib.test", "test-utils", "1.1.2")
   testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
 }
