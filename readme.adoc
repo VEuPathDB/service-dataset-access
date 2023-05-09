@@ -23,9 +23,9 @@ study datasets.
 
 == Main Concepts for Study/Dataset Access
 
-These concepts apply initially to curated studies, but might eventually apply too to individual and community studies uploaded firectly into our system.
+These concepts apply to curated studies, but might eventually apply also to individual and community studies uploaded directly by endusers.
 
-Some studies require that the user requests approval to access certain functionality (they will be prompted when attempting the action): 
+Studies may be: pubic, prerelease, private, controlled, and protected. Some require that the user sends a request for access (they will be prompted when attempting the action): 
 
 No request access needed or offered:
 
@@ -38,6 +38,8 @@ Request access needed:
 . controlled or protected: request access to download. 
 
 In controlled studies the user will be allowed to access the data automatically upon request submission, while in protected and private studies there will be human intervention in the decision.
+
+
 
 There are 3 tables in accountDB (shared by prod and qa sites) for 3 types of users:
 
