@@ -20,6 +20,32 @@ https://veupathdb.github.io/service-dataset-access/api.html[API Docs]
 REST API microservice enabling HTTP clients to view and manage user access to
 study datasets.
 
+
+== Main Concepts for Study/Dataset Access
+
+These concepts apply initially to curated studies, but might eventually apply too to individual and community studies uploaded firectly into our system.
+
+Some studies require that the user requests approval to access certain functionality (they will be prompted when attempting the action): 
+
+No request access needed or offered:
+
+. public: access to all functionality by default
+. prerelease: no request access mechanism offered. you see the study page
+
+Request access needed:
+
+. private: request access to explore the data, analyze it and download (by default you only can see the study page)
+. controlled or protected: request access to download. 
+
+In controlled studies the user will be allowed to access the data automatically upon request submission, while in protected and private studies there will be human intervention in the decision.
+
+There are 3 tables in accountDB (shared by prod and qa sites) for 3 types of users:
+
+. a staff member will have access to all studies, and if "owner" (bad name) they can access the dashboard and update  the database with many possible actions affecting any of the 3 tables.
+. an end user : they ask for permission to access  a study (that is how they become a row in the table), and we (staff owner or provider)  approve or deny access.
+. a provider is a user who owns the data for a given study, there could be several providers, and if "is_manager", then this provider can add/remove other providers.
+
+
 == Deployment
 
 === Required Configuration
