@@ -79,7 +79,7 @@ public class ApproveEligibleStudiesController implements ApproveEligibleAccessRe
     patch.setOp(EndUserPatch.OpType.REPLACE);
     patch.setPath("/" + Keys.Json.KEY_APPROVAL_STATUS);
     patch.setValue(ApprovalStatus.APPROVED);
-    // Handles sending the e-mail and setting
+    // Handles sending the e-mail and updating history.
     EndUserPatchService.modPatch(endUser, List.of(patch), SERVICE_USER_ID);
   }
 }
