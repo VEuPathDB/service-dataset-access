@@ -39,9 +39,10 @@ public final class DatasetRepo
             rs.getString(DB.Column.DatasetPresenters.DatasetId),
             rs.getString(DB.Column.StudyIdDatasetId.StudyId),
             rs.getString(DB.Column.DatasetPresenters.DatasetSha1Digest),
-            DatasetAccessLevel.valueOf(
-              rs.getString(PROP_STUDY_ACCESS).toUpperCase()
-            ),
+            Optional.ofNullable(rs.getString(PROP_STUDY_ACCESS))  // this value may be null
+              .map(String::toUpperCase)                           // if not null, uppercase for enum conversion
+              .map(DatasetAccessLevel::valueOf)                   // then convert to access level
+              .orElse(DatasetAccessLevel.PUBLIC),                 // make public if this value does not exist
             rs.getString(PROP_DISPLAY_NAME),
             rs.getString(PROP_SHORT_DISPLAY_NAME),
             rs.getString(PROP_DESCRIPTION)
