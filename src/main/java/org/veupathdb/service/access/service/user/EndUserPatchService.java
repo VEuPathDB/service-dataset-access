@@ -91,8 +91,8 @@ public class EndUserPatchService
         .map(UserRow::getEmail)
         .toArray(String[]::new);
       EndUserRepo.Update.self(row, userID);
-      EmailService.getInstance()
-        .sendEndUserUpdateNotificationEmail(ccs, ds, row);
+//      EmailService.getInstance()
+//        .sendEndUserUpdateNotificationEmail(ccs, ds, row);
     } catch (WebApplicationException e) {
       throw e;
     } catch (Exception e) {

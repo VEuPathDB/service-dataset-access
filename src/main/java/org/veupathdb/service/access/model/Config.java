@@ -50,6 +50,15 @@ public class Config extends Options
   private String siteUrl;
 
   @CommandLine.Option(
+    names = "--admin-auth-token",
+    defaultValue = "${env:ADMIN_AUTH_TOKEN}",
+    required = true,
+    arity = "1"
+  )
+  private String adminAuthToken;
+
+
+  @CommandLine.Option(
     names = "--registration-path",
     defaultValue = "${env:REGISTRATION_PATH}",
     arity = "1",
@@ -93,5 +102,9 @@ public class Config extends Options
 
   public String getApplicationPath() {
     return applicationPath;
+  }
+
+  public String getAdminAuthToken() {
+    return adminAuthToken;
   }
 }

@@ -22,6 +22,7 @@ public final class DatasetRepo
     static final String PROP_DISPLAY_NAME = "display_name";
     static final String PROP_SHORT_DISPLAY_NAME = "short_display_name";
     static final String PROP_DESCRIPTION = "description";
+    static final String PROP_DAYS_FOR_APPROVAL = "days_for_approval";
 
     static Select instance;
 
@@ -44,7 +45,10 @@ public final class DatasetRepo
             ),
             rs.getString(PROP_DISPLAY_NAME),
             rs.getString(PROP_SHORT_DISPLAY_NAME),
-            rs.getString(PROP_DESCRIPTION)
+            rs.getString(PROP_DESCRIPTION),
+            Optional.ofNullable(rs.getString(PROP_DAYS_FOR_APPROVAL))
+                .map(Long::parseLong)
+                .orElse(null)
           ));
         }
         return datasetProps;
