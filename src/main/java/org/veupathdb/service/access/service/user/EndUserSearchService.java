@@ -50,7 +50,7 @@ public class EndUserSearchService
    *
    * @return limited result set to return to the client.
    */
-  public <T> EndUserList findEndUsers(
+  public EndUserList findEndUsers(
     final String datasetId,
     final Long limit,
     final Long offset,
