@@ -7,7 +7,6 @@ import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.server.ContainerRequest;
 import org.veupathdb.lib.container.jaxrs.server.annotations.Authenticated;
 import org.veupathdb.service.access.Main;
-import org.veupathdb.service.access.generated.model.ApproveEligibleAccessRequestsResponseImpl;
 import org.veupathdb.service.access.generated.model.EndUserPatch;
 import org.veupathdb.service.access.generated.model.EndUserPatchImpl;
 import org.veupathdb.service.access.generated.resources.ApproveEligibleAccessRequests;
@@ -46,10 +45,9 @@ public class ApproveEligibleStudiesController implements ApproveEligibleAccessRe
       eligibleDatasets.stream()
           .filter(ds -> ds.durationForApproval != null)
           .forEach(dataset -> {
+            // Fetch all requests for given dataset.
             final var query = new SearchQuery()
                 .setDatasetId(dataset.datasetId)
-                .setLimit(100L)
-                .setOffset(0L)
                 .setApprovalStatus(ApprovalStatus.REQUESTED);
             try {
               LOG.info("Querying end users with dataset ID {}.", dataset.datasetId);
@@ -65,9 +63,7 @@ public class ApproveEligibleStudiesController implements ApproveEligibleAccessRe
               throw new RuntimeException(e);
             }
           });
-      return PostApproveEligibleAccessRequestsResponse.respond200WithApplicationJson(
-          new ApproveEligibleAccessRequestsResponseImpl()
-      );
+      return PostApproveEligibleAccessRequestsResponse.respond200();
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
