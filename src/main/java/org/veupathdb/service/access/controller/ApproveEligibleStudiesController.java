@@ -65,7 +65,7 @@ public class ApproveEligibleStudiesController implements ApproveEligibleAccessRe
               throw new RuntimeException(e);
             }
           });
-      return PostApproveEligibleAccessRequestsResponse.respond200();
+      return PostApproveEligibleAccessRequestsResponse.respond204();
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
