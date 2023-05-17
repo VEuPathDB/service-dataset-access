@@ -3,6 +3,7 @@ package org.veupathdb.service.access;
 import org.veupathdb.lib.container.jaxrs.config.Options;
 import org.veupathdb.lib.container.jaxrs.server.ContainerResources;
 import org.veupathdb.lib.container.jaxrs.utils.db.DbManager;
+import org.veupathdb.service.access.controller.ApproveEligibleStudiesController;
 import org.veupathdb.service.access.controller.EndUserController;
 import org.veupathdb.service.access.controller.HistoryController;
 import org.veupathdb.service.access.controller.PermissionController;
@@ -50,11 +51,12 @@ public class Resources extends ContainerResources {
   @Override
   protected Object[] resources() {
     return new Object[] {
+      ApproveEligibleStudiesController.class,
       ProviderController.class,
       StaffController.class,
       EndUserController.class,
       PermissionController.class,
-      HistoryController.class,
+      HistoryController.class
     };
   }
 }
