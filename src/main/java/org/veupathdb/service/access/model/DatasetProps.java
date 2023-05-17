@@ -1,8 +1,5 @@
 package org.veupathdb.service.access.model;
 
-import java.time.Duration;
-import java.util.Optional;
-
 public class DatasetProps {
 
   public final String datasetId;
@@ -12,7 +9,6 @@ public class DatasetProps {
   public final String displayName;
   public final String shortDisplayName;
   public final String description;
-  public final Duration durationForApproval;
 
   public DatasetProps(
       final String datasetId,
@@ -21,8 +17,7 @@ public class DatasetProps {
       final DatasetAccessLevel accessLevel,
       final String displayName,
       final String shortDisplayName,
-      final String description,
-      final Long daysForApproval) {
+      final String description) {
     this.datasetId = datasetId;
     this.studyId = studyId;
     this.sha1hash = sha1hash;
@@ -30,9 +25,6 @@ public class DatasetProps {
     this.displayName = displayName;
     this.shortDisplayName = shortDisplayName;
     this.description = description;
-    this.durationForApproval = Optional.ofNullable(daysForApproval)
-        .map(Duration::ofDays)
-        .orElse(null);
   }
 
 }

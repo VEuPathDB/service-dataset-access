@@ -100,7 +100,6 @@ public interface DB
         Category              = "category",
         IsSpeciesScope        = "is_species_scope",
         BuildNumberIntroduced = "build_number_introduced",
-        DaysForApproval       = "days_for_approval",
         DatasetSha1Digest     = "dataset_sha1_digest";
     }
 

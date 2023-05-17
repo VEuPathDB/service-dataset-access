@@ -5,8 +5,7 @@ SELECT
   prop.study_access,
   prop.display_name,
   prop.short_display_name,
-  prop.description,
-  prop.days_for_approval
+  prop.description
 FROM
   apidbtuning.datasetpresenter pres,
   apidbtuning.studyiddatasetid study,
@@ -16,8 +15,7 @@ FROM
       MAX(DECODE(property, 'studyAccess', value)) AS study_access,
       MAX(DECODE(property, 'datasetDisplayName', value)) AS display_name,
       MAX(DECODE(property, 'datasetShortDisplayName', value)) AS short_display_name,
-      MAX(DECODE(property, 'datasetDescrip', value)) AS description,
-      MAX(DECODE(property, 'daysForApproval', value)) AS days_for_approval
+      MAX(DECODE(property, 'datasetDescrip', value)) AS description
     FROM apidbtuning.datasetproperty
     GROUP BY dataset_presenter_id
   ) prop
