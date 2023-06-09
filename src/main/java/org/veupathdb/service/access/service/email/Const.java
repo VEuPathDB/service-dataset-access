@@ -13,13 +13,19 @@ class Const
   public static final String
     FIELD_PROVIDER  = "provider-register",
     FIELD_END_USER  = "end-user-register",
-    FIELD_EDIT_NOTE = "edit-notification";
+    FIELD_EDIT_NOTE = "edit-notification",
+    FIELD_APPROVE   = "approve-notification",
+    FIELD_DENY      = "deny-notification";
 
   public static final MessageTemplate ProviderTemplate;
 
   public static final MessageTemplate EndUserTemplate;
 
   public static final MessageTemplate EditNotification;
+
+  public static final MessageTemplate ApproveNotification;
+
+  public static final MessageTemplate DenyNotification;
 
   static {
     try {
@@ -30,6 +36,8 @@ class Const
       ProviderTemplate = config.provider;
       EndUserTemplate  = config.endUser;
       EditNotification = config.edits;
+      ApproveNotification = config.approve;
+      DenyNotification = config.deny;
     } catch (final Exception e) {
       throw new RuntimeException(e);
     }
@@ -44,5 +52,12 @@ class Const
 
     @JsonProperty(FIELD_EDIT_NOTE)
     public MessageTemplate edits;
+
+    @JsonProperty(FIELD_APPROVE)
+    public MessageTemplate approve;
+
+    @JsonProperty(FIELD_DENY)
+    public MessageTemplate deny;
+
   }
 }

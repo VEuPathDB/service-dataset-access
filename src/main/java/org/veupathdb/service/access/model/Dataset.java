@@ -275,4 +275,8 @@ public class Dataset
   public Map<Property, String> getProperties() {
     return Collections.unmodifiableMap(properties);
   }
+
+  public String getRequestEmailBcc() {
+    return getProperties().get(Property.REQUEST_EMAIL_BCC);
+  }
 }

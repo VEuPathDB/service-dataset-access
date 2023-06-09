@@ -2,6 +2,8 @@ package org.veupathdb.service.access.service.user;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
+
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.InternalServerErrorException;
@@ -15,6 +17,7 @@ import org.veupathdb.service.access.model.ApprovalStatus;
 import org.veupathdb.service.access.model.EndUserRow;
 import org.veupathdb.service.access.model.RestrictionLevel;
 import org.veupathdb.service.access.model.UserRow;
+import org.veupathdb.service.access.service.account.AccountRepo;
 import org.veupathdb.service.access.service.dataset.DatasetRepo;
 import org.veupathdb.service.access.service.email.EmailService;
 import org.veupathdb.service.access.service.provider.ProviderRepo;
@@ -115,6 +118,8 @@ public class EndUserPatchService
   ) {
     log.trace("EndUserService#modPatch(row, patches)");
     var pVal = new PatchUtil();
+    boolean approved = false;
+    boolean denied = false;
 
     if (patches.isEmpty())
       throw new BadRequestException();
@@ -143,15 +148,23 @@ public class EndUserPatchService
         case Keys.Json.KEY_DISSEMINATION_PLAN -> pVal.strVal(patch, row::setDisseminationPlan);
         case Keys.Json.KEY_PRIOR_AUTH -> pVal.strVal(patch, row::setPriorAuth);
         case Keys.Json.KEY_RESTRICTION_LEVEL -> pVal.enumVal(
-          patch,
-          RestrictionLevel::valueOf,
-          row::setRestrictionLevel
-        );
-        case Keys.Json.KEY_APPROVAL_STATUS -> pVal.enumVal(
-          patch,
-          ApprovalStatus::valueOf,
-          row::setApprovalStatus
-        );
+              patch,
+              RestrictionLevel::valueOf,
+              row::setRestrictionLevel
+          );
+        case Keys.Json.KEY_APPROVAL_STATUS -> {
+          approved = ApprovalStatus.valueOf(patch.getValue().toString()) == ApprovalStatus.APPROVED;
+          denied = ApprovalStatus.valueOf(patch.getValue().toString()) == ApprovalStatus.DENIED;
+          // Allow a single self-edit after a request is rejected.
+          if (denied) {
+            row.setAllowSelfEdits(true);
+          }
+          pVal.enumVal(
+              patch,
+              ApprovalStatus::valueOf,
+              row::setApprovalStatus
+          );
+        }
         case Keys.Json.KEY_DENIAL_REASON -> pVal.strVal(patch, row::setDenialReason);
         default -> throw pVal.forbiddenOp(patch);
       }
@@ -161,6 +174,26 @@ public class EndUserPatchService
       EndUserRepo.Update.mod(row, userID);
     } catch (Exception e) {
       throw new InternalServerErrorException(e);
+    }
+
+    // Send an e-mail to the end-user whose request was approved or denied.
+    try {
+      final var ds = DatasetRepo.Select.getInstance()
+          .selectDataset(row.getDatasetId())
+          .orElseThrow();
+      Optional<String> userEmail = AccountRepo.Select.getInstance().selectEmailByUserId(userID);
+      // Carbon copy the approved/denied user in the e-mail notification
+      String[] ccs = userEmail.map(email -> new String[] { email }).orElse(new String[0]);
+      if (approved) {
+        EmailService.getInstance().sendDatasetApprovedNotificationEmail(ccs, ds, row);
+      } else if (denied) {
+        EmailService.getInstance().sendDatasetDeniedNotificationEmail(ccs, ds, row);
+      } else {
+        log.debug("No need to send an e-mail notification, as patch request did not update approval status.");
+      }
+    } catch (Exception e) {
+      log.error("Failed to send e-mail to user {}", userID, e);
+      throw new RuntimeException(e);
     }
   }
 

@@ -17,6 +17,7 @@ import org.veupathdb.service.access.Main;
 import org.veupathdb.service.access.model.Dataset;
 import org.veupathdb.service.access.model.Email;
 import org.veupathdb.service.access.model.EndUserRow;
+import org.veupathdb.service.access.util.Format;
 
 public class EmailService
 {
@@ -74,10 +75,45 @@ public class EmailService
       .setFrom(dataset.getProperties().get(Dataset.Property.REQUEST_EMAIL)));
   }
 
+  public void sendDatasetApprovedNotificationEmail(final String[] cc,
+                                                  final Dataset dataset,
+                                                  final EndUserRow user) throws Exception {
+    final var template = Const.ApproveNotification;
+    final var util     = EmailUtil.getInstance();
+
+    sendEmail(new Email()
+        .setSubject(util.populateTemplate(template.getSubject(), dataset))
+        .setBody(util.populateTemplate(template.getBody(), dataset, user))
+        .setTo(
+            Stream.concat(Arrays.stream(cc), Stream.of(Main.config.getSupportEmail()))
+                .distinct()
+                .toArray(String[]::new)
+        )
+        .setFrom(dataset.getProperties().get(Dataset.Property.REQUEST_EMAIL)));
+  }
+
+  public void sendDatasetDeniedNotificationEmail(final String[] cc,
+                                                 final Dataset dataset,
+                                                 final EndUserRow user) throws Exception {
+    final var template = Const.DenyNotification;
+    final var util     = EmailUtil.getInstance();
+
+    sendEmail(new Email()
+        .setSubject(util.populateTemplate(template.getSubject(), dataset))
+        .setBody(util.populateTemplate(template.getBody(), dataset, user))
+        .setTo(
+            Stream.concat(Arrays.stream(cc), Stream.of(Main.config.getSupportEmail()))
+                .distinct()
+                .toArray(String[]::new)
+        )
+        .setFrom(dataset.getProperties().get(Dataset.Property.REQUEST_EMAIL)));
+  }
+
+
   public void sendEmail(final Email mail) throws Exception {
     log.trace("EmailService#sendEmail(Email)");
     if (!Main.config.isEmailEnabled()) {
-      log.warn("Per configuration, email is disabled.");
+      log.warn("Per configuration, email is disabled. Would have sent {}.", Format.Json.writeValueAsString(mail));
       return;
     }
 
