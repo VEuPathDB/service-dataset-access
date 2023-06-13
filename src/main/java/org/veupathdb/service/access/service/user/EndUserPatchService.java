@@ -153,8 +153,8 @@ public class EndUserPatchService
               row::setRestrictionLevel
           );
         case Keys.Json.KEY_APPROVAL_STATUS -> {
-          approved = ApprovalStatus.valueOf(patch.getValue().toString()) == ApprovalStatus.APPROVED;
-          denied = ApprovalStatus.valueOf(patch.getValue().toString()) == ApprovalStatus.DENIED;
+          approved = ApprovalStatus.valueOf(patch.getValue().toString().toUpperCase()) == ApprovalStatus.APPROVED;
+          denied = ApprovalStatus.valueOf(patch.getValue().toString().toUpperCase()) == ApprovalStatus.DENIED;
           // Allow a single self-edit after a request is rejected.
           if (denied) {
             row.setAllowSelfEdits(true);
