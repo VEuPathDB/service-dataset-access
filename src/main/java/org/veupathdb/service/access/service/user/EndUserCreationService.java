@@ -277,7 +277,7 @@ public class EndUserCreationService
     if (req.getDuration() == 0)
       row.setDuration(-1);
 
-    row.setAllowSelfEdits(false);
+    row.setAllowSelfEdits(true);
 
     return row;
   }

@@ -40,6 +40,15 @@ public final class AccountRepo
       ).execute().getValue();
     }
 
+    public Optional<String> selectEmailByUserId(final long userId) throws Exception {
+      return new BasicPreparedReadQuery<>(
+          SQL.Select.Accounts.EmailById,
+          QueryUtil.getInstance()::getAcctDbConnection,
+          SqlUtil.optParser(SqlUtil::parseSingleString),
+          SqlUtil.prepareSingleLong(userId)
+      ).execute().getValue();
+    }
+
     public static Select getInstance() {
       if (instance == null)
         instance = new Select();

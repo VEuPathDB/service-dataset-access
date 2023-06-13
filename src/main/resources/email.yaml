@@ -34,3 +34,13 @@ edit-notification:
     Dear provider,
 
     This is to let you know that end user $end-user.lastName$, $end-user.firstName$ ($end-user.email$) just updated their access request information. Please check their updates at $app-link$/$dataset.datasetId$.
+
+approve-notification:
+  subject: $dataset.displayName$ Access Request Approved
+  body: | 
+    Your request to access $dataset.displayName$ data on ClinEpiDB has been approved. Navigate to the "Download" tab of $dataset.displayName$ to download the data. Please cite that you accessed data via ClinEpiDB. Thank you!
+
+deny-notification:
+  subject: $dataset.displayName$ Access Request Denied
+  body: |
+    Unfortunately, your request to access $dataset.displayName$ data on ClinEpiDB has been denied. Please reach out to $dataset.requestEmailBcc$ for more information. Thank you!

@@ -51,7 +51,8 @@ public interface SQL
     {
       String
         Exists    = select(Table.Accounts, "exists-by-id"),
-        IdByEmail = select(Table.Accounts, "id-by-email");
+        IdByEmail = select(Table.Accounts, "id-by-email"),
+        EmailById = select(Table.Accounts, "email-by-id");
     }
 
     interface EndUsers

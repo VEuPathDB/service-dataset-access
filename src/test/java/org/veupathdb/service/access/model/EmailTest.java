@@ -3,6 +3,10 @@ package org.veupathdb.service.access.model;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.veupathdb.lib.test.RandUtil;
+import org.veupathdb.service.access.service.email.EmailUtil;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,6 +23,16 @@ class EmailTest
     assertSame(email, target.getTo());
 
     assertThrows(NullPointerException.class, () -> target.setTo(null));
+  }
+
+  @Test
+  void templateTest() {
+    final Map<Dataset.Property, String> properties = new HashMap<>();
+    properties.put(Dataset.Property.REQUEST_EMAIL, "Test");
+    properties.put(Dataset.Property.REQUEST_EMAIL_BCC, "Test2");
+
+    final String rendered = EmailUtil.getInstance().populateTemplate("RENDERED: $dataset.requestEmailBcc$", new Dataset().putProperties(properties));
+    System.out.println(rendered);
   }
 
   @Test
