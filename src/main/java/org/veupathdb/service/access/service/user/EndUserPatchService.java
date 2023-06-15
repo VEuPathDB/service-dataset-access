@@ -181,7 +181,7 @@ public class EndUserPatchService
       final var ds = DatasetRepo.Select.getInstance()
           .selectDataset(row.getDatasetId())
           .orElseThrow();
-      Optional<String> userEmail = AccountRepo.Select.getInstance().selectEmailByUserId(userID);
+      Optional<String> userEmail = AccountRepo.Select.getInstance().selectEmailByUserId(row.getEndUserID());
       // Carbon copy the approved/denied user in the e-mail notification
       String[] ccs = userEmail.map(email -> new String[] { email }).orElse(new String[0]);
       if (approved) {
