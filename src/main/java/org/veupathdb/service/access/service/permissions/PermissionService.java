@@ -161,6 +161,10 @@ public class PermissionService
       permEntry.setActionAuthorization(actions);
 
       // add to map
+      if (permissionMap.containsKey(dataset.datasetId)) {
+        throw new IllegalStateException("Database (datasetpresenter table or studyiddatasetid table) " +
+            "contains more than one row for dataset ID " + dataset.datasetId);
+      }
       permissionMap.put(dataset.datasetId, permEntry);
     }
 
