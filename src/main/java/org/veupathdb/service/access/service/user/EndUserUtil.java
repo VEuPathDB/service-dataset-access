@@ -240,6 +240,7 @@ public class EndUserUtil
     out.setRestrictionLevel(convertRestriction(row.getRestrictionLevel()));
     out.setStartDate(Date.from(row.getStartDate().toInstant()));
     out.setPriorAuth(row.getPriorAuth());
+    out.setAllowEdit(row.isAllowSelfEdits());
 
     return out;
   }
