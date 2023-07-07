@@ -84,11 +84,7 @@ public class EmailService
     sendEmail(new Email()
         .setSubject(util.populateTemplate(template.getSubject(), dataset))
         .setBody(util.populateTemplate(template.getBody(), dataset, user))
-        .setTo(
-            Stream.concat(Arrays.stream(cc), Stream.of(Main.config.getSupportEmail()))
-                .distinct()
-                .toArray(String[]::new)
-        )
+        .setTo(cc)
         .setFrom(dataset.getProperties().get(Dataset.Property.REQUEST_EMAIL)));
   }
 
@@ -101,11 +97,7 @@ public class EmailService
     sendEmail(new Email()
         .setSubject(util.populateTemplate(template.getSubject(), dataset))
         .setBody(util.populateTemplate(template.getBody(), dataset, user))
-        .setTo(
-            Stream.concat(Arrays.stream(cc), Stream.of(Main.config.getSupportEmail()))
-                .distinct()
-                .toArray(String[]::new)
-        )
+        .setTo(cc)
         .setFrom(dataset.getProperties().get(Dataset.Property.REQUEST_EMAIL)));
   }
 

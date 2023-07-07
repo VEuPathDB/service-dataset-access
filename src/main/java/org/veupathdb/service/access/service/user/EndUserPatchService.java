@@ -85,6 +85,9 @@ public class EndUserPatchService
     // manager or provider stepping in to re-enable self edits.
     row.setAllowSelfEdits(false);
 
+    // Set approval status to requested when a self-patch is made.
+    row.setApprovalStatus(ApprovalStatus.REQUESTED);
+
     try {
       final var ds = DatasetRepo.Select.getInstance()
         .selectDataset(row.getDatasetId())
