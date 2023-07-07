@@ -157,6 +157,7 @@ public class EndUserPatchService
           denied = ApprovalStatus.valueOf(patch.getValue().toString().toUpperCase()) == ApprovalStatus.DENIED;
           // Allow a single self-edit after a request is rejected.
           if (denied) {
+            log.info("Allowing self-edits because request was {}.", patch.getValue().toString());
             row.setAllowSelfEdits(true);
           }
           pVal.enumVal(
@@ -181,7 +182,7 @@ public class EndUserPatchService
       final var ds = DatasetRepo.Select.getInstance()
           .selectDataset(row.getDatasetId())
           .orElseThrow();
-      Optional<String> userEmail = AccountRepo.Select.getInstance().selectEmailByUserId(row.getEndUserID());
+      Optional<String> userEmail = AccountRepo.Select.getInstance().selectEmailByUserId(row.getUserId());
       // Carbon copy the approved/denied user in the e-mail notification
       String[] ccs = userEmail.map(email -> new String[] { email }).orElse(new String[0]);
       if (approved) {
