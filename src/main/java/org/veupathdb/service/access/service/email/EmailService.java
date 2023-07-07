@@ -117,6 +117,7 @@ public class EmailService
       return;
     }
 
+    log.debug("Sending e-mail with subject: " + mail.getSubject());
     final var props = new Properties();
     try {
       final var util = EmailUtil.getInstance();
