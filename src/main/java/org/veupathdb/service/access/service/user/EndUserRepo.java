@@ -240,6 +240,7 @@ public class EndUserRepo
             .setBoolean(row.isAllowSelfEdits())
             .setLong(row.getUserId())
             .setString(row.getDatasetId())
+            .setShort(ApprovalStatusCache.getInstance().get(row.getApprovalStatus()).orElseThrow())
             ::build
         ).execute();
 
