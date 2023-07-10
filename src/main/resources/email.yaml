@@ -43,4 +43,4 @@ approve-notification:
 deny-notification:
   subject: $dataset.displayName$ Access Request Denied
   body: |
-    Unfortunately, your request to access $dataset.displayName$ data on ClinEpiDB has been denied. Please reach out to $dataset.requestEmailBcc$ for more information. Thank you!
+    Unfortunately, your request to access $dataset.displayName$ data on ClinEpiDB has been denied for the following reason: "$end-user.denialReason$". Please reach out to $dataset.requestEmailBcc$ for more information. Thank you!
