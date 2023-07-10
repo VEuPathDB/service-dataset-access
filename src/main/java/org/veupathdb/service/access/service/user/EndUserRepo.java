@@ -226,7 +226,7 @@ public class EndUserRepo
   {
     static void self(final EndUserRow row, final long updaterID) throws Exception {
       log.trace("EndUserRepo$Update#self(EndUserRow)");
-
+      log.info("Approval status: " + ApprovalStatusCache.getInstance().get(row.getApprovalStatus()));
       try (var con = QueryUtil.acctDbConnection()) {
         new BasicPreparedWriteQuery(
           SQL.Update.EndUser.SelfUpdate,
@@ -238,9 +238,9 @@ public class EndUserRepo
             .setString(row.getDisseminationPlan())
             .setString(row.getPriorAuth())
             .setBoolean(row.isAllowSelfEdits())
+            .setShort(ApprovalStatusCache.getInstance().get(row.getApprovalStatus()).orElseThrow())
             .setLong(row.getUserId())
             .setString(row.getDatasetId())
-            .setShort(ApprovalStatusCache.getInstance().get(row.getApprovalStatus()).orElseThrow())
             ::build
         ).execute();
 
