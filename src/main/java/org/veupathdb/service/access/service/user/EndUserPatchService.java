@@ -1,8 +1,10 @@
 package org.veupathdb.service.access.service.user;
 
 import java.time.OffsetDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.ForbiddenException;
@@ -11,10 +13,12 @@ import jakarta.ws.rs.WebApplicationException;
 
 import org.apache.logging.log4j.Logger;
 import org.veupathdb.lib.container.jaxrs.providers.LogProvider;
+import org.veupathdb.service.access.Main;
 import org.veupathdb.service.access.generated.model.EndUserPatch;
 import org.veupathdb.service.access.generated.model.EndUserPatch.OpType;
 import org.veupathdb.service.access.model.ApprovalStatus;
 import org.veupathdb.service.access.model.EndUserRow;
+import org.veupathdb.service.access.model.ProviderRow;
 import org.veupathdb.service.access.model.RestrictionLevel;
 import org.veupathdb.service.access.model.UserRow;
 import org.veupathdb.service.access.service.account.AccountRepo;
@@ -186,8 +190,15 @@ public class EndUserPatchService
           .selectDataset(row.getDatasetId())
           .orElseThrow();
       Optional<String> userEmail = AccountRepo.Select.getInstance().selectEmailByUserId(row.getUserId());
-      // Carbon copy the approved/denied user in the e-mail notification
-      String[] ccs = userEmail.map(email -> new String[] { email }).orElse(new String[0]);
+
+      final var managers = ProviderRepo.Select.byDataset(row.getDatasetId(), 100L, 0L).stream()
+          .filter(ProviderRow::isManager)
+          .map(UserRow::getEmail)
+          .toArray(String[]::new);
+
+      // Send to the approved/denied user in the e-mail notification as well as managers and support.
+      String[] ccs = Stream.concat(Stream.concat(userEmail.stream(), Arrays.stream(managers)), Stream.of(Main.config.getSupportEmail()))
+          .toArray(String[]::new);
       if (approved) {
         EmailService.getInstance().sendDatasetApprovedNotificationEmail(ccs, ds, row);
       } else if (denied) {

@@ -18,7 +18,9 @@ public class Dataset
     // TO address
     REQUEST_EMAIL_BCC("requestEmailBcc"),
     REQUEST_EMAIL_BODY("requestEmailBody"),
-    REQUEST_NEEDS_APPROVAL("requestNeedsApproval");
+    REQUEST_NEEDS_APPROVAL("requestNeedsApproval"),
+
+    CUSTOM_APPROVAL_EMAIL_BODY("customApprovalEmailBody");
 
     public final String dbName;
 
@@ -279,4 +281,9 @@ public class Dataset
   public String getRequestEmailBcc() {
     return getProperties().get(Property.REQUEST_EMAIL_BCC);
   }
+
+  public String getCustomApprovalEmailBody() {
+    return getProperties().get(Property.CUSTOM_APPROVAL_EMAIL_BODY);
+  }
+
 }

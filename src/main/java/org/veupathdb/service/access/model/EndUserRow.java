@@ -2,6 +2,10 @@ package org.veupathdb.service.access.model;
 
 import java.time.OffsetDateTime;
 
+/**
+ * Database representation of an "EndUser". The name EndUser is slightly misleading. These entities correspond to a
+ * dataset access request for a user to gain access to a particular dataset.
+ */
 public class EndUserRow extends UserRow
 {
   private long             endUserID;

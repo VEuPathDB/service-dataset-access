@@ -38,7 +38,13 @@ edit-notification:
 approve-notification:
   subject: $dataset.displayName$ Access Request Approved
   body: | 
-    Your request to access $dataset.displayName$ data on ClinEpiDB has been approved. Navigate to the "Download" tab of $dataset.displayName$ to download the data. Please cite that you accessed data via ClinEpiDB. Thank you!
+    Your request to access $dataset.displayName$ data on ClinEpiDB has been approved. Navigate to the "Download" tab of $dataset.displayName$ to download the data. Please cite that you accessed data via ClinEpiDB.
+    $if(dataset.customApprovalEmailBody)$
+    
+        $dataset.customApprovalEmailBody$
+    $endif$
+    
+    Thank you!
 
 deny-notification:
   subject: $dataset.displayName$ Access Request Denied

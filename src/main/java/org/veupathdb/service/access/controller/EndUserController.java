@@ -20,6 +20,7 @@ import org.veupathdb.service.access.service.user.EndUserSearchService;
 
 import static org.veupathdb.service.access.service.provider.ProviderService.userIsManager;
 import static org.veupathdb.service.access.service.staff.StaffService.userIsOwner;
+import static org.veupathdb.service.access.service.staff.StaffService.userIsStaff;
 
 @Authenticated
 public class EndUserController implements DatasetEndUsers
@@ -70,9 +71,9 @@ public class EndUserController implements DatasetEndUsers
     final var curUser = Util.requireUser(_request);
     final var endUser = EndUserLookupService.getRawEndUser(endUserId);
 
-    if (endUser.getUserId() == curUser.getUserID()) {
+    if (endUser.getUserId() == curUser.getUserID()) { // Users can edit some of the fields of their request.
       EndUserPatchService.selfPatch(endUser, entity, curUser.getUserID());
-    } else if (userIsManager(curUser.getUserID(), endUser.getDatasetId()) || userIsOwner(curUser.getUserID())) {
+    } else if (userIsManager(curUser.getUserID(), endUser.getDatasetId()) || userIsStaff(curUser.getUserID())) { // Only managers can approve and edit.
       EndUserPatchService.modPatch(endUser, entity, curUser.getUserID());
     } else {
       throw new ForbiddenException();

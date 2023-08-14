@@ -20,7 +20,9 @@ import org.veupathdb.service.access.generated.model.StaffListImpl;
 import org.veupathdb.service.access.generated.model.StaffPatch;
 import org.veupathdb.service.access.generated.model.UserDetailsImpl;
 import org.veupathdb.service.access.model.PartialStaffRow;
+import org.veupathdb.service.access.model.ProviderRow;
 import org.veupathdb.service.access.model.StaffRow;
+import org.veupathdb.service.access.service.provider.ProviderRepo;
 import org.veupathdb.service.access.util.Keys;
 
 public class StaffService {
@@ -90,6 +92,25 @@ public class StaffService {
 
     try {
       return StaffRepo.Select.byUserId(userId).filter(StaffRow::isOwner).isPresent();
+    } catch (WebApplicationException e) {
+      throw e;
+    } catch (Throwable e) {
+      throw new InternalServerErrorException(e);
+    }
+  }
+
+  /**
+   * Looks up whether the given userId belongs to a site owner.
+   *
+   * @return whether or not the given userId belongs to a site owner.
+   */
+  public boolean isUserManager(final long userId, final String datasetId) {
+    log.trace("StaffService#isUserOwner(long)");
+
+    try {
+      return ProviderRepo.Select.byUserAndDataset(userId, datasetId)
+          .filter(ProviderRow::isManager)
+          .isPresent();
     } catch (WebApplicationException e) {
       throw e;
     } catch (Throwable e) {
