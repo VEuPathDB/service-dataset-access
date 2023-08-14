@@ -4,7 +4,7 @@ import java.time.Duration;
 import java.util.Optional;
 
 /**
- * A representation of the dataset properties in
+ * A representation of the dataset properties present in tuning tables. 
  */
 public class DatasetProps {
 
