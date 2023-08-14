@@ -26,18 +26,6 @@ class EmailTest
   }
 
   @Test
-  void templateTest() {
-    final Map<Dataset.Property, String> properties = new HashMap<>();
-    properties.put(Dataset.Property.REQUEST_EMAIL, "Test");
-    properties.put(Dataset.Property.REQUEST_EMAIL_BCC, "Test2");
-//    final String rendered = EmailUtil.getInstance().populateTemplate("RENDERED: $dataset.requestEmailBcc$", new Dataset().putProperties(properties));
-    final String rendered = EmailUtil.getInstance().populateTemplate("    " +
-        "$if(dataset.requestEmailBcc)$\n\n$dataset.requestEmailBcc$\n$else$\nDefault\n$endif$\n", new Dataset().putProperties(properties));
-
-    System.out.println(rendered);
-  }
-
-  @Test
   @DisplayName("Email.cc accessors function as expected")
   void test2() {
     final var target = new Email();
