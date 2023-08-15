@@ -32,10 +32,17 @@ public class EmailService
     final var template = Const.EndUserTemplate;
     final var util     = EmailUtil.getInstance();
 
+
     log.info("Sending email");
     sendEmail(new Email()
-      .setSubject(util.populateTemplate(template.getSubject(), dataset))
-      .setBody(util.populateTemplate(template.getBody(), dataset))
+      .setSubject(util.populateTemplate(EmailUtil.TemplateInput.newBuilder()
+          .withDataset(dataset)
+          .withTemplate(template.getSubject())
+          .build()))
+      .setBody(util.populateTemplate(EmailUtil.TemplateInput.newBuilder()
+          .withDataset(dataset)
+          .withTemplate(template.getBody())
+          .build()))
       .setFrom(dataset.getProperties().get(Dataset.Property.REQUEST_EMAIL))
       .setTo(new String[]{address}));
   }
@@ -48,8 +55,14 @@ public class EmailService
     final var util     = EmailUtil.getInstance();
 
     sendEmail(new Email()
-      .setSubject(util.populateTemplate(template.getSubject(), dataset))
-      .setBody(util.populateTemplate(template.getBody(), dataset))
+      .setSubject(util.populateTemplate(EmailUtil.TemplateInput.newBuilder()
+          .withDataset(dataset)
+          .withTemplate(template.getSubject())
+          .build()))
+      .setBody(util.populateTemplate(EmailUtil.TemplateInput.newBuilder()
+          .withDataset(dataset)
+          .withTemplate(template.getBody())
+          .build()))
       .setFrom(dataset.getProperties().get(Dataset.Property.REQUEST_EMAIL))
       .setTo(new String[]{address}));
   }
@@ -65,8 +78,15 @@ public class EmailService
     final var util     = EmailUtil.getInstance();
 
     sendEmail(new Email()
-      .setSubject(util.populateTemplate(template.getSubject(), dataset))
-      .setBody(util.populateTemplate(template.getBody(), dataset, user))
+      .setSubject(util.populateTemplate(EmailUtil.TemplateInput.newBuilder()
+          .withDataset(dataset)
+          .withTemplate(template.getSubject())
+          .build()))
+      .setBody(util.populateTemplate(EmailUtil.TemplateInput.newBuilder()
+          .withDataset(dataset)
+          .withTemplate(template.getBody())
+          .withEndUserRow(user)
+          .build()))
       .setTo(
         Stream.concat(Arrays.stream(cc), Stream.of(Main.config.getSupportEmail()))
           .distinct()
@@ -76,27 +96,45 @@ public class EmailService
   }
 
   public void sendDatasetApprovedNotificationEmail(final String[] cc,
-                                                  final Dataset dataset,
-                                                  final EndUserRow user) throws Exception {
+                                                   final Dataset dataset,
+                                                   final EndUserRow user,
+                                                   final String[] managerEmails) throws Exception {
     final var template = Const.ApproveNotification;
     final var util     = EmailUtil.getInstance();
 
     sendEmail(new Email()
-        .setSubject(util.populateTemplate(template.getSubject(), dataset))
-        .setBody(util.populateTemplate(template.getBody(), dataset, user))
+        .setSubject(util.populateTemplate(EmailUtil.TemplateInput.newBuilder()
+            .withDataset(dataset)
+            .withTemplate(template.getSubject())
+            .build()))
+        .setBody(util.populateTemplate(EmailUtil.TemplateInput.newBuilder()
+            .withDataset(dataset)
+            .withTemplate(template.getBody())
+            .withEndUserRow(user)
+            .withManagerEmails(managerEmails)
+            .build()))
         .setTo(cc)
         .setFrom(dataset.getProperties().get(Dataset.Property.REQUEST_EMAIL)));
   }
 
   public void sendDatasetDeniedNotificationEmail(final String[] cc,
                                                  final Dataset dataset,
-                                                 final EndUserRow user) throws Exception {
+                                                 final EndUserRow user,
+                                                 final String[] managerEmails) throws Exception {
     final var template = Const.DenyNotification;
     final var util     = EmailUtil.getInstance();
 
     sendEmail(new Email()
-        .setSubject(util.populateTemplate(template.getSubject(), dataset))
-        .setBody(util.populateTemplate(template.getBody(), dataset, user))
+        .setSubject(util.populateTemplate(EmailUtil.TemplateInput.newBuilder()
+            .withDataset(dataset)
+            .withTemplate(template.getSubject())
+            .build()))
+        .setBody(util.populateTemplate(EmailUtil.TemplateInput.newBuilder()
+            .withDataset(dataset)
+            .withTemplate(template.getBody())
+            .withEndUserRow(user)
+            .withManagerEmails(managerEmails)
+            .build()))
         .setTo(cc)
         .setFrom(dataset.getProperties().get(Dataset.Property.REQUEST_EMAIL)));
   }

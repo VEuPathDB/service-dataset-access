@@ -191,18 +191,20 @@ public class EndUserPatchService
           .orElseThrow();
       Optional<String> userEmail = AccountRepo.Select.getInstance().selectEmailByUserId(row.getUserId());
 
-      final var managers = ProviderRepo.Select.byDataset(row.getDatasetId(), 100L, 0L).stream()
+      final var managerEmails = ProviderRepo.Select.byDataset(row.getDatasetId(), 100L, 0L).stream()
           .filter(ProviderRow::isManager)
           .map(UserRow::getEmail)
           .toArray(String[]::new);
 
       // Send to the approved/denied user in the e-mail notification as well as managers and support.
-      String[] ccs = Stream.concat(Stream.concat(userEmail.stream(), Arrays.stream(managers)), Stream.of(Main.config.getSupportEmail()))
+      String[] ccs = Stream.concat(
+          Stream.concat(userEmail.stream(), Arrays.stream(managerEmails)),
+              Stream.of(Main.config.getSupportEmail()))
           .toArray(String[]::new);
       if (approved) {
-        EmailService.getInstance().sendDatasetApprovedNotificationEmail(ccs, ds, row);
+        EmailService.getInstance().sendDatasetApprovedNotificationEmail(ccs, ds, row, managerEmails);
       } else if (denied) {
-        EmailService.getInstance().sendDatasetDeniedNotificationEmail(ccs, ds, row);
+        EmailService.getInstance().sendDatasetDeniedNotificationEmail(ccs, ds, row, managerEmails);
       } else {
         log.debug("No need to send an e-mail notification, as patch request did not update approval status.");
       }
