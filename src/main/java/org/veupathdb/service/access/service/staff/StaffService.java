@@ -20,7 +20,9 @@ import org.veupathdb.service.access.generated.model.StaffListImpl;
 import org.veupathdb.service.access.generated.model.StaffPatch;
 import org.veupathdb.service.access.generated.model.UserDetailsImpl;
 import org.veupathdb.service.access.model.PartialStaffRow;
+import org.veupathdb.service.access.model.ProviderRow;
 import org.veupathdb.service.access.model.StaffRow;
+import org.veupathdb.service.access.service.provider.ProviderRepo;
 import org.veupathdb.service.access.util.Keys;
 
 public class StaffService {
@@ -97,6 +99,9 @@ public class StaffService {
     }
   }
 
+  /**
+   * Checks whether staff user is an "owner", meaning they are allowed to manage access requests on behalf of providers.
+   */
   public static boolean userIsOwner(final long userId) {
     return getInstance().isUserOwner(userId);
   }

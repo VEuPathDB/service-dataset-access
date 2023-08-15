@@ -23,6 +23,7 @@ public final class DatasetRepo
     static final String PROP_SHORT_DISPLAY_NAME = "short_display_name";
     static final String PROP_DESCRIPTION = "description";
     static final String PROP_DAYS_FOR_APPROVAL = "days_for_approval";
+    static final String PROP_CUSTOM_APPROVAL_EMAIL_BODY = "custom_approval_email_body";
 
     static Select instance;
 
@@ -47,6 +48,7 @@ public final class DatasetRepo
             rs.getString(PROP_DISPLAY_NAME),
             rs.getString(PROP_SHORT_DISPLAY_NAME),
             rs.getString(PROP_DESCRIPTION),
+            rs.getString(PROP_CUSTOM_APPROVAL_EMAIL_BODY),
             Optional.ofNullable(rs.getString(PROP_DAYS_FOR_APPROVAL))
                 .map(Long::parseLong)
                 .orElse(null)

@@ -24,7 +24,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 
-@Authenticated
+@Authenticated(allowGuests = true)
 public class ApproveEligibleStudiesController implements ApproveEligibleAccessRequests {
   private static final long SERVICE_USER_ID = 1926010L;
   private static final Logger LOG = LogManager.getLogger(ApproveEligibleStudiesController.class);
