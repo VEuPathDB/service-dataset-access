@@ -28,6 +28,8 @@ end-user-register:
     Please register for an account at $sign-up-link$ or, if you already have an account, please provide the email address linked to your account.
 
 # Email sent to providers when an end user updates their access request fields.
+# NOTE: This is not in use currently, as edits are handled on the WDK side.
+# TODO: If we decide to consolidate management of all dataset access in this service, we need to revisit verbiage.
 edit-notification:
   subject: $dataset.displayName$ Access Request Update
   body: |
@@ -35,6 +37,7 @@ edit-notification:
 
     This is to let you know that end user $end-user.lastName$, $end-user.firstName$ ($end-user.email$) just updated their access request information. Please check their updates at $app-link$/$dataset.datasetId$.
 
+# Email sent when a dataset access request is approved by a study manager.
 approve-notification:
   subject: $dataset.displayName$ Access Request Approved
   body: | 
@@ -46,6 +49,7 @@ approve-notification:
     
     Thank you!
 
+# Email sent when a dataset access request is rejected by a study manager.
 deny-notification:
   subject: $dataset.displayName$ Access Request Denied
   body: |

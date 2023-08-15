@@ -73,7 +73,7 @@ public class EndUserController implements DatasetEndUsers
 
     if (endUser.getUserId() == curUser.getUserID()) { // Users can edit some of the fields of their request.
       EndUserPatchService.selfPatch(endUser, entity, curUser.getUserID());
-    } else if (userIsManager(curUser.getUserID(), endUser.getDatasetId()) || userIsStaff(curUser.getUserID())) { // Only managers can approve and edit.
+    } else if (userIsManager(curUser.getUserID(), endUser.getDatasetId()) || userIsOwner(curUser.getUserID())) {
       EndUserPatchService.modPatch(endUser, entity, curUser.getUserID());
     } else {
       throw new ForbiddenException();

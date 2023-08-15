@@ -100,24 +100,8 @@ public class StaffService {
   }
 
   /**
-   * Looks up whether the given userId belongs to a site owner.
-   *
-   * @return whether or not the given userId belongs to a site owner.
+   * Checks whether staff user is an "owner", meaning they are allowed to manage access requests on behalf of providers.
    */
-  public boolean isUserManager(final long userId, final String datasetId) {
-    log.trace("StaffService#isUserOwner(long)");
-
-    try {
-      return ProviderRepo.Select.byUserAndDataset(userId, datasetId)
-          .filter(ProviderRow::isManager)
-          .isPresent();
-    } catch (WebApplicationException e) {
-      throw e;
-    } catch (Throwable e) {
-      throw new InternalServerErrorException(e);
-    }
-  }
-
   public static boolean userIsOwner(final long userId) {
     return getInstance().isUserOwner(userId);
   }
