@@ -6,7 +6,8 @@ SELECT
   prop.display_name,
   prop.short_display_name,
   prop.description,
-  prop.days_for_approval
+  prop.days_for_approval,
+  prop.custom_approval_email_body
 FROM
   apidbtuning.datasetpresenter pres,
   apidbtuning.studyiddatasetid study,
@@ -17,7 +18,8 @@ FROM
       MAX(DECODE(property, 'datasetDisplayName', value)) AS display_name,
       MAX(DECODE(property, 'datasetShortDisplayName', value)) AS short_display_name,
       MAX(DECODE(property, 'datasetDescrip', value)) AS description,
-      MAX(DECODE(property, 'daysForApproval', value)) AS days_for_approval
+      MAX(DECODE(property, 'daysForApproval', value)) AS days_for_approval,
+      MAX(DECODE(property, 'customApprovalEmailBody', value)) AS custom_approval_email_body
     FROM apidbtuning.datasetproperty
     GROUP BY dataset_presenter_id
   ) prop
