@@ -54,18 +54,20 @@ public class EmailUtil
     log = LogProvider.logger(EmailUtil.class);
   }
 
-  public String populateTemplate(final String tpl, final Dataset dataset, final EndUserRow user) {
-    final var inject = new ST(tpl, TEMPLATE_DELIM, TEMPLATE_DELIM);
-    populateInjection(inject, dataset);
+  public String populateTemplate(TemplateInput templateInput) {
+    final var inject = new ST(templateInput.template, TEMPLATE_DELIM, TEMPLATE_DELIM);
+    inject.add("dataset", templateInput.dataset);
+    inject.add("site-url", Main.config.getSiteUrl());
+    inject.add("sign-up-link", URI.create(makeUrl(Main.config.getRegistrationPath())));
+    inject.add("app-link", URI.create(makeUrl(Main.config.getApplicationPath())));
 
-    inject.add("end-user", user);
+    if (templateInput.managerEmails != null) {
+      inject.add("manager-emails", String.join(", ", templateInput.managerEmails));
+    }
+    if (templateInput.endUserRow != null) {
+      inject.add("end-user", templateInput.endUserRow);
+    }
 
-    return inject.render();
-  }
-
-  public String populateTemplate(final String template, final Dataset dataset) {
-    final var inject = new ST(template, TEMPLATE_DELIM, TEMPLATE_DELIM);
-    populateInjection(inject, dataset);
     return inject.render();
   }
 
@@ -159,14 +161,59 @@ public class EmailUtil
     return message;
   }
 
-  void populateInjection(final ST inject, final Dataset ds) {
-    inject.add("dataset", ds);
-    inject.add("site-url", Main.config.getSiteUrl());
-    inject.add("sign-up-link", URI.create(makeUrl(Main.config.getRegistrationPath())));
-    inject.add("app-link", URI.create(makeUrl(Main.config.getApplicationPath())));
-  }
-
   String makeUrl(final String path) {
     return Main.config.getSiteUrl() + (path.charAt(0) == '/' ? path : "/" + path);
+  }
+
+  public static class TemplateInput {
+    private final String template;
+    private final String[] managerEmails;
+    private final Dataset dataset;
+    private final EndUserRow endUserRow;
+
+    private TemplateInput(Builder builder) {
+      template = builder.template;
+      managerEmails = builder.managerEmails;
+      dataset = builder.dataset;
+      endUserRow = builder.endUserRow;
+    }
+
+    public static Builder newBuilder() {
+      return new Builder();
+    }
+
+    public static final class Builder {
+      private String template;
+      private String[] managerEmails;
+      private Dataset dataset;
+      private EndUserRow endUserRow;
+
+      private Builder() {
+      }
+
+      public Builder withTemplate(String val) {
+        template = val;
+        return this;
+      }
+
+      public Builder withManagerEmails(String[] val) {
+        managerEmails = val;
+        return this;
+      }
+
+      public Builder withDataset(Dataset val) {
+        dataset = val;
+        return this;
+      }
+
+      public Builder withEndUserRow(EndUserRow val) {
+        endUserRow = val;
+        return this;
+      }
+
+      public TemplateInput build() {
+        return new TemplateInput(this);
+      }
+    }
   }
 }
