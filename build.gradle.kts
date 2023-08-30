@@ -2,7 +2,7 @@ import org.veupathdb.lib.gradle.container.util.Logger.Level
 
 plugins {
   java
-  id("org.veupathdb.lib.gradle.container.container-utils") version "4.8.5"
+  id("org.veupathdb.lib.gradle.container.container-utils") version "4.8.9"
   id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
@@ -75,8 +75,8 @@ repositories {
 //
 
 // versions
-val coreLib       = "6.15.2"         // Container core lib version
-val fgputil       = "2.12.6-jakarta" // FgpUtil version
+val coreLib       = "6.16.0"         // Container core lib version
+val fgputil       = "2.12.9-jakarta" // FgpUtil version
 
 // ensures changing and dynamic modules are never cached
 configurations.all {
@@ -101,8 +101,8 @@ dependencies {
   implementation("org.glassfish.jersey.core:jersey-server:3.1.1")
 
   // Jackson
-  implementation("com.fasterxml.jackson.core:jackson-databind:2.14.2")
-  implementation("com.fasterxml.jackson.core:jackson-annotations:2.14.2")
+  implementation("com.fasterxml.jackson.core:jackson-databind:2.15.1")
+  implementation("com.fasterxml.jackson.core:jackson-annotations:2.15.1")
   implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.14.2")
 
   // Log4J
@@ -121,8 +121,8 @@ dependencies {
   implementation("io.vulpine.lib:lib-query-util:2.1.0")
   implementation("javax.mail", "mail", "1.5.0-b01")
   implementation("org.antlr", "ST4", "4.3.1")
-  implementation("info.picocli:picocli:4.7.1")
-  annotationProcessor("info.picocli:picocli-codegen:4.7.1")
+  implementation("info.picocli:picocli:4.7.3")
+  annotationProcessor("info.picocli:picocli-codegen:4.7.3")
 
   // Unit Testing
   testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
