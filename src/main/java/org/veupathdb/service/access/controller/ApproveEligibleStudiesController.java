@@ -22,11 +22,29 @@ import org.veupathdb.service.access.util.Keys;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.TextStyle;
+import java.time.temporal.ChronoField;
 import java.util.List;
 
 @Authenticated(allowGuests = true)
 public class ApproveEligibleStudiesController implements ApproveEligibleAccessRequests {
   private static final long SERVICE_USER_ID = 1926010L;
+  private static final DateTimeFormatter APPROVAL_REASON_FORMAT = new DateTimeFormatterBuilder()
+      .appendText(ChronoField.DAY_OF_WEEK, TextStyle.SHORT)
+      .appendPattern(", ")
+      .appendValue(ChronoField.DAY_OF_MONTH)
+      .appendPattern(" ")
+      .appendText(ChronoField.MONTH_OF_YEAR, TextStyle.SHORT)
+      .appendPattern(" ")
+      .appendValue(ChronoField.YEAR)
+      .appendPattern(" hh:mm:ss zzz")
+      .toFormatter();
+
+//      DateTimeFormatter.ofPattern("EEE, dd mmm")
   private static final Logger LOG = LogManager.getLogger(ApproveEligibleStudiesController.class);
 
   @Context
@@ -73,11 +91,22 @@ public class ApproveEligibleStudiesController implements ApproveEligibleAccessRe
 
   private void approveRequestAsUser(EndUserRow endUser) {
     LOG.info("Approving request for {}", endUser.getEndUserID());
-    final EndUserPatch patch = new EndUserPatchImpl();
-    patch.setOp(EndUserPatch.OpType.REPLACE);
-    patch.setPath("/" + Keys.Json.KEY_APPROVAL_STATUS);
-    patch.setValue(org.veupathdb.service.access.generated.model.ApprovalStatus.APPROVED.getValue());
+    final EndUserPatch statusPatch = new EndUserPatchImpl();
+    statusPatch.setOp(EndUserPatch.OpType.REPLACE);
+    statusPatch.setPath("/" + Keys.Json.KEY_APPROVAL_STATUS);
+    statusPatch.setValue(org.veupathdb.service.access.generated.model.ApprovalStatus.APPROVED.getValue());
+
+    final EndUserPatch notePatch = new EndUserPatchImpl();
+    notePatch.setOp(EndUserPatch.OpType.REPLACE);
+
+    // Note that this is set as a "denial reason" even though the request is approved. We mis-use the denial reason as
+    // a general "state change reason" in the UI.
+    notePatch.setPath("/" + Keys.Json.KEY_DENIAL_REASON);
+
+    // This DateTimeFormat is used for consistency with values passed by client.
+    notePatch.setValue(ZonedDateTime.now(ZoneId.of("GMT")).format(APPROVAL_REASON_FORMAT) + ": System approved request.");
+
     // Handles sending the e-mail and updating history.
-    EndUserPatchService.modPatch(endUser, List.of(patch), SERVICE_USER_ID);
+    EndUserPatchService.modPatch(endUser, List.of(statusPatch, notePatch), SERVICE_USER_ID);
   }
 }
