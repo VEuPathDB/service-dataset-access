@@ -96,13 +96,19 @@ public class EndUserPatchService
       final var ds = DatasetRepo.Select.getInstance()
         .selectDataset(row.getDatasetId())
         .orElseThrow();
-      final var ccs = ProviderRepo.Select.byDataset(row.getDatasetId(), 100L, 0L)
-        .stream()
+      Optional<String> userEmail = AccountRepo.Select.getInstance().selectEmailByUserId(row.getUserId());
+      final var ccs = ProviderRepo.Select.byDataset(row.getDatasetId(), 100L, 0L).stream()
         .map(UserRow::getEmail)
         .toArray(String[]::new);
       EndUserRepo.Update.self(row, userID);
       EmailService.getInstance()
-        .sendEndUserUpdateNotificationEmail(ccs, ds, row);
+        .sendEndUserUpdateNotificationEmail(ccs, ds, row, ds.getRequestEmailBodyManager());
+
+      if (userEmail.isPresent()) {
+        EmailService.getInstance()
+            .sendEndUserUpdateNotificationEmail(new String[]{ userEmail.get() }, ds, row, ds.getRequestEmailBodyRequester());
+      }
+
     } catch (WebApplicationException e) {
       throw e;
     } catch (Exception e) {

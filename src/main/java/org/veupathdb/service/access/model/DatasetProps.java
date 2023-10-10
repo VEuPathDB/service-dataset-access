@@ -17,6 +17,8 @@ public class DatasetProps {
   public final String description;
   public final Duration durationForApproval;
   public final String customApprovalEmailBody;
+  public final String requestEmailBodyRequester;
+  public final String requestEmailBodyManager;
 
   public DatasetProps(
       final String datasetId,
@@ -27,7 +29,9 @@ public class DatasetProps {
       final String shortDisplayName,
       final String description,
       final String customApprovalEmailBody,
-      final Long daysForApproval) {
+      final Long daysForApproval,
+      final String requestEmailBodyRequester,
+      final String requestEmailBodyManager) {
     this.datasetId = datasetId;
     this.studyId = studyId;
     this.sha1hash = sha1hash;
@@ -39,6 +43,8 @@ public class DatasetProps {
     this.durationForApproval = Optional.ofNullable(daysForApproval)
         .map(Duration::ofDays)
         .orElse(null);
+    this.requestEmailBodyRequester = requestEmailBodyRequester;
+    this.requestEmailBodyManager = requestEmailBodyManager;
   }
 
 }

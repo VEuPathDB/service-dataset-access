@@ -19,7 +19,7 @@ SELECT
       apidbtuning.datasetproperty
     WHERE
       dataset_presenter_id = d.dataset_presenter_id
-      AND property IN ('requestEmail', 'requestEmailBcc')
+      AND property IN ('requestEmail', 'requestEmailBcc', 'requestEmailBodyRequester', 'requestEmailBodyManager', 'daysForApproval', 'requestAccessFields')
   ) AS properties
 FROM
   apidbtuning.datasetpresenter d

@@ -24,6 +24,8 @@ public final class DatasetRepo
     static final String PROP_DESCRIPTION = "description";
     static final String PROP_DAYS_FOR_APPROVAL = "days_for_approval";
     static final String PROP_CUSTOM_APPROVAL_EMAIL_BODY = "custom_approval_email_body";
+    static final String PROP_REQUEST_EMAIL_BODY_REQUESTER = "request_email_body_requester";
+    static final String PROP_REQUEST_EMAIL_BODY_MANAGER = "request_email_body_manager";
 
     static Select instance;
 
@@ -51,7 +53,9 @@ public final class DatasetRepo
             rs.getString(PROP_CUSTOM_APPROVAL_EMAIL_BODY),
             Optional.ofNullable(rs.getString(PROP_DAYS_FOR_APPROVAL))
                 .map(Long::parseLong)
-                .orElse(null)
+                .orElse(null),
+            rs.getString(PROP_REQUEST_EMAIL_BODY_REQUESTER),
+            rs.getString(PROP_REQUEST_EMAIL_BODY_MANAGER)
           ));
         }
         return datasetProps;
