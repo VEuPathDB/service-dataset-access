@@ -204,6 +204,9 @@ public class EmailUtil
   }
 
 
+  /**
+   * Variables whose values may be substituted into e-mail templates.
+   */
   public static class TemplateInput {
     private final String template;
     private final String[] managerEmails;
@@ -223,10 +226,14 @@ public class EmailUtil
       return new FirstStepTemplateBuilder();
     }
 
+    /**
+     * The first step of the builder is to provide the dataset, as some subsequent builder methods depend on the
+     * dataset.
+     */
     public static final class FirstStepTemplateBuilder {
       private Dataset dataset;
 
-
+      // Unlock second step builder methods after dataset is specified.
       public SecondStepTemplateBuilder withDataset(Dataset val) {
         dataset = val;
         return new SecondStepTemplateBuilder(dataset);
@@ -261,6 +268,9 @@ public class EmailUtil
 
       public SecondStepTemplateBuilder withUserSpecificContent(String val) {
         if (val != null) {
+          // This is a bit of hack. Since this content is coming from the dataset presenters which uses a different
+          // style of templating from this service. We do the variable substitution here for the variables we expect
+          // to be present in this field.
           userSpecificContent = val
               .replaceAll("\\$\\$DATASET_ID\\$\\$", dataset.getDatasetId())
               .replaceAll("\\$\\$DAYS_FOR_APPROVAL\\$\\$", dataset.getDaysForApproval());

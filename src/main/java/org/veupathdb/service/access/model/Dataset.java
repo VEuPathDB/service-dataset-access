@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.Logger;
 import org.gusdb.fgputil.functional.Functions;
@@ -27,12 +28,10 @@ public class Dataset
     REQUEST_EMAIL_BCC("requestEmailBcc"),
     REQUEST_EMAIL_BODY("requestEmailBody"),
     REQUEST_NEEDS_APPROVAL("requestNeedsApproval"),
+    // Email template fields
     REQUEST_ACCESS_FIELDS("requestAccessFields"),
-
     CUSTOM_APPROVAL_EMAIL_BODY("customApprovalEmailBody"),
-
     DAYS_FOR_APPROVAL("daysForApproval"),
-
     REQUEST_EMAIL_BODY_REQUESTER("requestEmailBodyRequester"),
     REQUEST_EMAIL_BODY_MANAGER("requestEmailBodyManager");
 
@@ -284,7 +283,6 @@ public class Dataset
   }
 
   public Dataset putProperties(final Map<Property, String> props) {
-    log.info("All properties: " + props);
     this.properties.putAll(props);
     return this;
   }
@@ -317,7 +315,7 @@ public class Dataset
     return Optional.ofNullable(getProperties().get(Property.REQUEST_ACCESS_FIELDS))
         .map(Functions.fSwallow(OBJECT_MAPPER::readTree))
         .flatMap(tree -> Optional.ofNullable(tree.get("prior_auth")))
-        .map(node -> node.asText())
+        .map(JsonNode::asText)
         .orElse(null);
   }
 }
