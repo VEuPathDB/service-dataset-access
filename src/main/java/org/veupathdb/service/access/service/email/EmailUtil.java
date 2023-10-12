@@ -1,10 +1,15 @@
 package org.veupathdb.service.access.service.email;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.regex.Pattern;
+import javax.activation.DataHandler;
 import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.Session;
@@ -58,6 +63,7 @@ public class EmailUtil
     final var inject = new ST(templateInput.template, TEMPLATE_DELIM, TEMPLATE_DELIM);
     inject.add("dataset", templateInput.dataset);
     inject.add("site-url", Main.config.getSiteUrl());
+    inject.add("user-specific-content", templateInput.userSpecificContent);
     inject.add("sign-up-link", URI.create(makeUrl(Main.config.getRegistrationPath())));
     inject.add("app-link", URI.create(makeUrl(Main.config.getApplicationPath())));
 
@@ -154,8 +160,7 @@ public class EmailUtil
       message.setRecipients(Message.RecipientType.BCC, toAddresses(mail.getBcc()));
 
     var bodyPart = new MimeBodyPart();
-    bodyPart.setContent(mail.getBody(), "text/plain");
-
+    bodyPart.setDataHandler(new DataHandler(new HTMLDataSource(mail.getBody())));
     message.setContent(new MimeMultipart(bodyPart));
 
     return message;
@@ -165,51 +170,114 @@ public class EmailUtil
     return Main.config.getSiteUrl() + (path.charAt(0) == '/' ? path : "/" + path);
   }
 
+  private static class HTMLDataSource implements javax.activation.DataSource {
+
+    private String html;
+
+    public HTMLDataSource(String htmlString) {
+      html = htmlString;
+    }
+
+    // Return html string in an InputStream.
+    // A new stream must be returned each time.
+    @Override
+    public InputStream getInputStream() throws IOException {
+      if (html == null)
+        throw new IOException("Null HTML");
+      return new ByteArrayInputStream(html.getBytes());
+    }
+
+    @Override
+    public OutputStream getOutputStream() throws IOException {
+      throw new IOException("This DataHandler cannot write HTML");
+    }
+
+    @Override
+    public String getContentType() {
+      return "text/html";
+    }
+
+    @Override
+    public String getName() {
+      return "JAF text/html dataSource to send e-mail only";
+    }
+  }
+
+
+  /**
+   * Variables whose values may be substituted into e-mail templates.
+   */
   public static class TemplateInput {
     private final String template;
     private final String[] managerEmails;
     private final Dataset dataset;
     private final EndUserRow endUserRow;
+    private final String userSpecificContent;
 
-    private TemplateInput(Builder builder) {
+    private TemplateInput(SecondStepTemplateBuilder builder) {
       template = builder.template;
       managerEmails = builder.managerEmails;
       dataset = builder.dataset;
       endUserRow = builder.endUserRow;
+      userSpecificContent = builder.userSpecificContent;
     }
 
-    public static Builder newBuilder() {
-      return new Builder();
+    public static FirstStepTemplateBuilder newBuilder() {
+      return new FirstStepTemplateBuilder();
     }
 
-    public static final class Builder {
+    /**
+     * The first step of the builder is to provide the dataset, as some subsequent builder methods depend on the
+     * dataset.
+     */
+    public static final class FirstStepTemplateBuilder {
+      private Dataset dataset;
+
+      // Unlock second step builder methods after dataset is specified.
+      public SecondStepTemplateBuilder withDataset(Dataset val) {
+        dataset = val;
+        return new SecondStepTemplateBuilder(dataset);
+      }
+    }
+
+    public static final class SecondStepTemplateBuilder {
+      private final Dataset dataset;
       private String template;
       private String[] managerEmails;
-      private Dataset dataset;
       private EndUserRow endUserRow;
+      private String userSpecificContent;
 
-      private Builder() {
+      private SecondStepTemplateBuilder(Dataset dataset) {
+        this.dataset = dataset;
       }
 
-      public Builder withTemplate(String val) {
+      public SecondStepTemplateBuilder withTemplate(String val) {
         template = val;
         return this;
       }
 
-      public Builder withManagerEmails(String[] val) {
+      public SecondStepTemplateBuilder withManagerEmails(String[] val) {
         managerEmails = val;
         return this;
       }
 
-      public Builder withDataset(Dataset val) {
-        dataset = val;
-        return this;
-      }
-
-      public Builder withEndUserRow(EndUserRow val) {
+      public SecondStepTemplateBuilder withEndUserRow(EndUserRow val) {
         endUserRow = val;
         return this;
       }
+
+      public SecondStepTemplateBuilder withUserSpecificContent(String val) {
+        if (val != null) {
+          // This is a bit of hack. Since this content is coming from the dataset presenters which uses a different
+          // style of templating from this service. We do the variable substitution here for the variables we expect
+          // to be present in this field.
+          userSpecificContent = val
+              .replaceAll("\\$\\$DATASET_ID\\$\\$", dataset.getDatasetId())
+              .replaceAll("\\$\\$DAYS_FOR_APPROVAL\\$\\$", dataset.getDaysForApproval());
+        }
+        return this;
+      }
+
 
       public TemplateInput build() {
         return new TemplateInput(this);

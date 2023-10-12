@@ -6,9 +6,7 @@ import java.util.Properties;
 import java.util.stream.Stream;
 import javax.mail.Session;
 import javax.mail.Transport;
-import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 
 import org.apache.logging.log4j.Logger;
 import org.gusdb.fgputil.FormatUtil;
@@ -70,7 +68,8 @@ public class EmailService
   public void sendEndUserUpdateNotificationEmail(
     final String[] cc,
     final Dataset dataset,
-    final EndUserRow user
+    final EndUserRow user,
+    final String userSpecificContent
   ) throws Exception {
     log.trace("EmailService#sendEndUserUpdateNotificationEmail(String[], Dataset, EndUserRow)");
 
@@ -86,6 +85,7 @@ public class EmailService
           .withDataset(dataset)
           .withTemplate(template.getBody())
           .withEndUserRow(user)
+          .withUserSpecificContent(userSpecificContent)
           .build()))
       .setTo(
         Stream.concat(Arrays.stream(cc), Stream.of(Main.config.getSupportEmail()))
@@ -154,6 +154,7 @@ public class EmailService
 
       props.put("mail.smtp.host", Main.config.getSmtpHost());
       props.put("mail.debug", String.valueOf(Main.config.isEmailDebug()));
+      props.put("mail.smtp.port", "1025"); //SMTP Port
 
       final var session = Session.getInstance(props);
 
@@ -165,13 +166,6 @@ public class EmailService
       message.setRecipients(MimeMessage.RecipientType.BCC, util.toAddresses(mail.getBcc()));
       message.setReplyTo(util.toAddresses(new String[]{ Main.config.getSupportEmail() }));
       message.setSubject(mail.getSubject());
-
-      final var content = new MimeBodyPart();
-      content.setContent(mail.getBody(), "text/plain");
-      final var body = new MimeMultipart();
-      body.addBodyPart(content);
-
-      message.setContent(body);
 
       Transport.send(message);
     }

@@ -31,9 +31,53 @@ end-user-register:
 edit-notification:
   subject: $dataset.displayName$ Access Request Update
   body: |
-    Dear provider,
+    <p>$end-user.lastName$, $end-user.firstName$ has edited their access request to the $dataset.displayName$ data.</p>
 
-    This is to let you know that end user $end-user.lastName$, $end-user.firstName$ ($end-user.email$) just updated their access request information. Please check their updates at $app-link$/$dataset.datasetId$.
+    <p>Here are the details of their request:</p>
+
+    <table border=1>
+      <tbody>
+        <tr>
+          <td><strong>Date of request</strong></td>
+          <td>$end-user.startDate$</td>
+        </tr>
+        <tr>
+          <td><strong>Name</strong></td>
+          <td>$end-user.lastName$, $end-user.firstName$</td>
+        </tr>
+        <tr>
+          <td><strong>Email</strong></td>
+          <td>$end-user.email$</td>
+        </tr>
+        <tr>
+          <td><strong>Organization</strong></td>
+          <td>$end-user.organization$</td>
+        </tr>
+        <tr>
+          <td><strong>Purpose for which data will be used</strong></td>
+          <td>$end-user.purpose$</td>
+        </tr>
+        <tr>
+          <td><strong>$dataset.priorAuth$</strong></td>
+          <td>$end-user.priorAuth$</td>
+        </tr>
+        <tr>
+          <td><strong>Hypotheses and/or research questions</strong></td>
+          <td>$end-user.researchQuestion$</td>
+        </tr>
+        <tr>
+          <td><strong>Analysis plan</strong></td>
+          <td>$end-user.analysisPlan$</td>
+        </tr>
+        <tr>
+          <td><strong>Planned dissemination of results</strong></td>
+          <td>$end-user.disseminationPlan$</td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <p>$user-specific-content$</p>
+
 
 # APPROVAL  Email sent when a dataset access request is approved by a study manager.
 approve-notification:
