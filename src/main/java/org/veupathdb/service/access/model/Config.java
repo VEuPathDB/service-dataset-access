@@ -11,7 +11,7 @@ public class Config extends Options
 
   @CommandLine.Option(
     names = "--enable-email",
-    defaultValue = "${env:ENABLE_EMAIL}",
+    defaultValue = "true", // Permanently enable e-mail, ignoring env var. Testing can be done with fake smtp.
     arity = "1"
   )
   @SuppressWarnings("FieldMayBeFinal")
