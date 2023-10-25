@@ -154,7 +154,6 @@ public class EmailService
 
       props.put("mail.smtp.host", Main.config.getSmtpHost());
       props.put("mail.debug", String.valueOf(Main.config.isEmailDebug()));
-      props.put("mail.smtp.port", "1025"); //SMTP Port
 
       final var session = Session.getInstance(props);
 
