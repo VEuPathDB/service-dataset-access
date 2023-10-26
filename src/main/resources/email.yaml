@@ -57,10 +57,12 @@ edit-notification:
           <td><strong>Purpose for which data will be used</strong></td>
           <td>$end-user.purpose$</td>
         </tr>
+        $if(dataset.priorAuth)$
         <tr>
           <td><strong>$dataset.priorAuth$</strong></td>
           <td>$end-user.priorAuth$</td>
         </tr>
+        $endif$
         <tr>
           <td><strong>Hypotheses and/or research questions</strong></td>
           <td>$end-user.researchQuestion$</td>

@@ -271,9 +271,10 @@ public class EmailUtil
           // This is a bit of hack. Since this content is coming from the dataset presenters which uses a different
           // style of templating from this service. We do the variable substitution here for the variables we expect
           // to be present in this field.
-          userSpecificContent = val
-              .replaceAll("\\$\\$DATASET_ID\\$\\$", dataset.getDatasetId())
-              .replaceAll("\\$\\$DAYS_FOR_APPROVAL\\$\\$", dataset.getDaysForApproval());
+          userSpecificContent = val.replaceAll("\\$\\$DATASET_ID\\$\\$", dataset.getDatasetId());
+          if (dataset.getDaysForApproval() != null) {
+            userSpecificContent = userSpecificContent.replaceAll("\\$\\$DAYS_FOR_APPROVAL\\$\\$", dataset.getDaysForApproval());
+          }
         }
         return this;
       }
