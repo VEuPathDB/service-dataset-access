@@ -15,7 +15,7 @@ public class Config extends Options
     arity = "1"
   )
   @SuppressWarnings("FieldMayBeFinal")
-  private boolean enableEmail = true;
+  private boolean enableEmail = false;
 
   @CommandLine.Option(
     names = "--smtp-host",
