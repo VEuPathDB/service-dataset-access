@@ -31,7 +31,7 @@ public class Config extends Options
     arity = "1"
   )
   @SuppressWarnings("FieldMayBeFinal")
-  private boolean emailDebug = false;
+  private boolean emailDebug = true;
 
   @CommandLine.Option(
     names = "--support-email",
