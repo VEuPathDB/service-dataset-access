@@ -85,16 +85,114 @@ edit-notification:
 approve-notification:
   subject: $dataset.displayName$ Access Request Approved
   body: | 
-    Your request to access $dataset.displayName$ data on ClinEpiDB has been approved. Navigate to the "Download" tab of $dataset.displayName$ to download the data. Please cite that you accessed data via ClinEpiDB.
-    $if(dataset.customApprovalEmailBody)$
+    <p>Your request to access $dataset.displayName$ data on ClinEpiDB has been approved. 
+    Navigate to the "Download" tab of $dataset.displayName$ to download the data. 
+    Please cite that you accessed data via ClinEpiDB.</p>
     
+    $if(dataset.customApprovalEmailBody)$
         $dataset.customApprovalEmailBody$
     $endif$
     
     Thank you!
 
+    Request details:
+
+    <table border=1>
+      <tbody>
+        <tr>
+          <td><strong>Date of request</strong></td>
+          <td>$end-user.startDate$</td>
+        </tr>
+        <tr>
+          <td><strong>Name</strong></td>
+          <td>$end-user.lastName$, $end-user.firstName$</td>
+        </tr>
+        <tr>
+          <td><strong>Email</strong></td>
+          <td>$end-user.email$</td>
+        </tr>
+        <tr>
+          <td><strong>Organization</strong></td>
+          <td>$end-user.organization$</td>
+        </tr>
+        <tr>
+          <td><strong>Purpose for which data will be used</strong></td>
+          <td>$end-user.purpose$</td>
+        </tr>
+        $if(dataset.priorAuth)$
+        <tr>
+          <td><strong>$dataset.priorAuth$</strong></td>
+          <td>$end-user.priorAuth$</td>
+        </tr>
+        $endif$
+        <tr>
+          <td><strong>Hypotheses and/or research questions</strong></td>
+          <td>$end-user.researchQuestion$</td>
+        </tr>
+        <tr>
+          <td><strong>Analysis plan</strong></td>
+          <td>$end-user.analysisPlan$</td>
+        </tr>
+        <tr>
+          <td><strong>Planned dissemination of results</strong></td>
+          <td>$end-user.disseminationPlan$</td>
+        </tr>
+      </tbody>
+    </table>
+
 # DENIAL   Email sent when a dataset access request is rejected by a study manager.
 deny-notification:
   subject: $dataset.displayName$ Access Request Denied
   body: |
-    Unfortunately, your request to access $dataset.displayName$ data on ClinEpiDB has been denied for the following reason: "$end-user.denialReason$". You may resubmit with new information. Please reach out to $manager-emails$ for more information. Thank you!
+    <p>Unfortunately, your request to access $dataset.displayName$ data on ClinEpiDB has been denied for the following reason:</p>
+    
+    "$end-user.denialReason$". 
+    
+    <p>You may resubmit with new information. Please reach out to $manager-emails$ for more information. Thank you!</p>
+
+    <p>Request details:</p>
+
+    <table border=1>
+      <tbody>
+        <tr>
+          <td><strong>Date of request</strong></td>
+          <td>$end-user.startDate$</td>
+        </tr>
+        <tr>
+          <td><strong>Name</strong></td>
+          <td>$end-user.lastName$, $end-user.firstName$</td>
+        </tr>
+        <tr>
+          <td><strong>Email</strong></td>
+          <td>$end-user.email$</td>
+        </tr>
+        <tr>
+          <td><strong>Organization</strong></td>
+          <td>$end-user.organization$</td>
+        </tr>
+        <tr>
+          <td><strong>Purpose for which data will be used</strong></td>
+          <td>$end-user.purpose$</td>
+        </tr>
+        $if(dataset.priorAuth)$
+        <tr>
+          <td><strong>$dataset.priorAuth$</strong></td>
+          <td>$end-user.priorAuth$</td>
+        </tr>
+        $endif$
+        <tr>
+          <td><strong>Hypotheses and/or research questions</strong></td>
+          <td>$end-user.researchQuestion$</td>
+        </tr>
+        <tr>
+          <td><strong>Analysis plan</strong></td>
+          <td>$end-user.analysisPlan$</td>
+        </tr>
+        <tr>
+          <td><strong>Planned dissemination of results</strong></td>
+          <td>$end-user.disseminationPlan$</td>
+        </tr>
+      </tbody>
+    </table>
+
+    
