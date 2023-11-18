@@ -98,6 +98,7 @@ public class EndUserPatchService
         .orElseThrow();
       Optional<String> userEmail = AccountRepo.Select.getInstance().selectEmailByUserId(row.getUserId());
       final var ccs = ProviderRepo.Select.byDataset(row.getDatasetId(), 100L, 0L).stream()
+        .filter(ProviderRow::isManager)
         .map(UserRow::getEmail)
         .toArray(String[]::new);
       EndUserRepo.Update.self(row, userID);
