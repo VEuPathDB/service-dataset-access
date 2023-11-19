@@ -114,6 +114,7 @@ public class EmailService
             .withManagerEmails(managerEmails)
             .build()))
         .setTo(cc)
+        .setCc(managerEmails)
         .setFrom(dataset.getProperties().get(Dataset.Property.REQUEST_EMAIL)));
   }
 
@@ -136,6 +137,7 @@ public class EmailService
             .withManagerEmails(managerEmails)
             .build()))
         .setTo(cc)
+        .setCc(managerEmails)
         .setFrom(dataset.getProperties().get(Dataset.Property.REQUEST_EMAIL)));
   }
 
