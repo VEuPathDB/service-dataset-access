@@ -204,8 +204,8 @@ public class EndUserPatchService
           .toArray(String[]::new);
 
       // Send to the approved/denied user in the e-mail notification as well as managers and support.
-      String[] ccs = Stream.concat(
-          Stream.concat(userEmail.stream(), Arrays.stream(managerEmails)),
+      String[] ccs = Stream.concat(userEmail.stream(),
+          //Stream.concat(userEmail.stream(), Arrays.stream(managerEmails)),   // will add managers in cc field
               Stream.of(Main.config.getSupportEmail()))
           .toArray(String[]::new);
       if (approved) {
