@@ -75,8 +75,8 @@ repositories {
 //
 
 // versions
-val coreLib       = "7.0.0"         // Container core lib version
-val fgputil       = "2.12.9-jakarta" // FgpUtil version
+val coreLib       = "7.0.1"         // Container core lib version
+val fgputil       = "2.13.1-jakarta" // FgpUtil version
 
 // ensures changing and dynamic modules are never cached
 configurations.all {
