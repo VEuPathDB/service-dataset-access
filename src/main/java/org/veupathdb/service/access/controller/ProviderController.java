@@ -57,7 +57,7 @@ public class ProviderController implements DatasetProviders
 
     // To add a new provider, a user must be a site owner or a manager for the
     // dataset.
-    if (!userIsOwner(currentUser.getUserID()) && !userIsManager(currentUser.getUserID(), provider.getDatasetId()))
+    if (!userIsOwner(currentUser.getUserId()) && !userIsManager(currentUser.getUserId(), provider.getDatasetId()))
       throw new ForbiddenException();
 
     provider.setManager(entity.get(0).getValue());

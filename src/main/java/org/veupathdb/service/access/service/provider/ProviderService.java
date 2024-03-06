@@ -49,7 +49,7 @@ public class ProviderService
 
     // To add a new provider, a user must be a site owner or a manager for the
     // dataset.
-    if (!userIsOwner(user.getUserID()) && !userIsManager(user.getUserID(), body.getDatasetId()))
+    if (!userIsOwner(user.getUserId()) && !userIsManager(user.getUserId(), body.getDatasetId()))
       throw new ForbiddenException();
 
     try {
@@ -108,13 +108,13 @@ public class ProviderService
 
       // Determine if the user is a manager for the dataset.
       for (var pro : rows) {
-        if (pro.getUserId() == currentUser.getUserID()) {
+        if (pro.getUserId() == currentUser.getUserId()) {
           allowed = true;
           break;
         }
       }
 
-      if (StaffService.userIsStaff(currentUser.getUserID()))
+      if (StaffService.userIsStaff(currentUser.getUserId()))
         allowed = true;
 
       if (!allowed)
@@ -177,7 +177,7 @@ public class ProviderService
     log.trace("ProviderService#userIsManager(Request, String)");
 
     return isUserManager(UserProvider.lookupUser(req)
-      .map(User::getUserID)
+      .map(User::getUserId)
       .orElseThrow(InternalServerErrorException::new), datasetId);
   }
 
