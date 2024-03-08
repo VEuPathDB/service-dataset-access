@@ -71,7 +71,7 @@ public class PermissionService
       Wrapper<Boolean> grantAll = new Wrapper<>(false);
 
       // check if current user is staff and set outgoing perms accordingly
-      StaffRepo.Select.byUserId(user.getUserID())
+      StaffRepo.Select.byUserId(user.getUserId())
         .ifPresent(s -> {
           // all staff get access to all studies
           grantAll.set(true);
@@ -87,16 +87,16 @@ public class PermissionService
       var datasetProps = DatasetRepo.Select.getDatasetProps();
 
       // if datasetId is present, then user is provider; boolean indicates isManager
-      Map<String,Boolean> providerInfoMap = ProviderRepo.Select.datasets(user.getUserID());
+      Map<String,Boolean> providerInfoMap = ProviderRepo.Select.datasets(user.getUserId());
 
       // list of datasetIds user has approved access for
-      Map<String, ApprovalStatus> approvalStatusMap = EndUserRepo.Select.datasets(user.getUserID());
+      Map<String, ApprovalStatus> approvalStatusMap = EndUserRepo.Select.datasets(user.getUserId());
 
       // assign specific permissions on each dataset for this user
       PermissionMap datasetPerms = getPermissionMap(grantAll.get(), datasetProps, providerInfoMap, approvalStatusMap);
 
       // supplement official studies with studies from user datasets
-      datasetPerms.putAll(UserDatasetIsaStudies.getUserDatasetPermissions(user.getUserID()));
+      datasetPerms.putAll(UserDatasetIsaStudies.getUserDatasetPermissions(user.getUserId()));
 
       // set permission map on permissions object
       out.setPerDataset(datasetPerms);

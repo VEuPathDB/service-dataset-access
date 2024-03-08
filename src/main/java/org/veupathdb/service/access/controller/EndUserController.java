@@ -52,9 +52,9 @@ public class EndUserController implements DatasetEndUsers
     final var curUser = Util.requireUser(_request);
     final var endUser = EndUserLookupService.getEndUser(endUserId);
 
-    if (endUser.getUser().getUserId() == curUser.getUserID()
-      || ProviderService.getInstance().isUserProvider(curUser.getUserID(), endUser.getDatasetId())
-      || userIsOwner(curUser.getUserID())
+    if (endUser.getUser().getUserId() == curUser.getUserId()
+      || ProviderService.getInstance().isUserProvider(curUser.getUserId(), endUser.getDatasetId())
+      || userIsOwner(curUser.getUserId())
     ) {
       return GetDatasetEndUsersByEndUserIdResponse.respond200WithApplicationJson(
         endUser);
@@ -71,10 +71,10 @@ public class EndUserController implements DatasetEndUsers
     final var curUser = Util.requireUser(_request);
     final var endUser = EndUserLookupService.getRawEndUser(endUserId);
 
-    if (endUser.getUserId() == curUser.getUserID()) { // Users can edit some of the fields of their request.
-      EndUserPatchService.selfPatch(endUser, entity, curUser.getUserID());
-    } else if (userIsManager(curUser.getUserID(), endUser.getDatasetId()) || userIsOwner(curUser.getUserID())) {
-      EndUserPatchService.modPatch(endUser, entity, curUser.getUserID());
+    if (endUser.getUserId() == curUser.getUserId()) { // Users can edit some of the fields of their request.
+      EndUserPatchService.selfPatch(endUser, entity, curUser.getUserId());
+    } else if (userIsManager(curUser.getUserId(), endUser.getDatasetId()) || userIsOwner(curUser.getUserId())) {
+      EndUserPatchService.modPatch(endUser, entity, curUser.getUserId());
     } else {
       throw new ForbiddenException();
     }
@@ -89,8 +89,8 @@ public class EndUserController implements DatasetEndUsers
       final var curUser = Util.requireUser(_request);
       final var endUser = EndUserLookupService.getRawEndUser(endUserId);
 
-      if (userIsManager(curUser.getUserID(), endUser.getDatasetId()) || userIsOwner(curUser.getUserID())) {
-        EndUserDeleteService.delete(endUser, curUser.getUserID());
+      if (userIsManager(curUser.getUserId(), endUser.getDatasetId()) || userIsOwner(curUser.getUserId())) {
+        EndUserDeleteService.delete(endUser, curUser.getUserId());
       }
 
       return DeleteDatasetEndUsersByEndUserIdResponse.respond204();
