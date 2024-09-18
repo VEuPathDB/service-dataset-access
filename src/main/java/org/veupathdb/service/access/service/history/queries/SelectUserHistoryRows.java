@@ -44,7 +44,7 @@ public class SelectUserHistoryRows
     + "OFFSET ? ROWS\n"
     + "FETCH FIRST ? ROWS ONLY";
 
-  private static final int HardLimit = 100;
+  private static final int HardLimit = 1000;
 
   private final Connection con;
   private final long userID;
